@@ -64,7 +64,7 @@ struct ContentView: View {
 
             Spacer().frame(height: 4)
 
-            Text("MIT License \u{00B7} \u{00A9} 2026 Kiril")
+            Text("MIT License \u{00B7} \u{00A9} 2026 Phrontizo Limited")
                 .font(.caption)
                 .foregroundStyle(.tertiary)
         }
