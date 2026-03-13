@@ -48,7 +48,7 @@
     mermaid.initialize({
         startOnLoad: false,
         theme: isDark ? "dark" : "default",
-        securityLevel: "loose"
+        securityLevel: "strict"
     });
     mermaid.run();
 
