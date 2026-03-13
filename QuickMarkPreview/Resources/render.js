@@ -39,9 +39,10 @@
         return defaultFence(tokens, idx, options, env, self);
     };
 
-    // Decode base64 markdown source and render
+    // Decode base64 markdown source (UTF-8 aware) and render
     var sourceEl = document.getElementById("markdown-source");
-    var source = atob(sourceEl.textContent.trim());
+    var bytes = Uint8Array.from(atob(sourceEl.textContent.trim()), function(c) { return c.charCodeAt(0); });
+    var source = new TextDecoder().decode(bytes);
     document.getElementById("content").innerHTML = md.render(source);
 
     // Initialize mermaid

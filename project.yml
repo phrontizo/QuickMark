@@ -8,6 +8,15 @@ settings:
   base:
     SWIFT_VERSION: "5.9"
     CODE_SIGN_STYLE: Automatic
+    DEAD_CODE_STRIPPING: YES
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+schemes:
+  QuickMark:
+    build:
+      targets:
+        QuickMark: all
+    run:
+      config: Debug
 targets:
   QuickMark:
     type: application
@@ -27,8 +36,8 @@ targets:
       - path: QuickMarkPreview
         excludes:
           - "Resources/**"
-    resources:
       - path: QuickMarkPreview/Resources
+        buildPhase: resources
     info:
       path: QuickMarkPreview/Info.plist
       properties:

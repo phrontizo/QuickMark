@@ -7,16 +7,29 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0FCB85F17AF7ABDBAE3AB443 /* markdown-it.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 733EBB2778133BA55F3D6977 /* markdown-it.min.js */; };
 		0FEF39FD19D4279D1091ACE5 /* QuickMarkPreview.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 37DA3BBC24FD11A22175E2F1 /* QuickMarkPreview.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1680DC704AEFB3DEB9526989 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92239FE1AFE0A52DE5E0FF6 /* ContentView.swift */; };
+		1B2CFB60433E6D08902E063C /* katex-inlined.min.css in Resources */ = {isa = PBXBuildFile; fileRef = E2C988C4882CF2552CA9FCAF /* katex-inlined.min.css */; };
+		43C46C23C16C16A68C49BB49 /* highlight.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 202BB1A525B409CFF1EA48B0 /* highlight.min.js */; };
+		47ABD3B3E683A8E84AD5A830 /* mermaid.min.js in Resources */ = {isa = PBXBuildFile; fileRef = FB6691AFE4B67F1F3617DDA2 /* mermaid.min.js */; };
 		5188571ED14BD9003A3A2C26 /* HTMLBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4DA0013A60D3B71BCABCE41 /* HTMLBuilder.swift */; };
 		5A45F178AAA310766D7727B0 /* HTMLBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB04BBF826383A2C078A9960 /* HTMLBuilderTests.swift */; };
 		6984BEBAA997CEF0DEE37A6A /* QuickMarkApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653CE4750AE1FBB9B41ED4EC /* QuickMarkApp.swift */; };
+		9CE679DB5B277D7D465B0B8F /* katex.min.js in Resources */ = {isa = PBXBuildFile; fileRef = B4E8C01661186C19E8264797 /* katex.min.js */; };
+		A05078668B77AD92D1E3C196 /* markdown-it-task-lists.min.js in Resources */ = {isa = PBXBuildFile; fileRef = BE3679C89305E3D0C29688BD /* markdown-it-task-lists.min.js */; };
 		A151838060CA32A1307D848D /* MarkdownProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BCCF813526D2663FCE73F9B /* MarkdownProcessor.swift */; };
+		A61D435C2C1EC461D86E0CA1 /* viewer-static.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 9E1D84ECE67AD6DA934BCD3D /* viewer-static.min.js */; };
 		A9D7213400835B66B1194692 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5260FBA7D7D51AFA7C529998 /* PreviewViewController.swift */; };
 		B8B8E94D65BC1B70E5925ABB /* MarkdownProcessorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4AF0F19C5C0CEB2D631E7E /* MarkdownProcessorTests.swift */; };
+		B8CFAC2EF124404F384E4D7D /* hljs-themes.css in Resources */ = {isa = PBXBuildFile; fileRef = A8B67C7C6C85877EF496BD49 /* hljs-themes.css */; };
 		BDFE310A35EE39B125CBE217 /* HTMLBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4DA0013A60D3B71BCABCE41 /* HTMLBuilder.swift */; };
+		C587BD8E27366A11E0DAB638 /* render.js in Resources */ = {isa = PBXBuildFile; fileRef = CF3C5B03D6538A43D6642970 /* render.js */; };
+		C75E4A5423514B8C52E57512 /* texmath.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 52DA12520FCA33919A26628C /* texmath.min.js */; };
+		E60D3F1EDBDAA8EC3F2F479A /* texmath.min.css in Resources */ = {isa = PBXBuildFile; fileRef = AE674047DB03868496337751 /* texmath.min.css */; };
+		ECB8BBF9EB5E4FEEEF39C390 /* style.css in Resources */ = {isa = PBXBuildFile; fileRef = 523E7AAA8ABF3D839401ECD9 /* style.css */; };
 		FE862145F68EE7761CAD9ED9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 43BCB4594E25E7A451777FE2 /* Assets.xcassets */; };
+		FFBEF628372545749B97AFE2 /* markdown-it-footnote.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 384575201CF5C2420B1766CE /* markdown-it-footnote.min.js */; };
 		FFC097075A86474BC67358BA /* MarkdownProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BCCF813526D2663FCE73F9B /* MarkdownProcessor.swift */; };
 /* End PBXBuildFile section */
 
@@ -46,18 +59,31 @@
 
 /* Begin PBXFileReference section */
 		039DE6F516B91ED5DDFEEAA7 /* QuickMark.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuickMark.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		202BB1A525B409CFF1EA48B0 /* highlight.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = highlight.min.js; sourceTree = "<group>"; };
 		37DA3BBC24FD11A22175E2F1 /* QuickMarkPreview.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = QuickMarkPreview.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		384575201CF5C2420B1766CE /* markdown-it-footnote.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "markdown-it-footnote.min.js"; sourceTree = "<group>"; };
 		43BCB4594E25E7A451777FE2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		523E7AAA8ABF3D839401ECD9 /* style.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = style.css; sourceTree = "<group>"; };
 		5260FBA7D7D51AFA7C529998 /* PreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
+		52DA12520FCA33919A26628C /* texmath.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = texmath.min.js; sourceTree = "<group>"; };
 		5F0868E52DE2385930A8F219 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		653CE4750AE1FBB9B41ED4EC /* QuickMarkApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickMarkApp.swift; sourceTree = "<group>"; };
+		733EBB2778133BA55F3D6977 /* markdown-it.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "markdown-it.min.js"; sourceTree = "<group>"; };
 		8D4AF0F19C5C0CEB2D631E7E /* MarkdownProcessorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownProcessorTests.swift; sourceTree = "<group>"; };
 		945CDBF1E40B3284FF009125 /* QuickMarkPreview.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = QuickMarkPreview.entitlements; sourceTree = "<group>"; };
 		9BCCF813526D2663FCE73F9B /* MarkdownProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownProcessor.swift; sourceTree = "<group>"; };
+		9E1D84ECE67AD6DA934BCD3D /* viewer-static.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "viewer-static.min.js"; sourceTree = "<group>"; };
 		A4DA0013A60D3B71BCABCE41 /* HTMLBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLBuilder.swift; sourceTree = "<group>"; };
+		A8B67C7C6C85877EF496BD49 /* hljs-themes.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "hljs-themes.css"; sourceTree = "<group>"; };
+		AE674047DB03868496337751 /* texmath.min.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = texmath.min.css; sourceTree = "<group>"; };
+		B4E8C01661186C19E8264797 /* katex.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = katex.min.js; sourceTree = "<group>"; };
 		BB04BBF826383A2C078A9960 /* HTMLBuilderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLBuilderTests.swift; sourceTree = "<group>"; };
+		BE3679C89305E3D0C29688BD /* markdown-it-task-lists.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "markdown-it-task-lists.min.js"; sourceTree = "<group>"; };
 		C80CE75D0EB00B561ABB1018 /* QuickMarkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QuickMarkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C92239FE1AFE0A52DE5E0FF6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		CF3C5B03D6538A43D6642970 /* render.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = render.js; sourceTree = "<group>"; };
+		E2C988C4882CF2552CA9FCAF /* katex-inlined.min.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "katex-inlined.min.css"; sourceTree = "<group>"; };
+		FB6691AFE4B67F1F3617DDA2 /* mermaid.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = mermaid.min.js; sourceTree = "<group>"; };
 		FDA36C174CBAC99F350A745D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -104,12 +130,34 @@
 			path = QuickMark;
 			sourceTree = "<group>";
 		};
+		CF2BB1B0C84986D854E51C12 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				202BB1A525B409CFF1EA48B0 /* highlight.min.js */,
+				A8B67C7C6C85877EF496BD49 /* hljs-themes.css */,
+				E2C988C4882CF2552CA9FCAF /* katex-inlined.min.css */,
+				B4E8C01661186C19E8264797 /* katex.min.js */,
+				384575201CF5C2420B1766CE /* markdown-it-footnote.min.js */,
+				BE3679C89305E3D0C29688BD /* markdown-it-task-lists.min.js */,
+				733EBB2778133BA55F3D6977 /* markdown-it.min.js */,
+				FB6691AFE4B67F1F3617DDA2 /* mermaid.min.js */,
+				CF3C5B03D6538A43D6642970 /* render.js */,
+				523E7AAA8ABF3D839401ECD9 /* style.css */,
+				AE674047DB03868496337751 /* texmath.min.css */,
+				52DA12520FCA33919A26628C /* texmath.min.js */,
+				9E1D84ECE67AD6DA934BCD3D /* viewer-static.min.js */,
+			);
+			name = Resources;
+			path = QuickMarkPreview/Resources;
+			sourceTree = "<group>";
+		};
 		E099588C0CEF4D93F648EFEA = {
 			isa = PBXGroup;
 			children = (
 				A52F448894DB876C0AF957AB /* QuickMark */,
 				9E4A853666AC6A588AAD9AC6 /* QuickMarkPreview */,
 				6B6084DAAB840702B52095E8 /* QuickMarkTests */,
+				CF2BB1B0C84986D854E51C12 /* Resources */,
 				20E3225738EE284AE605E61C /* Products */,
 			);
 			sourceTree = "<group>";
@@ -142,6 +190,7 @@
 			buildConfigurationList = 0D24CF277F950C7E56D9BC12 /* Build configuration list for PBXNativeTarget "QuickMarkPreview" */;
 			buildPhases = (
 				133E00500667C7B50B96A6D0 /* Sources */,
+				0376593B6AD39FE1F9991BCB /* Resources */,
 			);
 			buildRules = (
 			);
@@ -178,7 +227,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 1500;
+				LastUpgradeCheck = 2630;
 				TargetAttributes = {
 					B85FFBA54E4768FA892422DD = {
 						ProvisioningStyle = Automatic;
@@ -213,6 +262,26 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		0376593B6AD39FE1F9991BCB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				43C46C23C16C16A68C49BB49 /* highlight.min.js in Resources */,
+				B8CFAC2EF124404F384E4D7D /* hljs-themes.css in Resources */,
+				1B2CFB60433E6D08902E063C /* katex-inlined.min.css in Resources */,
+				9CE679DB5B277D7D465B0B8F /* katex.min.js in Resources */,
+				FFBEF628372545749B97AFE2 /* markdown-it-footnote.min.js in Resources */,
+				A05078668B77AD92D1E3C196 /* markdown-it-task-lists.min.js in Resources */,
+				0FCB85F17AF7ABDBAE3AB443 /* markdown-it.min.js in Resources */,
+				47ABD3B3E683A8E84AD5A830 /* mermaid.min.js in Resources */,
+				C587BD8E27366A11E0DAB638 /* render.js in Resources */,
+				ECB8BBF9EB5E4FEEEF39C390 /* style.css in Resources */,
+				E60D3F1EDBDAA8EC3F2F479A /* texmath.min.css in Resources */,
+				C75E4A5423514B8C52E57512 /* texmath.min.js in Resources */,
+				A61D435C2C1EC461D86E0CA1 /* viewer-static.min.js in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CC9FAFFEE2865905195B4DCA /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -300,9 +369,11 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -316,6 +387,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.9;
@@ -373,9 +445,11 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -396,6 +470,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.9;
@@ -453,6 +528,9 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = QuickMarkPreview/QuickMarkPreview.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
 				INFOPLIST_FILE = QuickMarkPreview/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -469,6 +547,9 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = QuickMarkPreview/QuickMarkPreview.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
 				INFOPLIST_FILE = QuickMarkPreview/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

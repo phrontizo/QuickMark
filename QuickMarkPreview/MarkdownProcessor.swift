@@ -59,10 +59,69 @@ struct MarkdownProcessor {
         return result
     }
 
+    /// Pattern matches `![alt](path)` in markdown
+    private static let imagePattern = try! NSRegularExpression(
+        pattern: #"!\[([^\]]*)\]\(([^)]+)\)"#,
+        options: []
+    )
+
+    /// MIME type for common image extensions. Returns nil for unsupported types.
+    private static func imageMIME(for ext: String) -> String? {
+        switch ext.lowercased() {
+        case "svg": return "image/svg+xml"
+        case "png": return "image/png"
+        case "jpg", "jpeg": return "image/jpeg"
+        case "gif": return "image/gif"
+        case "webp": return "image/webp"
+        default: return nil
+        }
+    }
+
+    /// Replaces local image references with inline data URIs so they render
+    /// inside WKWebView's `loadHTMLString` (which lacks local file access).
+    static func resolveImageReferences(_ markdown: String, baseURL: URL) -> String {
+        let nsMarkdown = markdown as NSString
+        let matches = imagePattern.matches(in: markdown, range: NSRange(location: 0, length: nsMarkdown.length))
+
+        var result = markdown
+        for match in matches.reversed() {
+            let pathRange = match.range(at: 2)
+            let path = nsMarkdown.substring(with: pathRange)
+
+            // Skip URLs, data URIs, anchors, and draw.io files (handled separately)
+            if path.hasPrefix("http://") || path.hasPrefix("https://") ||
+               path.hasPrefix("data:") || path.hasPrefix("#") ||
+               path.hasSuffix(".drawio") {
+                continue
+            }
+
+            let fileURL = baseURL.appendingPathComponent(path)
+            let ext = fileURL.pathExtension
+
+            guard let mime = imageMIME(for: ext),
+                  let data = try? Data(contentsOf: fileURL) else {
+                continue
+            }
+
+            let base64 = data.base64EncodedString()
+            let dataURI = "data:\(mime);base64,\(base64)"
+
+            let altRange = match.range(at: 1)
+            let alt = nsMarkdown.substring(with: altRange)
+            let replacement = "![\(alt)](\(dataURI))"
+
+            let swiftRange = Range(match.range(at: 0), in: result)!
+            result.replaceSubrange(swiftRange, with: replacement)
+        }
+
+        return result
+    }
+
     /// Entry point: preprocesses markdown before HTML rendering.
     static func process(_ markdown: String, baseURL: URL) -> String {
         var result = markdown
         result = resolveDrawioReferences(result, baseURL: baseURL)
+        result = resolveImageReferences(result, baseURL: baseURL)
         return result
     }
 }
