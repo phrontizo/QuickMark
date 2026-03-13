@@ -44,12 +44,46 @@ struct ContentView: View {
                     .controlSize(.small)
                     .padding(.top, 4)
             }
+
+            Divider()
+                .frame(maxWidth: 300)
+
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Renders")
+                    .font(.callout)
+                    .fontWeight(.medium)
+                featureRow("Syntax-highlighted code blocks")
+                featureRow("LaTeX math (inline & display)")
+                featureRow("Mermaid diagrams")
+                featureRow("Task lists & footnotes")
+                featureRow("Draw.io diagrams")
+                featureRow("Local images (SVG, PNG, JPEG, etc.)")
+                featureRow("Dark mode support")
+            }
+            .frame(maxWidth: 300, alignment: .leading)
+
+            Spacer().frame(height: 4)
+
+            Text("MIT License \u{00B7} \u{00A9} 2026 Kiril")
+                .font(.caption)
+                .foregroundStyle(.tertiary)
         }
         .padding(40)
-        .frame(width: 480, height: 320)
+        .frame(width: 480, height: 520)
         .onAppear { checkExtension() }
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
             checkExtension()
+        }
+    }
+
+    private func featureRow(_ text: String) -> some View {
+        HStack(spacing: 6) {
+            Image(systemName: "checkmark")
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+            Text(text)
+                .font(.callout)
+                .foregroundStyle(.secondary)
         }
     }
 
