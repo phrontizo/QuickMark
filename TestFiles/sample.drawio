@@ -1,0 +1,21 @@
+<mxfile>
+  <diagram name="Page-1" id="test">
+    <mxGraphModel dx="1234" dy="765" grid="1" gridSize="10">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="2" value="QuickMark" style="rounded=1;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="200" y="100" width="120" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="3" value="Markdown" style="rounded=1;whiteSpace=wrap;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="100" y="220" width="120" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="4" value="HTML Preview" style="rounded=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="300" y="220" width="120" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="5" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="2" target="3" parent="1"/>
+        <mxCell id="6" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="2" target="4" parent="1"/>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
