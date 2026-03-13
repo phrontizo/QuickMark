@@ -1,0 +1,68 @@
+name: QuickMark
+options:
+  bundleIdPrefix: com.quickmark
+  deploymentTarget:
+    macOS: "12.0"
+  xcodeVersion: "15.0"
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    CODE_SIGN_STYLE: Automatic
+targets:
+  QuickMark:
+    type: application
+    platform: macOS
+    sources:
+      - path: QuickMark
+    info:
+      path: QuickMark/Info.plist
+    dependencies:
+      - target: QuickMarkPreview
+        embed: true
+        codeSign: true
+  QuickMarkPreview:
+    type: app-extension
+    platform: macOS
+    sources:
+      - path: QuickMarkPreview
+        excludes:
+          - "Resources/**"
+    resources:
+      - path: QuickMarkPreview/Resources
+    info:
+      path: QuickMarkPreview/Info.plist
+      properties:
+        NSExtension:
+          NSExtensionAttributes:
+            QLSupportedContentTypes:
+              - public.markdown
+              - net.daringfireball.markdown
+              - net.ia.markdown
+              - com.unknown.md
+              - io.typora.markdown
+              - com.nutstore.down
+              - com.rstudio.rmarkdown
+              - org.quarto.qmarkdown
+              - org.apiblueprint.file
+              - org.textbundle.package
+          NSExtensionPointIdentifier: com.apple.quicklook.preview
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).PreviewViewController
+    entitlements:
+      path: QuickMarkPreview/QuickMarkPreview.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.network.client: true
+        com.apple.security.files.user-selected.read-only: true
+        com.apple.security.temporary-exception.files.absolute-path.read-only:
+          - /
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.quickmark.QuickMark.QuickMarkPreview
+  QuickMarkTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: QuickMarkTests
+      - path: QuickMarkPreview/MarkdownProcessor.swift
+        type: file
+      - path: QuickMarkPreview/HTMLBuilder.swift
+        type: file
