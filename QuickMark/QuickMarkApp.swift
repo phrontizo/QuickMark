@@ -4,7 +4,7 @@ import SwiftUI
 struct QuickMarkApp: App {
     var body: some Scene {
         WindowGroup {
-            Text("QuickMark")
+            ContentView()
         }
     }
 }
