@@ -2,7 +2,8 @@ import Cocoa
 import Quartz
 import WebKit
 
-class PreviewViewController: NSViewController, QLPreviewingController {
+@MainActor
+class PreviewViewController: NSViewController, @preconcurrency QLPreviewingController {
 
     private var webView: WKWebView!
     private var tempFileURL: URL?
@@ -34,12 +35,7 @@ class PreviewViewController: NSViewController, QLPreviewingController {
     }
 
     private func renderMarkdown(at url: URL) throws {
-        let markdown: String
-        if let utf8 = try? String(contentsOf: url, encoding: .utf8) {
-            markdown = utf8
-        } else {
-            markdown = try String(contentsOf: url, encoding: .isoLatin1)
-        }
+        let markdown = try MarkdownProcessor.readFile(at: url)
         let baseURL = url.deletingLastPathComponent()
         let processed = MarkdownProcessor.process(markdown, baseURL: baseURL)
         let bundle = Bundle(for: type(of: self))
@@ -58,8 +54,13 @@ class PreviewViewController: NSViewController, QLPreviewingController {
 
     private func cleanupStaleTempFiles() {
         let tempDir = FileManager.default.temporaryDirectory
-        guard let files = try? FileManager.default.contentsOfDirectory(at: tempDir, includingPropertiesForKeys: nil) else { return }
+        guard let files = try? FileManager.default.contentsOfDirectory(
+            at: tempDir, includingPropertiesForKeys: [.creationDateKey]
+        ) else { return }
+        let cutoff = Date().addingTimeInterval(-300) // 5 minutes ago
         for file in files where file.lastPathComponent.hasPrefix(Self.tempFilePrefix) && file.pathExtension == "html" {
+            guard let created = try? file.resourceValues(forKeys: [.creationDateKey]).creationDate,
+                  created < cutoff else { continue }
             try? FileManager.default.removeItem(at: file)
         }
     }

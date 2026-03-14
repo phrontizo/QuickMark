@@ -15,7 +15,8 @@ enum MarkdownProcessor {
         let matches = drawioPattern.matches(in: markdown, range: NSRange(location: 0, length: nsMarkdown.length))
 
         var result = markdown
-        // Process matches in reverse order to preserve indices
+        // Process in reverse: match ranges are computed against the original
+        // string, so replacing from the end keeps earlier ranges valid.
         for match in matches.reversed() {
             let pathRange = match.range(at: 2)
             let relativePath = nsMarkdown.substring(with: pathRange)
@@ -37,5 +38,13 @@ enum MarkdownProcessor {
     /// Entry point: preprocesses markdown before HTML rendering.
     static func process(_ markdown: String, baseURL: URL) -> String {
         return resolveDrawioReferences(markdown, baseURL: baseURL)
+    }
+
+    /// Reads a markdown file, trying UTF-8 first and falling back to ISO Latin 1.
+    static func readFile(at url: URL) throws -> String {
+        if let utf8 = try? String(contentsOf: url, encoding: .utf8) {
+            return utf8
+        }
+        return try String(contentsOf: url, encoding: .isoLatin1)
     }
 }

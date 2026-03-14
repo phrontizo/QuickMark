@@ -2,6 +2,15 @@ import Foundation
 
 enum HTMLBuilder {
 
+    /// Escapes a string for safe use inside an HTML attribute value.
+    private static func escapeHTMLAttribute(_ string: String) -> String {
+        string
+            .replacingOccurrences(of: "&", with: "&amp;")
+            .replacingOccurrences(of: "<", with: "&lt;")
+            .replacingOccurrences(of: ">", with: "&gt;")
+            .replacingOccurrences(of: "\"", with: "&quot;")
+    }
+
     /// Pure function: assembles a complete HTML document referencing resources by URL.
     /// Scripts and styles are loaded by the browser via file:// URLs rather than
     /// inlined, avoiding holding multi-megabyte JS libraries in memory.
@@ -15,16 +24,11 @@ enum HTMLBuilder {
         html += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
 
         if let href = baseHref {
-            let escaped = href
-                .replacingOccurrences(of: "&", with: "&amp;")
-                .replacingOccurrences(of: "<", with: "&lt;")
-                .replacingOccurrences(of: ">", with: "&gt;")
-                .replacingOccurrences(of: "\"", with: "&quot;")
-            html += "<base href=\"\(escaped)\">\n"
+            html += "<base href=\"\(escapeHTMLAttribute(href))\">\n"
         }
 
         for url in styleURLs {
-            html += "<link rel=\"stylesheet\" href=\"\(url.absoluteString)\">\n"
+            html += "<link rel=\"stylesheet\" href=\"\(escapeHTMLAttribute(url.absoluteString))\">\n"
         }
 
         html += "</head>\n<body>\n"
@@ -32,7 +36,7 @@ enum HTMLBuilder {
         html += "<script id=\"markdown-source\" type=\"text/plain\">\(markdownBase64)</script>\n"
 
         for url in scriptURLs {
-            html += "<script src=\"\(url.absoluteString)\"></script>\n"
+            html += "<script src=\"\(escapeHTMLAttribute(url.absoluteString))\"></script>\n"
         }
 
         html += "</body>\n</html>"

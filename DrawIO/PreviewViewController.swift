@@ -2,7 +2,8 @@ import Cocoa
 import Quartz
 import WebKit
 
-class PreviewViewController: NSViewController, QLPreviewingController, WKNavigationDelegate {
+@MainActor
+class PreviewViewController: NSViewController, @preconcurrency QLPreviewingController, WKNavigationDelegate {
 
     private var webView: WKWebView!
     private var contentSize: CGSize = .zero
@@ -31,7 +32,12 @@ class PreviewViewController: NSViewController, QLPreviewingController, WKNavigat
     func preparePreviewOfFile(at url: URL, completionHandler handler: @escaping (Error?) -> Void) {
         webView.appearance = AppearancePreference.drawio.nsAppearance
         do {
-            let xml = try String(contentsOf: url, encoding: .utf8)
+            let xml: String
+            if let utf8 = try? String(contentsOf: url, encoding: .utf8) {
+                xml = utf8
+            } else {
+                xml = try String(contentsOf: url, encoding: .isoLatin1)
+            }
             let bundle = Bundle(for: type(of: self))
 
             guard let viewerURL = bundle.url(forResource: "viewer-static.min", withExtension: "js") else {
@@ -90,8 +96,13 @@ class PreviewViewController: NSViewController, QLPreviewingController, WKNavigat
             return null;
         })()
         """
-        webView.evaluateJavaScript(js) { [weak self] result, _ in
+        webView.evaluateJavaScript(js) { [weak self] result, error in
             guard let self = self else { return }
+            #if DEBUG
+            if let error = error {
+                NSLog("QuickDrawio: JS evaluation error: %@", error.localizedDescription)
+            }
+            #endif
             if let json = result as? String {
                 self.applyDiagramSize(json: json)
             } else if attempts < 60 {
@@ -156,8 +167,13 @@ class PreviewViewController: NSViewController, QLPreviewingController, WKNavigat
 
     private func cleanupStaleTempFiles() {
         let tempDir = FileManager.default.temporaryDirectory
-        guard let files = try? FileManager.default.contentsOfDirectory(at: tempDir, includingPropertiesForKeys: nil) else { return }
+        guard let files = try? FileManager.default.contentsOfDirectory(
+            at: tempDir, includingPropertiesForKeys: [.creationDateKey]
+        ) else { return }
+        let cutoff = Date().addingTimeInterval(-300) // 5 minutes ago
         for file in files where file.lastPathComponent.hasPrefix(Self.tempFilePrefix) && file.pathExtension == "html" {
+            guard let created = try? file.resourceValues(forKeys: [.creationDateKey]).creationDate,
+                  created < cutoff else { continue }
             try? FileManager.default.removeItem(at: file)
         }
     }

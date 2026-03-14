@@ -83,6 +83,26 @@ class HTMLBuilderTests: XCTestCase {
         XCTAssertFalse(html.contains("<base"), "Should not include base tag when baseHref is nil")
     }
 
+    func testAssembleHTMLEscapesScriptURLs() {
+        let url = URL(string: "file:///path/with%22quotes&amps")!
+        let html = HTMLBuilder.assembleHTML(
+            markdownBase64: "",
+            scriptURLs: [url],
+            styleURLs: []
+        )
+        XCTAssertTrue(html.contains("&amp;"), "Ampersands in script URLs should be escaped")
+    }
+
+    func testAssembleHTMLEscapesStyleURLs() {
+        let url = URL(string: "file:///path/with%22quotes&amps")!
+        let html = HTMLBuilder.assembleHTML(
+            markdownBase64: "",
+            scriptURLs: [],
+            styleURLs: [url]
+        )
+        XCTAssertTrue(html.contains("&amp;"), "Ampersands in style URLs should be escaped")
+    }
+
     func testAssembleHTMLOrdersStylesBeforeScripts() {
         let styleURL = URL(fileURLWithPath: "/style.css")
         let scriptURL = URL(fileURLWithPath: "/script.js")
@@ -94,5 +114,42 @@ class HTMLBuilderTests: XCTestCase {
         let styleRange = html.range(of: "stylesheet")!
         let scriptRange = html.range(of: "<script src=")!
         XCTAssertTrue(styleRange.lowerBound < scriptRange.lowerBound, "Styles should come before scripts")
+    }
+
+    // MARK: - build(markdown:bundle:)
+
+    func testBuildProducesValidHTMLWithTestBundle() {
+        let bundle = Bundle(for: type(of: self))
+        let html = HTMLBuilder.build(markdown: "# Hello", bundle: bundle)
+
+        XCTAssertTrue(html.contains("<!DOCTYPE html>"), "Should produce valid HTML")
+        XCTAssertTrue(html.contains("markdown-source"), "Should contain markdown source element")
+        XCTAssertTrue(html.contains("render.js"), "Should reference render.js from bundle")
+        XCTAssertTrue(html.contains("style.css"), "Should reference style.css from bundle")
+    }
+
+    func testBuildBase64EncodesMarkdown() {
+        let bundle = Bundle(for: type(of: self))
+        let markdown = "# Test Content"
+        let html = HTMLBuilder.build(markdown: markdown, bundle: bundle)
+
+        let expected = Data(markdown.utf8).base64EncodedString()
+        XCTAssertTrue(html.contains(expected), "Markdown should be base64-encoded in output")
+    }
+
+    func testBuildWithMissingResourcesProducesValidHTML() {
+        // Bundle.main in tests is the xctest runner, which lacks QuickMark resources
+        let html = HTMLBuilder.build(markdown: "# Hello", bundle: Bundle.main)
+
+        XCTAssertTrue(html.contains("<!DOCTYPE html>"), "Should still produce valid HTML structure")
+        XCTAssertTrue(html.contains("markdown-source"), "Should still have markdown source element")
+        XCTAssertFalse(html.contains("render.js"), "Should not reference missing resources")
+    }
+
+    func testBuildIncludesBaseHref() {
+        let bundle = Bundle(for: type(of: self))
+        let html = HTMLBuilder.build(markdown: "test", bundle: bundle, baseHref: "file:///tmp/docs/")
+
+        XCTAssertTrue(html.contains("<base href=\"file:///tmp/docs/\">"), "Should include base href")
     }
 }

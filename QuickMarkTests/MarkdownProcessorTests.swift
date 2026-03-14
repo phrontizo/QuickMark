@@ -62,6 +62,44 @@ class MarkdownProcessorTests: XCTestCase {
         XCTAssertEqual(result, markdown, "Non-drawio images should be unchanged")
     }
 
+    // MARK: - readFile Encoding
+
+    func testReadFileWithUTF8() throws {
+        let tempDir = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: tempDir) }
+
+        let content = "# Héllo Wörld"
+        let file = tempDir.appendingPathComponent("test.md")
+        try content.write(to: file, atomically: true, encoding: .utf8)
+
+        let result = try MarkdownProcessor.readFile(at: file)
+        XCTAssertEqual(result, content, "UTF-8 content should be read correctly")
+    }
+
+    func testReadFileWithLatin1Fallback() throws {
+        let tempDir = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: tempDir) }
+
+        let content = "café résumé naïve"
+        let file = tempDir.appendingPathComponent("test.md")
+        try content.write(to: file, atomically: true, encoding: .isoLatin1)
+
+        let result = try MarkdownProcessor.readFile(at: file)
+        XCTAssertEqual(result, content, "Latin1 content should be read via fallback")
+    }
+
+    func testReadFileThrowsForMissingFile() {
+        let file = URL(fileURLWithPath: "/tmp/nonexistent-\(UUID().uuidString).md")
+        XCTAssertThrowsError(try MarkdownProcessor.readFile(at: file),
+                             "Should throw for missing file")
+    }
+
+    // MARK: - Multiple Drawio Refs
+
     func testResolveDrawioReferencesHandlesMultipleRefs() throws {
         let tempDir = FileManager.default.temporaryDirectory
             .appendingPathComponent(UUID().uuidString)
