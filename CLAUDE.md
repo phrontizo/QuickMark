@@ -1,5 +1,9 @@
 # QuickMark Development Notes
 
+## Git
+
+Commit locally when asked, but **never push** — pushing is always manual.
+
 ## WKWebView in Sandboxed Extensions
 
 - **`ENABLE_OUTGOING_NETWORK_CONNECTIONS: YES` is required** for WKWebView to function in a sandboxed QuickLook extension. The WebContent process uses IPC that the sandbox classifies as network activity. Removing this entitlement causes blank/white previews.
