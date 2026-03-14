@@ -32,9 +32,14 @@ enum AppearancePreference: String, CaseIterable {
     private static let drawioKey = "drawioAppearance"
 
     /// Path to the host app's UserDefaults plist.
+    /// Uses getpwuid to get the real home directory, since NSHomeDirectory()
+    /// returns the sandbox container path in extensions.
     private static let prefsPlistPath: String = {
-        let home = NSHomeDirectory()
-        return (home as NSString).appendingPathComponent("Library/Preferences/com.quickmark.QuickMark.plist")
+        if let pw = getpwuid(getuid()), let dir = pw.pointee.pw_dir {
+            let realHome = String(cString: dir)
+            return (realHome as NSString).appendingPathComponent("Library/Preferences/com.quickmark.QuickMark.plist")
+        }
+        return (NSHomeDirectory() as NSString).appendingPathComponent("Library/Preferences/com.quickmark.QuickMark.plist")
     }()
 
     /// Read a preference value. In the host app this reads UserDefaults.standard;
