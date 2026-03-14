@@ -21,7 +21,6 @@ struct ContentView: View {
                 .font(.body)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
-                .frame(maxWidth: 400)
 
             if hasChecked {
                 VStack(alignment: .leading, spacing: 6) {
@@ -53,9 +52,8 @@ struct ContentView: View {
             }
 
             Divider()
-                .frame(maxWidth: 300)
 
-            HStack(alignment: .top, spacing: 24) {
+            HStack(alignment: .top, spacing: 32) {
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Markdown")
                         .font(.callout)
@@ -81,22 +79,21 @@ struct ContentView: View {
                     featureRow("Auto-fit to window")
                     featureRow("Pinch-to-zoom")
                     featureRow("Multi-page diagrams")
+                    Spacer()
                     appearancePicker(selection: $drawioAppearance)
                         .onChange(of: drawioAppearance) { newValue in
                             AppearancePreference.drawio = newValue
                         }
                 }
             }
-
-            Spacer().frame(height: 4)
+            .fixedSize(horizontal: false, vertical: true)
 
             Text("MIT License \u{00B7} \u{00A9} 2026 Phrontizo Limited")
                 .font(.caption)
                 .foregroundStyle(.tertiary)
         }
-        .padding(.horizontal, 24)
-        .padding(.vertical, 32)
-        .frame(width: 460, height: 580)
+        .padding(32)
+        .frame(width: 480)
         .onAppear { checkExtensions() }
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
             checkExtensions()
@@ -119,7 +116,7 @@ struct ContentView: View {
             }
         }
         .pickerStyle(.segmented)
-        .frame(maxWidth: 180)
+        .labelsHidden()
         .padding(.top, 4)
     }
 

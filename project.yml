@@ -2,7 +2,7 @@ name: QuickMark
 options:
   bundleIdPrefix: com.quickmark
   deploymentTarget:
-    macOS: "12.0"
+    macOS: "26.0"
   xcodeVersion: "2630"
 settings:
   base:

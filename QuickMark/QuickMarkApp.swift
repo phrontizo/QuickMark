@@ -6,5 +6,6 @@ struct QuickMarkApp: App {
         WindowGroup {
             ContentView()
         }
+        .windowResizability(.contentSize)
     }
 }
