@@ -23,5 +23,8 @@ xcuserdata/
 .AppleDouble
 .LSOverride
 
+# Test files (external samples, unknown licenses)
+TestFiles/drawio-samples/
+
 # Node (for JS dependency management)
 node_modules/
