@@ -3,13 +3,15 @@ options:
   bundleIdPrefix: com.quickmark
   deploymentTarget:
     macOS: "12.0"
-  xcodeVersion: "15.0"
+  xcodeVersion: "2630"
 settings:
   base:
     SWIFT_VERSION: "5.9"
     CODE_SIGN_STYLE: Automatic
+    ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOL_EXTENSIONS: YES
     DEAD_CODE_STRIPPING: YES
     ENABLE_USER_SCRIPT_SANDBOXING: YES
+    STRING_CATALOG_GENERATE_SYMBOLS: YES
 schemes:
   QuickMark:
     build:
@@ -25,22 +27,35 @@ targets:
       - path: QuickMark
     info:
       path: QuickMark/Info.plist
+      properties:
+        UTImportedTypeDeclarations:
+          - UTTypeIdentifier: com.jgraph.drawio
+            UTTypeDescription: Draw.io Diagram
+            UTTypeConformsTo:
+              - public.xml
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - drawio
     dependencies:
       - target: QuickMarkPreview
+        embed: true
+        codeSign: true
+      - target: QuickMarkDrawio
         embed: true
         codeSign: true
   QuickMarkPreview:
     type: app-extension
     platform: macOS
     sources:
-      - path: QuickMarkPreview
+      - path: Markdown
         excludes:
           - "Resources/**"
-      - path: QuickMarkPreview/Resources
+      - path: Markdown/Resources
         buildPhase: resources
     info:
-      path: QuickMarkPreview/Info.plist
+      path: Markdown/Info.plist
       properties:
+        CFBundleDisplayName: Markdown Preview
         NSExtension:
           NSExtensionAttributes:
             QLSupportedContentTypes:
@@ -57,23 +72,62 @@ targets:
           NSExtensionPointIdentifier: com.apple.quicklook.preview
           NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).PreviewViewController
     entitlements:
-      path: QuickMarkPreview/QuickMarkPreview.entitlements
+      path: Markdown/Markdown.entitlements
       properties:
-        com.apple.security.app-sandbox: true
-        com.apple.security.network.client: true
-        com.apple.security.files.user-selected.read-only: true
         com.apple.security.temporary-exception.files.absolute-path.read-only:
           - /
     settings:
       PRODUCT_BUNDLE_IDENTIFIER: com.quickmark.QuickMark.QuickMarkPreview
+      ENABLE_APP_SANDBOX: YES
+      ENABLE_HARDENED_RUNTIME: YES
+      ENABLE_OUTGOING_NETWORK_CONNECTIONS: YES
+      ENABLE_USER_SELECTED_FILES: readonly
+  QuickMarkDrawio:
+    type: app-extension
+    platform: macOS
+    sources:
+      - path: DrawIO
+        excludes:
+          - "Resources/**"
+      - path: DrawIO/Resources
+        buildPhase: resources
+    info:
+      path: DrawIO/Info.plist
+      properties:
+        CFBundleDisplayName: Draw.io Preview
+        NSExtension:
+          NSExtensionAttributes:
+            QLSupportedContentTypes:
+              - com.jgraph.drawio
+          NSExtensionPointIdentifier: com.apple.quicklook.preview
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).PreviewViewController
+        UTImportedTypeDeclarations:
+          - UTTypeIdentifier: com.jgraph.drawio
+            UTTypeDescription: Draw.io Diagram
+            UTTypeConformsTo:
+              - public.xml
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - drawio
+    entitlements:
+      path: DrawIO/DrawIO.entitlements
+      properties:
+        com.apple.security.temporary-exception.files.absolute-path.read-only:
+          - /
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.quickmark.QuickMark.QuickMarkDrawio
+      ENABLE_APP_SANDBOX: YES
+      ENABLE_HARDENED_RUNTIME: YES
+      ENABLE_OUTGOING_NETWORK_CONNECTIONS: YES
+      ENABLE_USER_SELECTED_FILES: readonly
   QuickMarkTests:
     type: bundle.unit-test
     platform: macOS
     sources:
       - path: QuickMarkTests
-      - path: QuickMarkPreview/MarkdownProcessor.swift
+      - path: Markdown/MarkdownProcessor.swift
         type: file
-      - path: QuickMarkPreview/HTMLBuilder.swift
+      - path: Markdown/HTMLBuilder.swift
         type: file
     settings:
       GENERATE_INFOPLIST_FILE: YES

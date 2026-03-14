@@ -18,5 +18,25 @@
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>UTImportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.xml</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Draw.io Diagram</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.jgraph.drawio</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>drawio</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
 </dict>
 </plist>

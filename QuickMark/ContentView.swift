@@ -1,7 +1,8 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var extensionActive = false
+    @State private var markdownActive = false
+    @State private var drawioActive = false
     @State private var hasChecked = false
 
     var body: some View {
@@ -14,25 +15,24 @@ struct ContentView: View {
                 .font(.largeTitle)
                 .fontWeight(.semibold)
 
-            Text("A QuickLook preview extension for Markdown files.")
+            Text("QuickLook preview extensions for Markdown and draw.io files.")
                 .font(.body)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .frame(maxWidth: 400)
 
             if hasChecked {
-                HStack(spacing: 8) {
-                    Image(systemName: extensionActive ? "checkmark.circle.fill" : "xmark.circle.fill")
-                        .foregroundStyle(extensionActive ? .green : .orange)
-                    Text(extensionActive ? "Extension is active" : "Extension is not enabled")
-                        .font(.callout)
+                VStack(alignment: .leading, spacing: 6) {
+                    extensionRow("Markdown Preview", active: markdownActive)
+                    extensionRow("Draw.io Preview", active: drawioActive)
                 }
                 .padding(.top, 4)
 
-                if extensionActive {
-                    Text("Select a .md file in Finder and press Space to preview.")
+                if markdownActive && drawioActive {
+                    Text("Select a .md or .drawio file in Finder and press Space to preview.")
                         .font(.callout)
                         .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
                 } else {
                     Button("Open Extension Settings") {
                         NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.ExtensionsPreferences")!)
@@ -48,19 +48,31 @@ struct ContentView: View {
             Divider()
                 .frame(maxWidth: 300)
 
-            VStack(alignment: .leading, spacing: 6) {
-                Text("Renders")
-                    .font(.callout)
-                    .fontWeight(.medium)
-                featureRow("Syntax-highlighted code blocks")
-                featureRow("LaTeX math (inline & display)")
-                featureRow("Mermaid diagrams")
-                featureRow("Task lists & footnotes")
-                featureRow("Draw.io diagrams")
-                featureRow("Local images (SVG, PNG, JPEG, etc.)")
-                featureRow("Dark mode support")
+            HStack(alignment: .top, spacing: 24) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Markdown")
+                        .font(.callout)
+                        .fontWeight(.medium)
+                    featureRow("Syntax-highlighted code")
+                    featureRow("LaTeX math")
+                    featureRow("Mermaid diagrams")
+                    featureRow("Task lists & footnotes")
+                    featureRow("Embedded draw.io diagrams")
+                    featureRow("Local images")
+                    featureRow("Linked .md navigation")
+                }
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Draw.io")
+                        .font(.callout)
+                        .fontWeight(.medium)
+                    featureRow("All diagram types")
+                    featureRow("Auto-fit to window")
+                    featureRow("Pinch-to-zoom")
+                    featureRow("Multi-page diagrams")
+                    featureRow("Dark mode")
+                }
             }
-            .frame(maxWidth: 300, alignment: .leading)
 
             Spacer().frame(height: 4)
 
@@ -69,10 +81,19 @@ struct ContentView: View {
                 .foregroundStyle(.tertiary)
         }
         .padding(40)
-        .frame(width: 480, height: 520)
-        .onAppear { checkExtension() }
+        .frame(width: 520, height: 560)
+        .onAppear { checkExtensions() }
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
-            checkExtension()
+            checkExtensions()
+        }
+    }
+
+    private func extensionRow(_ name: String, active: Bool) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: active ? "checkmark.circle.fill" : "xmark.circle.fill")
+                .foregroundStyle(active ? .green : .orange)
+            Text(active ? "\(name) is active" : "\(name) is not enabled")
+                .font(.callout)
         }
     }
 
@@ -87,20 +108,22 @@ struct ContentView: View {
         }
     }
 
-    private func checkExtension() {
+    private func checkExtensions() {
         DispatchQueue.global(qos: .userInitiated).async {
-            let active = isExtensionRegistered()
+            let md = isExtensionRegistered("com.quickmark.QuickMark.QuickMarkPreview")
+            let dio = isExtensionRegistered("com.quickmark.QuickMark.QuickMarkDrawio")
             DispatchQueue.main.async {
-                extensionActive = active
+                markdownActive = md
+                drawioActive = dio
                 hasChecked = true
             }
         }
     }
 
-    private func isExtensionRegistered() -> Bool {
+    private func isExtensionRegistered(_ bundleId: String) -> Bool {
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/usr/bin/pluginkit")
-        process.arguments = ["-m", "-i", "com.quickmark.QuickMark.QuickMarkPreview"]
+        process.arguments = ["-m", "-i", bundleId]
         let pipe = Pipe()
         process.standardOutput = pipe
         process.standardError = Pipe()

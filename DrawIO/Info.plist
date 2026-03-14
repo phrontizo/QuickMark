@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>Draw.io Preview</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -24,16 +26,7 @@
 		<dict>
 			<key>QLSupportedContentTypes</key>
 			<array>
-				<string>public.markdown</string>
-				<string>net.daringfireball.markdown</string>
-				<string>net.ia.markdown</string>
-				<string>com.unknown.md</string>
-				<string>io.typora.markdown</string>
-				<string>com.nutstore.down</string>
-				<string>com.rstudio.rmarkdown</string>
-				<string>org.quarto.qmarkdown</string>
-				<string>org.apiblueprint.file</string>
-				<string>org.textbundle.package</string>
+				<string>com.jgraph.drawio</string>
 			</array>
 		</dict>
 		<key>NSExtensionPointIdentifier</key>
@@ -41,5 +34,25 @@
 		<key>NSExtensionPrincipalClass</key>
 		<string>$(PRODUCT_MODULE_NAME).PreviewViewController</string>
 	</dict>
+	<key>UTImportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.xml</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Draw.io Diagram</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.jgraph.drawio</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>drawio</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
 </dict>
 </plist>
