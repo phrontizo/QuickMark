@@ -22,9 +22,12 @@ TEXMATH_CSS_HASH="8d886ea32b7d159ca2fe4acf396d227a539edb0b474a3d166d6afb6da3834d
 
 HLJS_VER="11.11.1"
 HLJS_HASH="c4a399dd6f488bc97a3546e3476747b3e714c99c57b9473154c6fb8d259b9381"
+HLJS_LIGHT_HASH="3a9a5def8b9c311e5ae43abde85c63133185eed4f0d9f67fea4b00a8308cf066"
+HLJS_DARK_HASH="9f208d022102b1d0c7aebfecd8e42ca7997d5de636649d2b31ea63093d809019"
 
 KATEX_VER="0.16.21"
 KATEX_HASH="1b68624f8f96870496011de546fad33805b112e1e1c0f7fa675ede6baa47136c"
+KATEX_CSS_HASH="f787891b550d554c214aa8902f39ac46df2dbd48fdec500a2040a5dce1e8ab58"
 
 MERMAID_VER="11.4.1"
 MERMAID_HASH="3e2002bf333907fae7c1d6860bbc78f5da417bc70b64f3d2268581ba0ba8b96a"
@@ -96,8 +99,10 @@ curl -sfLo "$RESOURCES_DIR/highlight.min.js" \
 verify_hash "$RESOURCES_DIR/highlight.min.js" "$HLJS_HASH" "highlight.js"
 curl -sfLo "$TEMP_DIR/github.min.css" \
   "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@$HLJS_VER/build/styles/github.min.css"
+verify_hash "$TEMP_DIR/github.min.css" "$HLJS_LIGHT_HASH" "hljs-light-theme"
 curl -sfLo "$TEMP_DIR/github-dark.min.css" \
   "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@$HLJS_VER/build/styles/github-dark.min.css"
+verify_hash "$TEMP_DIR/github-dark.min.css" "$HLJS_DARK_HASH" "hljs-dark-theme"
 
 # Combine hljs themes into media-query-wrapped stylesheet
 {
@@ -115,6 +120,7 @@ KATEX_BASE="https://cdn.jsdelivr.net/npm/katex@$KATEX_VER/dist"
 curl -sfLo "$RESOURCES_DIR/katex.min.js" "$KATEX_BASE/katex.min.js"
 verify_hash "$RESOURCES_DIR/katex.min.js" "$KATEX_HASH" "katex.js"
 curl -sfLo "$TEMP_DIR/katex.min.css" "$KATEX_BASE/katex.min.css"
+verify_hash "$TEMP_DIR/katex.min.css" "$KATEX_CSS_HASH" "katex.css"
 
 # Download all fonts referenced in the CSS
 mkdir -p "$TEMP_DIR/fonts"

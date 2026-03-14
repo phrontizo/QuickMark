@@ -27,4 +27,36 @@ enum MxGraphHelper {
 
         return "<div class=\"mxgraph\" data-mxgraph=\"\(htmlEscaped)\"></div>"
     }
+
+    /// Builds a complete HTML document for rendering a draw.io diagram.
+    static func buildHTML(xml: String, viewerURL: URL) -> String {
+        let div = drawioDiv(xml: xml)
+        let escapedURL = viewerURL.absoluteString
+            .replacingOccurrences(of: "&", with: "&amp;")
+            .replacingOccurrences(of: "<", with: "&lt;")
+            .replacingOccurrences(of: ">", with: "&gt;")
+            .replacingOccurrences(of: "\"", with: "&quot;")
+
+        return """
+        <!DOCTYPE html>
+        <html>
+        <head>
+        <meta charset="utf-8">
+        <style>
+        html, body { margin: 0; padding: 0; }
+        @media (prefers-color-scheme: dark) {
+            body { background: #0d1117; }
+        }
+        </style>
+        </head>
+        <body>
+        \(div)
+        <script src="\(escapedURL)"></script>
+        <script>
+        if (typeof GraphViewer !== "undefined") { GraphViewer.processElements(); }
+        </script>
+        </body>
+        </html>
+        """
+    }
 }

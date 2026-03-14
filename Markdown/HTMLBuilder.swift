@@ -65,7 +65,7 @@ enum HTMLBuilder {
 
         let scriptURLs = scriptResources.compactMap { res -> URL? in
             guard let url = bundle.url(forResource: res.name, withExtension: res.ext) else {
-                NSLog("QuickMarkPreview: resource not found: \(res.name).\(res.ext)")
+                NSLog("QuickMarkPreview: resource not found: %@.%@", res.name, res.ext)
                 return nil
             }
             return url
@@ -73,7 +73,7 @@ enum HTMLBuilder {
 
         let styleURLs = styleResources.compactMap { res -> URL? in
             guard let url = bundle.url(forResource: res.name, withExtension: res.ext) else {
-                NSLog("QuickMarkPreview: resource not found: \(res.name).\(res.ext)")
+                NSLog("QuickMarkPreview: resource not found: %@.%@", res.name, res.ext)
                 return nil
             }
             return url

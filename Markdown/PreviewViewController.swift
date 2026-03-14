@@ -6,12 +6,14 @@ class PreviewViewController: NSViewController, QLPreviewingController {
 
     private var webView: WKWebView!
     private var tempFileURL: URL?
+    private static let tempFilePrefix = "quickmark-"
 
     deinit {
         if let temp = tempFileURL { try? FileManager.default.removeItem(at: temp) }
     }
 
     override func loadView() {
+        cleanupStaleTempFiles()
         let config = WKWebViewConfiguration()
         #if DEBUG
         config.preferences.setValue(true, forKey: "developerExtrasEnabled")
@@ -48,10 +50,18 @@ class PreviewViewController: NSViewController, QLPreviewingController {
         // file resources (images, SVGs) in a sandboxed extension.
         if let old = tempFileURL { try? FileManager.default.removeItem(at: old) }
         let tempFile = FileManager.default.temporaryDirectory
-            .appendingPathComponent("quickmark-\(UUID().uuidString).html")
+            .appendingPathComponent("\(Self.tempFilePrefix)\(UUID().uuidString).html")
         try html.write(to: tempFile, atomically: true, encoding: .utf8)
         tempFileURL = tempFile
         webView.loadFileURL(tempFile, allowingReadAccessTo: URL(fileURLWithPath: "/"))
+    }
+
+    private func cleanupStaleTempFiles() {
+        let tempDir = FileManager.default.temporaryDirectory
+        guard let files = try? FileManager.default.contentsOfDirectory(at: tempDir, includingPropertiesForKeys: nil) else { return }
+        for file in files where file.lastPathComponent.hasPrefix(Self.tempFilePrefix) && file.pathExtension == "html" {
+            try? FileManager.default.removeItem(at: file)
+        }
     }
 }
 
@@ -71,19 +81,25 @@ extension PreviewViewController: WKNavigationDelegate {
 
         decisionHandler(.cancel)
 
-        // Local .md links: render inline in the preview
-        if url.isFileURL && ["md", "markdown"].contains(url.pathExtension.lowercased()) {
+        switch LinkPolicy.action(for: url) {
+        case .renderMarkdown(let fileURL):
             do {
-                try renderMarkdown(at: url)
+                try renderMarkdown(at: fileURL)
             } catch {
                 NSLog("QuickMarkPreview: failed to render linked markdown: %@", error.localizedDescription)
             }
-            return
+        case .openExternal(let externalURL):
+            NSWorkspace.shared.open(externalURL)
+        case .block:
+            break
         }
+    }
 
-        // Only open http/https links externally (block custom URL schemes)
-        if let scheme = url.scheme?.lowercased(), ["http", "https"].contains(scheme) {
-            NSWorkspace.shared.open(url)
-        }
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        NSLog("QuickMarkPreview: navigation failed: %@", error.localizedDescription)
+    }
+
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        NSLog("QuickMarkPreview: provisional navigation failed: %@", error.localizedDescription)
     }
 }

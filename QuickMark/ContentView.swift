@@ -66,7 +66,7 @@ struct ContentView: View {
                     featureRow("Local images")
                     featureRow("Linked .md navigation")
                     appearancePicker(selection: $markdownAppearance)
-                        .onChange(of: markdownAppearance) { newValue in
+                        .onChange(of: markdownAppearance) { _, newValue in
                             AppearancePreference.markdown = newValue
                         }
                 }
@@ -81,7 +81,7 @@ struct ContentView: View {
                     featureRow("Multi-page diagrams")
                     Spacer()
                     appearancePicker(selection: $drawioAppearance)
-                        .onChange(of: drawioAppearance) { newValue in
+                        .onChange(of: drawioAppearance) { _, newValue in
                             AppearancePreference.drawio = newValue
                         }
                 }

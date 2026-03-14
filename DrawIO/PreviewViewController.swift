@@ -8,12 +8,14 @@ class PreviewViewController: NSViewController, QLPreviewingController, WKNavigat
     private var contentSize: CGSize = .zero
     private var completionHandler: ((Error?) -> Void)?
     private var tempFileURL: URL?
+    private static let tempFilePrefix = "quickdrawio-"
 
     deinit {
         if let temp = tempFileURL { try? FileManager.default.removeItem(at: temp) }
     }
 
     override func loadView() {
+        cleanupStaleTempFiles()
         let config = WKWebViewConfiguration()
         #if DEBUG
         config.preferences.setValue(true, forKey: "developerExtrasEnabled")
@@ -39,33 +41,11 @@ class PreviewViewController: NSViewController, QLPreviewingController, WKNavigat
                 return
             }
 
-            let div = MxGraphHelper.drawioDiv(xml: xml)
-
-            let html = """
-            <!DOCTYPE html>
-            <html>
-            <head>
-            <meta charset="utf-8">
-            <style>
-            html, body { margin: 0; padding: 0; }
-            @media (prefers-color-scheme: dark) {
-                body { background: #0d1117; }
-            }
-            </style>
-            </head>
-            <body>
-            \(div)
-            <script src="\(viewerURL.absoluteString)"></script>
-            <script>
-            if (typeof GraphViewer !== "undefined") { GraphViewer.processElements(); }
-            </script>
-            </body>
-            </html>
-            """
+            let html = MxGraphHelper.buildHTML(xml: xml, viewerURL: viewerURL)
 
             if let old = tempFileURL { try? FileManager.default.removeItem(at: old) }
             let tempFile = FileManager.default.temporaryDirectory
-                .appendingPathComponent("quickdrawio-\(UUID().uuidString).html")
+                .appendingPathComponent("\(Self.tempFilePrefix)\(UUID().uuidString).html")
             try html.write(to: tempFile, atomically: true, encoding: .utf8)
             tempFileURL = tempFile
             // Defer completion until diagram is measured so QuickLook
@@ -172,5 +152,13 @@ class PreviewViewController: NSViewController, QLPreviewingController, WKNavigat
         let viewH = view.bounds.height
         let scale = min(viewW / contentSize.width, viewH / contentSize.height, 1.0)
         webView.magnification = scale
+    }
+
+    private func cleanupStaleTempFiles() {
+        let tempDir = FileManager.default.temporaryDirectory
+        guard let files = try? FileManager.default.contentsOfDirectory(at: tempDir, includingPropertiesForKeys: nil) else { return }
+        for file in files where file.lastPathComponent.hasPrefix(Self.tempFilePrefix) && file.pathExtension == "html" {
+            try? FileManager.default.removeItem(at: file)
+        }
     }
 }
