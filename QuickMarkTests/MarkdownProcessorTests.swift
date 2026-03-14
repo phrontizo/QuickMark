@@ -24,7 +24,8 @@ class MarkdownProcessorTests: XCTestCase {
         let result = MarkdownProcessor.resolveDrawioReferences(markdown, baseURL: tempDir)
 
         XCTAssertFalse(result.contains("![My Diagram](diagram.drawio)"), "Image ref should be replaced")
-        XCTAssertTrue(result.contains("class=\"mxgraph\""), "Should contain draw.io div")
+        XCTAssertTrue(result.contains("```drawio\n"), "Should contain drawio fenced block")
+        XCTAssertTrue(result.contains(drawioContent), "Should contain the XML content")
         XCTAssertTrue(result.contains("End."), "Other content should be preserved")
     }
 
@@ -48,7 +49,7 @@ class MarkdownProcessorTests: XCTestCase {
         let markdown = "# Architecture\n\n![Diagram](arch.drawio)\n\nDone."
         let result = MarkdownProcessor.process(markdown, baseURL: tempDir)
 
-        XCTAssertTrue(result.contains("class=\"mxgraph\""), "process() should resolve drawio refs")
+        XCTAssertTrue(result.contains("```drawio\n"), "process() should resolve drawio refs as fenced blocks")
         XCTAssertTrue(result.contains("# Architecture"), "Other content should be preserved")
         XCTAssertFalse(result.contains("![Diagram]"), "Drawio ref should be replaced")
     }
@@ -78,7 +79,7 @@ class MarkdownProcessorTests: XCTestCase {
         XCTAssertFalse(result.contains("![A]"), "First ref should be replaced")
         XCTAssertFalse(result.contains("![B]"), "Second ref should be replaced")
         XCTAssertTrue(result.contains("text"), "Surrounding text should be preserved")
-        let divCount = result.components(separatedBy: "class=\"mxgraph\"").count - 1
-        XCTAssertEqual(divCount, 2, "Should have two mxgraph divs")
+        let fenceCount = result.components(separatedBy: "```drawio\n").count - 1
+        XCTAssertEqual(fenceCount, 2, "Should have two drawio fenced blocks")
     }
 }

@@ -33,6 +33,9 @@ struct ContentView: View {
                         .font(.callout)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
+                    Text("You can quit this app \u{2014} the extensions will continue to work.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 } else {
                     Button("Open Extension Settings") {
                         if let url = URL(string: "x-apple.systempreferences:com.apple.ExtensionsPreferences") {
@@ -78,16 +81,13 @@ struct ContentView: View {
 
             Spacer().frame(height: 4)
 
-            Text("You can quit this app \u{2014} the extensions will continue to work.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-
             Text("MIT License \u{00B7} \u{00A9} 2026 Phrontizo Limited")
                 .font(.caption)
                 .foregroundStyle(.tertiary)
         }
-        .padding(40)
-        .frame(width: 520, height: 560)
+        .padding(.horizontal, 24)
+        .padding(.vertical, 32)
+        .frame(width: 460, height: 580)
         .onAppear { checkExtensions() }
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
             checkExtensions()

@@ -86,6 +86,7 @@ targets:
       PRODUCT_BUNDLE_IDENTIFIER: com.quickmark.QuickMark.QuickMarkPreview
       ENABLE_APP_SANDBOX: YES
       ENABLE_HARDENED_RUNTIME: YES
+      ENABLE_OUTGOING_NETWORK_CONNECTIONS: YES
       ENABLE_USER_SELECTED_FILES: readonly
   QuickMarkDrawio:
     type: app-extension
@@ -124,6 +125,7 @@ targets:
       PRODUCT_BUNDLE_IDENTIFIER: com.quickmark.QuickMark.QuickMarkDrawio
       ENABLE_APP_SANDBOX: YES
       ENABLE_HARDENED_RUNTIME: YES
+      ENABLE_OUTGOING_NETWORK_CONNECTIONS: YES
       ENABLE_USER_SELECTED_FILES: readonly
   QuickMarkTests:
     type: bundle.unit-test
@@ -137,5 +139,13 @@ targets:
         type: file
       - path: Markdown/Resources
         buildPhase: resources
+    entitlements:
+      path: QuickMarkTests/QuickMarkTests.entitlements
+      properties:
+        com.apple.security.temporary-exception.files.absolute-path.read-only:
+          - /
     settings:
       GENERATE_INFOPLIST_FILE: YES
+      ENABLE_APP_SANDBOX: YES
+      ENABLE_HARDENED_RUNTIME: YES
+      ENABLE_OUTGOING_NETWORK_CONNECTIONS: YES

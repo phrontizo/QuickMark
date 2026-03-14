@@ -160,6 +160,44 @@ class RenderingTests: XCTestCase, WKNavigationDelegate {
         XCTAssertTrue(rendered, "Draw.io viewer should render an SVG from sample.drawio")
     }
 
+    func testDrawioEmbeddedInMarkdownRenders() throws {
+        let testFilesDir = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("TestFiles")
+
+        let markdown = try String(contentsOf: testFilesDir.appendingPathComponent("drawio-test.md"), encoding: .utf8)
+        let processed = MarkdownProcessor.process(markdown, baseURL: testFilesDir)
+
+        // Verify the preprocessor produced a drawio fenced block
+        XCTAssertTrue(processed.contains("```drawio\n"), "Preprocessor should create drawio fence block")
+
+        let bundle = Bundle(for: type(of: self))
+        let html = HTMLBuilder.build(markdown: processed, bundle: bundle)
+
+        let tempFile = FileManager.default.temporaryDirectory
+            .appendingPathComponent("test-drawio-md-\(UUID().uuidString).html")
+        try html.write(to: tempFile, atomically: true, encoding: .utf8)
+        addTeardownBlock { try? FileManager.default.removeItem(at: tempFile) }
+
+        navigationExpectation = expectation(description: "Drawio-in-markdown page loaded")
+        webView.loadFileURL(tempFile, allowingReadAccessTo: URL(fileURLWithPath: "/"))
+        wait(for: [navigationExpectation!], timeout: 10)
+
+        // The drawio fence rule should produce a .mxgraph div, then GraphViewer renders it
+        var rendered = false
+        for _ in 0..<40 {
+            let hasSVG = evaluateJS(
+                "document.querySelector('.mxgraph svg') !== null || document.querySelector('svg') !== null"
+            ) as? Bool
+            if hasSVG == true { rendered = true; break }
+            let waitExp = expectation(description: "poll wait")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { waitExp.fulfill() }
+            wait(for: [waitExp], timeout: 1)
+        }
+        XCTAssertTrue(rendered, "Draw.io diagram embedded in markdown should render as SVG")
+    }
+
     // MARK: - Test File Rendering
 
     func testMultipleTestFilesRender() throws {

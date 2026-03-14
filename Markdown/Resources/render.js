@@ -30,15 +30,26 @@
         md.use(texmath, { engine: katex, delimiters: "dollars", katexOptions: { throwOnError: false } });
     }
 
-    // Custom fence rule: render mermaid blocks as divs instead of <pre><code>
-    // HTML-escape the content to prevent injection; mermaid reads textContent
-    // so it sees the original unescaped text (arrows like --> work correctly).
+    // Custom fence rules: render mermaid and drawio blocks as divs instead of <pre><code>
     var defaultFence = md.renderer.rules.fence.bind(md.renderer.rules);
     md.renderer.rules.fence = function(tokens, idx, options, env, self) {
         var token = tokens[idx];
-        if (token.info.trim() === "mermaid") {
+        var info = token.info.trim();
+
+        if (info === "mermaid") {
+            // HTML-escape the content to prevent injection; mermaid reads textContent
+            // so it sees the original unescaped text (arrows like --> work correctly).
             return '<div class="mermaid">' + md.utils.escapeHtml(token.content) + "</div>\n";
         }
+
+        if (info === "drawio") {
+            // Build draw.io viewer div: JSON-encode the XML, then HTML-escape for the attribute
+            var xml = token.content.replace(/\n$/, "");
+            var data = JSON.stringify({highlight: "#0000ff", nav: true, resize: true, xml: xml});
+            var escaped = data.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+            return '<div class="mxgraph" data-mxgraph="' + escaped + '"></div>\n';
+        }
+
         return defaultFence(tokens, idx, options, env, self);
     };
 

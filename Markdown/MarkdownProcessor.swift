@@ -26,9 +26,9 @@ enum MarkdownProcessor {
             }
 
             let fullRange = match.range(at: 0)
-            let div = MxGraphHelper.drawioDiv(xml: xml)
+            let fencedBlock = "```drawio\n\(xml)\n```"
             guard let swiftRange = Range(fullRange, in: result) else { continue }
-            result.replaceSubrange(swiftRange, with: div)
+            result.replaceSubrange(swiftRange, with: fencedBlock)
         }
 
         return result

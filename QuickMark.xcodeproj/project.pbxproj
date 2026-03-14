@@ -103,6 +103,7 @@
 		95FDD838D2D05CF73EC9616B /* HTMLBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLBuilder.swift; sourceTree = "<group>"; };
 		982FCB0E3433F1ABDD5C4FF8 /* PreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
 		9E1D84ECE67AD6DA934BCD3D /* viewer-static.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "viewer-static.min.js"; sourceTree = "<group>"; };
+		A136084A2324C29249FE2BF7 /* QuickMarkTests.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = QuickMarkTests.entitlements; sourceTree = "<group>"; };
 		A1F48449713EC8C69848C1F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		A3E88DDF1B9500E5AAF7A593 /* MarkdownProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownProcessor.swift; sourceTree = "<group>"; };
 		A8B67C7C6C85877EF496BD49 /* hljs-themes.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "hljs-themes.css"; sourceTree = "<group>"; };
@@ -171,6 +172,7 @@
 				BB04BBF826383A2C078A9960 /* HTMLBuilderTests.swift */,
 				8D4AF0F19C5C0CEB2D631E7E /* MarkdownProcessorTests.swift */,
 				BA6417AEAB51F11D1D0B25CB /* MxGraphHelperTests.swift */,
+				A136084A2324C29249FE2BF7 /* QuickMarkTests.entitlements */,
 				B7F0CFCB2514CFA756DBFA7F /* RenderingTests.swift */,
 			);
 			path = QuickMarkTests;
@@ -542,6 +544,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				INFOPLIST_FILE = DrawIO/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -558,7 +561,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_ENTITLEMENTS = QuickMarkTests/QuickMarkTests.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -577,6 +584,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				INFOPLIST_FILE = DrawIO/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -661,7 +669,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_ENTITLEMENTS = QuickMarkTests/QuickMarkTests.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -710,6 +722,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				INFOPLIST_FILE = Markdown/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -729,6 +742,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				INFOPLIST_FILE = Markdown/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
