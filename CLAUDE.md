@@ -22,6 +22,10 @@ Do NOT re-add CSP or remove the network entitlement — both break WKWebView ren
 
 Draw.io diagrams referenced as `![alt](file.drawio)` are converted to ` ```drawio` fenced code blocks by `MarkdownProcessor`. The `render.js` fence rule then creates the `<div class="mxgraph">` at render time. This is necessary because `html: false` would escape raw HTML divs injected pre-rendering.
 
+## SharedResources
+
+`SharedResources/` contains resources used by multiple extension targets (currently `viewer-static.min.js` for Markdown and DrawIO). Each target references the single copy in `project.yml` — Xcode bundles it into each extension at build time. Do NOT duplicate shared resources into individual extension `Resources/` directories.
+
 ## Testing
 
 - Tests run under App Sandbox with the same entitlements as the extensions (`ENABLE_APP_SANDBOX`, `ENABLE_HARDENED_RUNTIME`, `ENABLE_OUTGOING_NETWORK_CONNECTIONS`, read-only `/`)
