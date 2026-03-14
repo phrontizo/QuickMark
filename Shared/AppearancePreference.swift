@@ -35,7 +35,7 @@ enum AppearancePreference: String, CaseIterable {
     /// Path to the host app's UserDefaults plist.
     /// Uses getpwuid to get the real home directory, since NSHomeDirectory()
     /// returns the sandbox container path in extensions.
-    private static let prefsPlistPath: String = {
+    static let prefsPlistPath: String = {
         if let pw = getpwuid(getuid()), let dir = pw.pointee.pw_dir {
             let realHome = String(cString: dir)
             return (realHome as NSString).appendingPathComponent("Library/Preferences/com.quickmark.QuickMark.plist")

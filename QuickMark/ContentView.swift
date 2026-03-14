@@ -176,6 +176,9 @@ struct ContentView: View {
             let output = String(data: data, encoding: .utf8) ?? ""
             return !output.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         } catch {
+            #if DEBUG
+            NSLog("QuickMark: pluginkit check failed for %@: %@", bundleId, error.localizedDescription)
+            #endif
             return false
         }
     }

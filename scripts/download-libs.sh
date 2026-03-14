@@ -140,16 +140,12 @@ curl -sfLo "$RESOURCES_DIR/mermaid.min.js" \
 verify_hash "$RESOURCES_DIR/mermaid.min.js" "$MERMAID_HASH" "mermaid.js"
 echo "  mermaid@$MERMAID_VER ✓"
 
-# --- draw.io viewer ---
-curl -sfLo "$RESOURCES_DIR/viewer-static.min.js" \
+# --- draw.io viewer (shared between Markdown and DrawIO extensions) ---
+mkdir -p "SharedResources"
+curl -sfLo "SharedResources/viewer-static.min.js" \
   "https://viewer.diagrams.net/js/viewer-static.min.js"
-verify_hash "$RESOURCES_DIR/viewer-static.min.js" "$DRAWIO_VIEWER_HASH" "viewer-static.js"
+verify_hash "SharedResources/viewer-static.min.js" "$DRAWIO_VIEWER_HASH" "viewer-static.js"
 echo "  draw.io viewer ✓"
-
-# Copy viewer-static to DrawIO extension
-mkdir -p "DrawIO/Resources"
-cp "$RESOURCES_DIR/viewer-static.min.js" "DrawIO/Resources/viewer-static.min.js"
-echo "  Copied viewer-static.min.js to DrawIO/Resources/ ✓"
 
 # Copy highlight.js to Structured extension
 mkdir -p "Structured/Resources"

@@ -3,33 +3,26 @@ import Foundation
 enum MarkdownProcessor {
 
     /// Pattern matches `![alt](path.drawio)` in markdown
-    private static let drawioPattern = try! NSRegularExpression(
-        pattern: #"!\[([^\]]*)\]\(([^)]+\.drawio)\)"#,
-        options: []
-    )
+    private static let drawioPattern = #/!\[([^\]]*)\]\(([^)]+\.drawio)\)/#
 
     /// Replaces `![alt](path.drawio)` references with draw.io viewer divs.
     /// Reads the .drawio XML file from disk and embeds it inline.
     static func resolveDrawioReferences(_ markdown: String, baseURL: URL) -> String {
-        let nsMarkdown = markdown as NSString
-        let matches = drawioPattern.matches(in: markdown, range: NSRange(location: 0, length: nsMarkdown.length))
+        let matches = Array(markdown.matches(of: drawioPattern))
 
         var result = markdown
         // Process in reverse: match ranges are computed against the original
         // string, so replacing from the end keeps earlier ranges valid.
         for match in matches.reversed() {
-            let pathRange = match.range(at: 2)
-            let relativePath = nsMarkdown.substring(with: pathRange)
+            let relativePath = String(match.output.2)
             let fileURL = baseURL.appendingPathComponent(relativePath)
 
             guard let xml = try? String(contentsOf: fileURL, encoding: .utf8) else {
                 continue // Leave the reference as-is if file can't be read
             }
 
-            let fullRange = match.range(at: 0)
             let fencedBlock = "```drawio\n\(xml)\n```"
-            guard let swiftRange = Range(fullRange, in: result) else { continue }
-            result.replaceSubrange(swiftRange, with: fencedBlock)
+            result.replaceSubrange(match.range, with: fencedBlock)
         }
 
         return result

@@ -64,6 +64,9 @@ targets:
           - "Resources/**"
       - path: Markdown/Resources
         buildPhase: resources
+      - path: SharedResources/viewer-static.min.js
+        buildPhase: resources
+        type: file
     info:
       path: Markdown/Info.plist
       properties:
@@ -102,8 +105,9 @@ targets:
       - path: DrawIO
         excludes:
           - "Resources/**"
-      - path: DrawIO/Resources
+      - path: SharedResources/viewer-static.min.js
         buildPhase: resources
+        type: file
     info:
       path: DrawIO/Info.plist
       properties:
@@ -186,6 +190,9 @@ targets:
         type: file
       - path: Markdown/Resources
         buildPhase: resources
+      - path: SharedResources/viewer-static.min.js
+        buildPhase: resources
+        type: file
       - path: Structured/PreviewViewController.swift
         type: file
       - path: Structured/Resources/structured-style.css

@@ -100,6 +100,47 @@ class MarkdownProcessorTests: XCTestCase {
 
     // MARK: - Multiple Drawio Refs
 
+    // MARK: - Malformed Draw.io XML
+
+    func testResolveDrawioReferencesMalformedXMLPassesThrough() throws {
+        let tempDir = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: tempDir) }
+
+        // Write malformed XML (unclosed tags, invalid structure)
+        let malformedXML = "<mxfile><diagram><unclosed"
+        try malformedXML.write(
+            to: tempDir.appendingPathComponent("broken.drawio"), atomically: true, encoding: .utf8)
+
+        let markdown = "![Broken](broken.drawio)"
+        let result = MarkdownProcessor.resolveDrawioReferences(markdown, baseURL: tempDir)
+
+        // Malformed XML should still be embedded — the viewer handles parse errors
+        XCTAssertTrue(result.contains("```drawio\n"), "Malformed XML should still produce a fenced block")
+        XCTAssertTrue(result.contains(malformedXML), "Malformed XML content should be embedded as-is")
+        XCTAssertFalse(result.contains("![Broken]"), "Image ref should be replaced even for malformed XML")
+    }
+
+    func testResolveDrawioReferencesEmptyFilePassesThrough() throws {
+        let tempDir = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: tempDir) }
+
+        // Write an empty file
+        try "".write(
+            to: tempDir.appendingPathComponent("empty.drawio"), atomically: true, encoding: .utf8)
+
+        let markdown = "![Empty](empty.drawio)"
+        let result = MarkdownProcessor.resolveDrawioReferences(markdown, baseURL: tempDir)
+
+        XCTAssertTrue(result.contains("```drawio\n"), "Empty file should still produce a fenced block")
+        XCTAssertFalse(result.contains("![Empty]"), "Image ref should be replaced")
+    }
+
+    // MARK: - Multiple Drawio Refs
+
     func testResolveDrawioReferencesHandlesMultipleRefs() throws {
         let tempDir = FileManager.default.temporaryDirectory
             .appendingPathComponent(UUID().uuidString)

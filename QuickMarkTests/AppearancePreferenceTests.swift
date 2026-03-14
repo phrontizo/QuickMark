@@ -68,6 +68,53 @@ class AppearancePreferenceTests: XCTestCase {
         XCTAssertEqual(appearance?.name, .darkAqua)
     }
 
+    // MARK: - Plist Fallback
+
+    func testPlistFallbackWhenUserDefaultsMissing() {
+        // Clear the key from UserDefaults so the first read path misses
+        let key = "markdownAppearance"
+        UserDefaults.standard.removeObject(forKey: key)
+
+        // Write directly to the host app's plist file (simulates extension read path)
+        let plistPath = AppearancePreference.prefsPlistPath
+        let dict = NSMutableDictionary(contentsOfFile: plistPath) ?? NSMutableDictionary()
+        let originalValue = dict[key] as? String
+        dict[key] = "dark"
+        dict.write(toFile: plistPath, atomically: true)
+
+        let result = AppearancePreference.markdown
+        XCTAssertEqual(result, .dark, "Should read from plist when UserDefaults has no value")
+
+        // Restore original state
+        if let originalValue = originalValue {
+            dict[key] = originalValue
+        } else {
+            dict.removeObject(forKey: key)
+        }
+        dict.write(toFile: plistPath, atomically: true)
+    }
+
+    func testPlistFallbackReturnsSystemForInvalidValue() {
+        let key = "markdownAppearance"
+        UserDefaults.standard.removeObject(forKey: key)
+
+        let plistPath = AppearancePreference.prefsPlistPath
+        let dict = NSMutableDictionary(contentsOfFile: plistPath) ?? NSMutableDictionary()
+        let originalValue = dict[key] as? String
+        dict[key] = "invalid_value"
+        dict.write(toFile: plistPath, atomically: true)
+
+        let result = AppearancePreference.markdown
+        XCTAssertEqual(result, .system, "Invalid plist value should fall back to .system")
+
+        if let originalValue = originalValue {
+            dict[key] = originalValue
+        } else {
+            dict.removeObject(forKey: key)
+        }
+        dict.write(toFile: plistPath, atomically: true)
+    }
+
     // MARK: - WKWebView Appearance
 
     func testWebViewAppearanceAffectsMediaQuery() throws {
