@@ -18,6 +18,7 @@ class PreviewViewController: NSViewController, QLPreviewingController {
         #endif
         webView = WKWebView(frame: NSRect(x: 0, y: 0, width: 800, height: 600), configuration: config)
         webView.navigationDelegate = self
+        webView.appearance = AppearancePreference.markdown.nsAppearance
         self.view = webView
     }
 

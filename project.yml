@@ -30,6 +30,7 @@ targets:
     platform: macOS
     sources:
       - path: QuickMark
+      - path: Shared
     info:
       path: QuickMark/Info.plist
       properties:

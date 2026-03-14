@@ -21,6 +21,7 @@ class PreviewViewController: NSViewController, QLPreviewingController, WKNavigat
         webView = WKWebView(frame: NSRect(x: 0, y: 0, width: 800, height: 600), configuration: config)
         webView.navigationDelegate = self
         webView.allowsMagnification = true
+        webView.appearance = AppearancePreference.drawio.nsAppearance
         // Hidden until content is measured and scaled to prevent flash
         webView.alphaValue = 0
         self.view = webView

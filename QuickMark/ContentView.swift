@@ -4,6 +4,8 @@ struct ContentView: View {
     @State private var markdownActive = false
     @State private var drawioActive = false
     @State private var hasChecked = false
+    @State private var markdownAppearance = AppearancePreference.markdown
+    @State private var drawioAppearance = AppearancePreference.drawio
 
     var body: some View {
         VStack(spacing: 16) {
@@ -65,6 +67,10 @@ struct ContentView: View {
                     featureRow("Embedded draw.io diagrams")
                     featureRow("Local images")
                     featureRow("Linked .md navigation")
+                    appearancePicker(selection: $markdownAppearance)
+                        .onChange(of: markdownAppearance) { newValue in
+                            AppearancePreference.markdown = newValue
+                        }
                 }
 
                 VStack(alignment: .leading, spacing: 6) {
@@ -75,7 +81,10 @@ struct ContentView: View {
                     featureRow("Auto-fit to window")
                     featureRow("Pinch-to-zoom")
                     featureRow("Multi-page diagrams")
-                    featureRow("Dark mode")
+                    appearancePicker(selection: $drawioAppearance)
+                        .onChange(of: drawioAppearance) { newValue in
+                            AppearancePreference.drawio = newValue
+                        }
                 }
             }
 
@@ -101,6 +110,17 @@ struct ContentView: View {
             Text(active ? "\(name) is active" : "\(name) is not enabled")
                 .font(.callout)
         }
+    }
+
+    private func appearancePicker(selection: Binding<AppearancePreference>) -> some View {
+        Picker("Appearance", selection: selection) {
+            ForEach(AppearancePreference.allCases, id: \.self) { pref in
+                Text(pref.displayName).tag(pref)
+            }
+        }
+        .pickerStyle(.segmented)
+        .frame(maxWidth: 180)
+        .padding(.top, 4)
     }
 
     private func featureRow(_ text: String) -> some View {
