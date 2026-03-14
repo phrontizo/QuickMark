@@ -17,8 +17,13 @@ schemes:
     build:
       targets:
         QuickMark: all
+        QuickMarkTests: [test]
     run:
       config: Debug
+    test:
+      config: Debug
+      targets:
+        - QuickMarkTests
 targets:
   QuickMark:
     type: application
@@ -47,6 +52,7 @@ targets:
     type: app-extension
     platform: macOS
     sources:
+      - path: Shared
       - path: Markdown
         excludes:
           - "Resources/**"
@@ -80,12 +86,12 @@ targets:
       PRODUCT_BUNDLE_IDENTIFIER: com.quickmark.QuickMark.QuickMarkPreview
       ENABLE_APP_SANDBOX: YES
       ENABLE_HARDENED_RUNTIME: YES
-      ENABLE_OUTGOING_NETWORK_CONNECTIONS: YES
       ENABLE_USER_SELECTED_FILES: readonly
   QuickMarkDrawio:
     type: app-extension
     platform: macOS
     sources:
+      - path: Shared
       - path: DrawIO
         excludes:
           - "Resources/**"
@@ -118,16 +124,18 @@ targets:
       PRODUCT_BUNDLE_IDENTIFIER: com.quickmark.QuickMark.QuickMarkDrawio
       ENABLE_APP_SANDBOX: YES
       ENABLE_HARDENED_RUNTIME: YES
-      ENABLE_OUTGOING_NETWORK_CONNECTIONS: YES
       ENABLE_USER_SELECTED_FILES: readonly
   QuickMarkTests:
     type: bundle.unit-test
     platform: macOS
     sources:
+      - path: Shared
       - path: QuickMarkTests
       - path: Markdown/MarkdownProcessor.swift
         type: file
       - path: Markdown/HTMLBuilder.swift
         type: file
+      - path: Markdown/Resources
+        buildPhase: resources
     settings:
       GENERATE_INFOPLIST_FILE: YES

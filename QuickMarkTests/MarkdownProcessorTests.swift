@@ -2,23 +2,6 @@ import XCTest
 
 class MarkdownProcessorTests: XCTestCase {
 
-    func testDrawioDivWrapsXmlInMxgraphDiv() {
-        let xml = "<mxfile><diagram>test</diagram></mxfile>"
-        let result = MarkdownProcessor.drawioDiv(xml: xml)
-
-        XCTAssertTrue(result.contains("class=\"mxgraph\""), "Should have mxgraph class")
-        XCTAssertTrue(result.contains("data-mxgraph="), "Should have data attribute")
-        XCTAssertTrue(result.contains("mxfile"), "Should reference the XML content")
-    }
-
-    func testDrawioDivEscapesQuotesInXml() {
-        let xml = "<mxfile attr=\"value\">content</mxfile>"
-        let result = MarkdownProcessor.drawioDiv(xml: xml)
-
-        XCTAssertTrue(result.contains("mxgraph"), "Should produce mxgraph div")
-        XCTAssertFalse(result.contains("attr=\"value\">"), "Raw quotes must be escaped")
-    }
-
     func testDrawioDivMissingFileReturnsUnchanged() {
         let markdown = "![diagram](nonexistent.drawio)"
         let baseURL = URL(fileURLWithPath: "/tmp/empty")
@@ -43,6 +26,31 @@ class MarkdownProcessorTests: XCTestCase {
         XCTAssertFalse(result.contains("![My Diagram](diagram.drawio)"), "Image ref should be replaced")
         XCTAssertTrue(result.contains("class=\"mxgraph\""), "Should contain draw.io div")
         XCTAssertTrue(result.contains("End."), "Other content should be preserved")
+    }
+
+    func testProcessReturnsUnchangedMarkdownWithoutDrawio() {
+        let markdown = "# Hello\n\nSome text with ![photo](cat.png) and **bold**."
+        let baseURL = URL(fileURLWithPath: "/tmp")
+        let result = MarkdownProcessor.process(markdown, baseURL: baseURL)
+
+        XCTAssertEqual(result, markdown, "Markdown without .drawio refs should be unchanged")
+    }
+
+    func testProcessResolvesDrawioReferences() throws {
+        let tempDir = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: tempDir) }
+
+        let xml = "<mxfile><diagram>test</diagram></mxfile>"
+        try xml.write(to: tempDir.appendingPathComponent("arch.drawio"), atomically: true, encoding: .utf8)
+
+        let markdown = "# Architecture\n\n![Diagram](arch.drawio)\n\nDone."
+        let result = MarkdownProcessor.process(markdown, baseURL: tempDir)
+
+        XCTAssertTrue(result.contains("class=\"mxgraph\""), "process() should resolve drawio refs")
+        XCTAssertTrue(result.contains("# Architecture"), "Other content should be preserved")
+        XCTAssertFalse(result.contains("![Diagram]"), "Drawio ref should be replaced")
     }
 
     func testResolveDrawioReferencesIgnoresNonDrawioImages() {

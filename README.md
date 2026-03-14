@@ -41,7 +41,7 @@ macOS has no built-in Markdown preview. QuickLook shows `.md` files as plain tex
 xcodegen generate
 
 # Download JS/CSS dependencies (run once)
-./scripts/fetch-resources.sh
+./scripts/download-libs.sh
 
 # Open in Xcode and build
 open QuickMark.xcodeproj
@@ -57,10 +57,9 @@ QuickMark is a macOS app bundle containing two QuickLook preview extensions:
 
 1. **PreviewViewController** reads the file from disk
 2. **MarkdownProcessor** resolves draw.io references (inlined as viewer divs)
-3. **HTMLBuilder** assembles a self-contained HTML page with all JS/CSS inlined
-4. A `<base>` tag is injected so relative image paths resolve correctly
-5. The HTML is loaded via `WKWebView.loadFileURL` for local file access
-6. **render.js** (client-side) parses the Markdown with markdown-it and its plugins
+3. **HTMLBuilder** assembles an HTML page referencing bundled JS/CSS by URL, with a `<base>` tag for relative image paths
+4. The HTML is loaded via `WKWebView.loadFileURL` for local file access
+5. **render.js** (client-side) parses the Markdown with markdown-it and its plugins
 
 **Draw.io Preview** — when Finder invokes QuickLook on a `.drawio` file:
 
@@ -74,6 +73,7 @@ All rendering happens locally with no network requests.
 
 ```
 QuickMark/                  # Host app (SwiftUI)
+Shared/                     # Code shared between both extensions
 Markdown/                   # Markdown QuickLook extension
   ├── PreviewViewController.swift
   ├── MarkdownProcessor.swift

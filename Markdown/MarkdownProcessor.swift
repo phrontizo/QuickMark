@@ -1,31 +1,6 @@
 import Foundation
 
-struct MarkdownProcessor {
-
-    /// Creates an HTML div that the draw.io viewer will render.
-    /// Escaping strategy:
-    /// 1. JSON-escape the XML (escape \, ", newlines, tabs)
-    /// 2. Build the JSON object string
-    /// 3. HTML-attribute-escape the JSON string (escape & and ")
-    static func drawioDiv(xml: String) -> String {
-        // Step 1: JSON-escape the XML for embedding as a JSON string value
-        let jsonEscaped = xml
-            .replacingOccurrences(of: "\\", with: "\\\\")
-            .replacingOccurrences(of: "\"", with: "\\\"")
-            .replacingOccurrences(of: "\n", with: "\\n")
-            .replacingOccurrences(of: "\r", with: "\\r")
-            .replacingOccurrences(of: "\t", with: "\\t")
-
-        // Step 2: Build JSON object
-        let json = "{\"highlight\":\"#0000ff\",\"nav\":true,\"resize\":true,\"xml\":\"\(jsonEscaped)\"}"
-
-        // Step 3: HTML-attribute-escape the JSON for use in data-mxgraph="..."
-        let htmlEscaped = json
-            .replacingOccurrences(of: "&", with: "&amp;")
-            .replacingOccurrences(of: "\"", with: "&quot;")
-
-        return "<div class=\"mxgraph\" data-mxgraph=\"\(htmlEscaped)\"></div>"
-    }
+enum MarkdownProcessor {
 
     /// Pattern matches `![alt](path.drawio)` in markdown
     private static let drawioPattern = try! NSRegularExpression(
@@ -51,8 +26,8 @@ struct MarkdownProcessor {
             }
 
             let fullRange = match.range(at: 0)
-            let div = drawioDiv(xml: xml)
-            let swiftRange = Range(fullRange, in: result)!
+            let div = MxGraphHelper.drawioDiv(xml: xml)
+            guard let swiftRange = Range(fullRange, in: result) else { continue }
             result.replaceSubrange(swiftRange, with: div)
         }
 
@@ -61,8 +36,6 @@ struct MarkdownProcessor {
 
     /// Entry point: preprocesses markdown before HTML rendering.
     static func process(_ markdown: String, baseURL: URL) -> String {
-        var result = markdown
-        result = resolveDrawioReferences(result, baseURL: baseURL)
-        return result
+        return resolveDrawioReferences(markdown, baseURL: baseURL)
     }
 }

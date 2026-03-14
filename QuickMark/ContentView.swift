@@ -35,7 +35,9 @@ struct ContentView: View {
                         .multilineTextAlignment(.center)
                 } else {
                     Button("Open Extension Settings") {
-                        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.ExtensionsPreferences")!)
+                        if let url = URL(string: "x-apple.systempreferences:com.apple.ExtensionsPreferences") {
+                            NSWorkspace.shared.open(url)
+                        }
                     }
                     .padding(.top, 4)
                 }
@@ -75,6 +77,10 @@ struct ContentView: View {
             }
 
             Spacer().frame(height: 4)
+
+            Text("You can quit this app \u{2014} the extensions will continue to work.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
 
             Text("MIT License \u{00B7} \u{00A9} 2026 Phrontizo Limited")
                 .font(.caption)
@@ -129,8 +135,8 @@ struct ContentView: View {
         process.standardError = Pipe()
         do {
             try process.run()
-            process.waitUntilExit()
             let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            process.waitUntilExit()
             let output = String(data: data, encoding: .utf8) ?? ""
             return !output.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         } catch {
