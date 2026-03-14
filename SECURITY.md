@@ -14,10 +14,7 @@ QuickMark renders untrusted files (Markdown, draw.io XML, JSON, YAML, TOML) in s
 
 ## Reporting a Vulnerability
 
-If you discover a security issue, please report it privately:
-
-1. **GitHub Security Advisories** (preferred): [Report a vulnerability](https://github.com/phrontizo/QuickMark/security/advisories/new)
-2. **Email**: security@phrontizo.com
+If you discover a security issue, please report it privately via [GitHub Security Advisories](https://github.com/phrontizo/QuickMark/security/advisories/new).
 
 Please include:
 - Description of the vulnerability
