@@ -2,12 +2,14 @@ name: QuickMark
 options:
   bundleIdPrefix: com.quickmark
   deploymentTarget:
-    macOS: "26.0"
+    macOS: "14.0"
   xcodeVersion: "2630"
 settings:
   base:
     SWIFT_VERSION: "5.9"
     CODE_SIGN_STYLE: Automatic
+    ARCHS: "$(ARCHS_STANDARD)"
+    ONLY_ACTIVE_ARCH: NO
     ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOL_EXTENSIONS: YES
     DEAD_CODE_STRIPPING: YES
     ENABLE_USER_SCRIPT_SANDBOXING: YES
