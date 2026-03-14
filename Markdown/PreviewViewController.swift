@@ -18,11 +18,11 @@ class PreviewViewController: NSViewController, QLPreviewingController {
         #endif
         webView = WKWebView(frame: NSRect(x: 0, y: 0, width: 800, height: 600), configuration: config)
         webView.navigationDelegate = self
-        webView.appearance = AppearancePreference.markdown.nsAppearance
         self.view = webView
     }
 
     func preparePreviewOfFile(at url: URL, completionHandler handler: @escaping (Error?) -> Void) {
+        webView.appearance = AppearancePreference.markdown.nsAppearance
         do {
             try renderMarkdown(at: url)
             handler(nil)

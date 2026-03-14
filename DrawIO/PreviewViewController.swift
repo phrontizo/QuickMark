@@ -21,13 +21,13 @@ class PreviewViewController: NSViewController, QLPreviewingController, WKNavigat
         webView = WKWebView(frame: NSRect(x: 0, y: 0, width: 800, height: 600), configuration: config)
         webView.navigationDelegate = self
         webView.allowsMagnification = true
-        webView.appearance = AppearancePreference.drawio.nsAppearance
         // Hidden until content is measured and scaled to prevent flash
         webView.alphaValue = 0
         self.view = webView
     }
 
     func preparePreviewOfFile(at url: URL, completionHandler handler: @escaping (Error?) -> Void) {
+        webView.appearance = AppearancePreference.drawio.nsAppearance
         do {
             let xml = try String(contentsOf: url, encoding: .utf8)
             let bundle = Bundle(for: type(of: self))

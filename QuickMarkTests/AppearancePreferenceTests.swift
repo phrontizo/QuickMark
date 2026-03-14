@@ -3,10 +3,16 @@ import WebKit
 
 class AppearancePreferenceTests: XCTestCase {
 
+    override func setUp() {
+        super.setUp()
+        // Reset to system before each test
+        AppearancePreference.markdown = .system
+        AppearancePreference.drawio = .system
+    }
+
     override func tearDown() {
-        // Clean up UserDefaults after each test
-        UserDefaults.standard.removeObject(forKey: "markdownAppearance")
-        UserDefaults.standard.removeObject(forKey: "drawioAppearance")
+        AppearancePreference.markdown = .system
+        AppearancePreference.drawio = .system
         super.tearDown()
     }
 
