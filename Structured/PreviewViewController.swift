@@ -104,7 +104,7 @@ class PreviewViewController: NSViewController, @preconcurrency QLPreviewingContr
         html += "  if (lines.length > 0 && lines[lines.length - 1] === '') lines.pop();\n"
         html += "  code.innerHTML = lines.map(function(line, i) {\n"
         html += "    return '<span class=\"line\"><span class=\"line-number\">' + (i + 1) + '</span>' + line + '</span>';\n"
-        html += "  }).join('\\n');\n"
+        html += "  }).join('');\n"
         html += "  code.classList.add('hljs');\n"
         html += "  code.setAttribute('data-highlighted', 'yes');\n"
         html += "})();\n"

@@ -62,6 +62,41 @@ class StructuredTests: XCTestCase {
         XCTAssertTrue(html.contains("line-number"), "Should include line number generation script")
     }
 
+    // MARK: - Line Spacing
+
+    func testNoDoubleSpacingBetweenLines() throws {
+        let bundle = Bundle(for: type(of: self))
+        let content = "line1\nline2\nline3"
+        let html = PreviewViewController.buildHTML(content: content, language: "yaml", bundle: bundle)
+
+        let tempFile = FileManager.default.temporaryDirectory
+            .appendingPathComponent("test-structured-spacing-\(UUID().uuidString).html")
+        try html.write(to: tempFile, atomically: true, encoding: .utf8)
+        addTeardownBlock { try? FileManager.default.removeItem(at: tempFile) }
+
+        let webView = WKWebView(frame: NSRect(x: 0, y: 0, width: 800, height: 600))
+        let navExp = expectation(description: "Page loaded")
+        let delegate = NavigationHelper { navExp.fulfill() }
+        webView.navigationDelegate = delegate
+        webView.loadFileURL(tempFile, allowingReadAccessTo: URL(fileURLWithPath: "/"))
+        wait(for: [navExp], timeout: 10)
+
+        // Block-level .line spans inside <pre> must not be separated by newline
+        // characters, otherwise <pre> renders each \n as an extra blank line.
+        let jsExp = expectation(description: "JS check")
+        var hasNewlineBetweenSpans = true
+        webView.evaluateJavaScript(
+            "document.querySelector('code').innerHTML.indexOf('</span>\\n<span class=\"line\">') === -1"
+        ) { result, _ in
+            hasNewlineBetweenSpans = !(result as? Bool ?? false)
+            jsExp.fulfill()
+        }
+        wait(for: [jsExp], timeout: 5)
+
+        XCTAssertFalse(hasNewlineBetweenSpans,
+                       "Line spans must not be separated by newlines inside <pre> — causes double spacing")
+    }
+
     // MARK: - WKWebView Rendering
 
     func testHighlightJSProducesOutput() throws {
