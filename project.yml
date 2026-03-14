@@ -51,6 +51,9 @@ targets:
       - target: QuickMarkDrawio
         embed: true
         codeSign: true
+      - target: QuickMarkStructured
+        embed: true
+        codeSign: true
   QuickMarkPreview:
     type: app-extension
     platform: macOS
@@ -130,6 +133,47 @@ targets:
       ENABLE_HARDENED_RUNTIME: YES
       ENABLE_OUTGOING_NETWORK_CONNECTIONS: YES
       ENABLE_USER_SELECTED_FILES: readonly
+  QuickMarkStructured:
+    type: app-extension
+    platform: macOS
+    sources:
+      - path: Shared
+      - path: Structured
+        excludes:
+          - "Resources/**"
+      - path: Structured/Resources
+        buildPhase: resources
+    info:
+      path: Structured/Info.plist
+      properties:
+        CFBundleDisplayName: Structured Data Preview
+        NSExtension:
+          NSExtensionAttributes:
+            QLSupportedContentTypes:
+              - public.json
+              - public.yaml
+              - org.toml.toml
+          NSExtensionPointIdentifier: com.apple.quicklook.preview
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).PreviewViewController
+        UTImportedTypeDeclarations:
+          - UTTypeIdentifier: org.toml.toml
+            UTTypeDescription: TOML Document
+            UTTypeConformsTo:
+              - public.text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - toml
+    entitlements:
+      path: Structured/Structured.entitlements
+      properties:
+        com.apple.security.temporary-exception.files.absolute-path.read-only:
+          - /
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.quickmark.QuickMark.QuickMarkStructured
+      ENABLE_APP_SANDBOX: YES
+      ENABLE_HARDENED_RUNTIME: YES
+      ENABLE_OUTGOING_NETWORK_CONNECTIONS: YES
+      ENABLE_USER_SELECTED_FILES: readonly
   QuickMarkTests:
     type: bundle.unit-test
     platform: macOS
@@ -142,6 +186,11 @@ targets:
         type: file
       - path: Markdown/Resources
         buildPhase: resources
+      - path: Structured/PreviewViewController.swift
+        type: file
+      - path: Structured/Resources/structured-style.css
+        buildPhase: resources
+        type: file
     entitlements:
       path: QuickMarkTests/QuickMarkTests.entitlements
       properties:

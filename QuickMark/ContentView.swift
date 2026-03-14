@@ -3,9 +3,11 @@ import SwiftUI
 struct ContentView: View {
     @State private var markdownActive = false
     @State private var drawioActive = false
+    @State private var structuredActive = false
     @State private var hasChecked = false
     @State private var markdownAppearance = AppearancePreference.markdown
     @State private var drawioAppearance = AppearancePreference.drawio
+    @State private var structuredAppearance = AppearancePreference.structured
 
     var body: some View {
         VStack(spacing: 16) {
@@ -17,7 +19,7 @@ struct ContentView: View {
                 .font(.largeTitle)
                 .fontWeight(.semibold)
 
-            Text("QuickLook preview extensions for Markdown and draw.io files.")
+            Text("QuickLook preview extensions for Markdown, draw.io, and structured data files.")
                 .font(.body)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
@@ -26,11 +28,12 @@ struct ContentView: View {
                 VStack(alignment: .leading, spacing: 6) {
                     extensionRow("Markdown Preview", active: markdownActive)
                     extensionRow("Draw.io Preview", active: drawioActive)
+                    extensionRow("Structured Data Preview", active: structuredActive)
                 }
                 .padding(.top, 4)
 
-                if markdownActive && drawioActive {
-                    Text("Select a .md or .drawio file in Finder and press Space to preview.")
+                if markdownActive && drawioActive && structuredActive {
+                    Text("Select a .md, .drawio, .yml, .json, or .toml file in Finder and press Space to preview.")
                         .font(.callout)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
@@ -85,6 +88,20 @@ struct ContentView: View {
                             AppearancePreference.drawio = newValue
                         }
                 }
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Structured Data")
+                        .font(.callout)
+                        .fontWeight(.medium)
+                    featureRow("YAML / JSON / TOML")
+                    featureRow("Syntax highlighting")
+                    featureRow("Line numbers")
+                    Spacer()
+                    appearancePicker(selection: $structuredAppearance)
+                        .onChange(of: structuredAppearance) { _, newValue in
+                            AppearancePreference.structured = newValue
+                        }
+                }
             }
             .fixedSize(horizontal: false, vertical: true)
 
@@ -93,7 +110,7 @@ struct ContentView: View {
                 .foregroundStyle(.tertiary)
         }
         .padding(32)
-        .frame(width: 480)
+        .frame(width: 600)
         .onAppear { checkExtensions() }
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
             checkExtensions()
@@ -135,9 +152,11 @@ struct ContentView: View {
         DispatchQueue.global(qos: .userInitiated).async {
             let md = isExtensionRegistered("com.quickmark.QuickMark.QuickMarkPreview")
             let dio = isExtensionRegistered("com.quickmark.QuickMark.QuickMarkDrawio")
+            let str = isExtensionRegistered("com.quickmark.QuickMark.QuickMarkStructured")
             DispatchQueue.main.async {
                 markdownActive = md
                 drawioActive = dio
+                structuredActive = str
                 hasChecked = true
             }
         }

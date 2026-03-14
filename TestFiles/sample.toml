@@ -1,0 +1,30 @@
+[package]
+name = "quickmark"
+version = "1.0.0"
+edition = "2024"
+authors = ["Developer <dev@example.com>"]
+description = "A QuickLook preview extension"
+license = "MIT"
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+tokio = { version = "1", features = ["full"] }
+tracing = "0.1"
+
+[dev-dependencies]
+assert_cmd = "2.0"
+predicates = "3.0"
+
+[profile.release]
+opt-level = 3
+lto = true
+strip = true
+
+[[bin]]
+name = "server"
+path = "src/main.rs"
+
+[features]
+default = ["logging"]
+logging = ["tracing"]
+metrics = ["prometheus"]

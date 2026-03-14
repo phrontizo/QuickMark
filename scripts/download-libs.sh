@@ -151,6 +151,12 @@ mkdir -p "DrawIO/Resources"
 cp "$RESOURCES_DIR/viewer-static.min.js" "DrawIO/Resources/viewer-static.min.js"
 echo "  Copied viewer-static.min.js to DrawIO/Resources/ ✓"
 
+# Copy highlight.js to Structured extension
+mkdir -p "Structured/Resources"
+cp "$RESOURCES_DIR/highlight.min.js" "Structured/Resources/highlight.min.js"
+cp "$RESOURCES_DIR/hljs-themes.css" "Structured/Resources/hljs-themes.css"
+echo "  Copied highlight.min.js and hljs-themes.css to Structured/Resources/ ✓"
+
 echo ""
 echo "All libraries downloaded to $RESOURCES_DIR/"
 ls -lh "$RESOURCES_DIR/"

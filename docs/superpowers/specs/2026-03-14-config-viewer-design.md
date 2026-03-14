@@ -1,4 +1,4 @@
-# Config Viewer QuickLook Extension
+# Structured Data Viewer QuickLook Extension
 
 ## Overview
 
@@ -8,17 +8,17 @@ Add a new QuickLook extension to QuickMark that provides syntax-highlighted prev
 
 ## Architecture
 
-### New Target: `QuickMarkConfig`
+### New Target: `QuickMarkStructured`
 
 Follows the same pattern as `QuickMarkDrawio` — a standalone app-extension target with its own resources.
 
 ### Files
 
 ```
-ConfigViewer/
+Structured/
 ├── PreviewViewController.swift    # Reads file, detects language, builds HTML, loads WKWebView
 ├── Info.plist
-├── ConfigViewer.entitlements
+├── Structured.entitlements
 ├── Resources/
 │   ├── highlight.min.js           # Copy from Markdown/Resources
 │   └── hljs-themes.css            # Copy from Markdown/Resources
@@ -88,19 +88,19 @@ Same as other extensions:
 
 ### Host App Changes
 
-- Add `configAppearance` to `AppearancePreference` (new key, same System/Light/Dark picker)
-- Add third column in ContentView for "Config Files" with feature list and appearance picker
-- Check extension registration for `com.quickmark.QuickMark.QuickMarkConfig`
+- Add `structuredAppearance` to `AppearancePreference` (new key, same System/Light/Dark picker)
+- Add third column in ContentView for "Structured Data" with feature list and appearance picker
+- Check extension registration for `com.quickmark.QuickMark.QuickMarkStructured`
 
 ### download-libs.sh
 
-Add a step to copy `highlight.min.js` and `hljs-themes.css` to `ConfigViewer/Resources/`.
+Add a step to copy `highlight.min.js` and `hljs-themes.css` to `Structured/Resources/`.
 
 ### project.yml
 
-New target `QuickMarkConfig`:
+New target `QuickMarkStructured`:
 - Type: `app-extension`
-- Sources: `Shared`, `ConfigViewer` (excluding Resources), `ConfigViewer/Resources` (as resources)
+- Sources: `Shared`, `Structured` (excluding Resources), `Structured/Resources` (as resources)
 - Dependency of `QuickMark` (embed + codesign)
 - Same entitlements pattern as other extensions
 

@@ -1,0 +1,53 @@
+:root {
+    --line-num: #8b949e;
+    --line-border: #d0d7de;
+    --bg: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --line-num: #656d76;
+        --line-border: #30363d;
+        --bg: #0d1117;
+    }
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+}
+
+pre {
+    margin: 0;
+    padding: 16px 0;
+    overflow-x: auto;
+    tab-size: 4;
+}
+
+code {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.line {
+    display: block;
+    padding: 0 16px 0 0;
+}
+
+.line-number {
+    display: inline-block;
+    width: 4em;
+    padding-right: 12px;
+    margin-right: 12px;
+    text-align: right;
+    color: var(--line-num);
+    border-right: 1px solid var(--line-border);
+    user-select: none;
+    -webkit-user-select: none;
+}

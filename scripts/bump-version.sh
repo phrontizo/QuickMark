@@ -13,6 +13,7 @@ PLISTS=(
   "QuickMark/Info.plist"
   "Markdown/Info.plist"
   "DrawIO/Info.plist"
+  "Structured/Info.plist"
 )
 
 # Update marketing version

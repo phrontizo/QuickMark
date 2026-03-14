@@ -30,6 +30,7 @@ enum AppearancePreference: String, CaseIterable {
 
     private static let markdownKey = "markdownAppearance"
     private static let drawioKey = "drawioAppearance"
+    private static let structuredKey = "structuredAppearance"
 
     /// Path to the host app's UserDefaults plist.
     /// Uses getpwuid to get the real home directory, since NSHomeDirectory()
@@ -67,5 +68,10 @@ enum AppearancePreference: String, CaseIterable {
     static var drawio: AppearancePreference {
         get { read(key: drawioKey) }
         set { UserDefaults.standard.set(newValue.rawValue, forKey: drawioKey) }
+    }
+
+    static var structured: AppearancePreference {
+        get { read(key: structuredKey) }
+        set { UserDefaults.standard.set(newValue.rawValue, forKey: structuredKey) }
     }
 }

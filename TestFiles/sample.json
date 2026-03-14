@@ -1,0 +1,50 @@
+{
+  "apiVersion": "apps/v1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "web-server",
+    "namespace": "production",
+    "labels": {
+      "app": "web-server",
+      "version": "2.1.0"
+    }
+  },
+  "spec": {
+    "replicas": 3,
+    "selector": {
+      "matchLabels": {
+        "app": "web-server"
+      }
+    },
+    "template": {
+      "spec": {
+        "containers": [
+          {
+            "name": "web",
+            "image": "nginx:1.25-alpine",
+            "ports": [
+              {
+                "containerPort": 80,
+                "protocol": "TCP"
+              }
+            ],
+            "resources": {
+              "limits": {
+                "cpu": "500m",
+                "memory": "128Mi"
+              }
+            },
+            "readinessProbe": {
+              "httpGet": {
+                "path": "/healthz",
+                "port": 80
+              },
+              "initialDelaySeconds": 5,
+              "periodSeconds": 10
+            }
+          }
+        ]
+      }
+    }
+  }
+}
