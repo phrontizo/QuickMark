@@ -24,7 +24,7 @@ Do NOT re-add CSP or remove the network entitlement — both break WKWebView ren
 
 ## Draw.io in Markdown
 
-Draw.io diagrams referenced as `![alt](file.drawio)` are converted to ` ```drawio` fenced code blocks by `MarkdownProcessor`. The `render.js` fence rule then creates the `<div class="mxgraph">` at render time. This is necessary because `html: false` would escape raw HTML divs injected pre-rendering.
+Draw.io diagrams referenced as `![alt](file.drawio)` are converted to `` ```drawio `` fenced code blocks by `MarkdownProcessor`. An optional fragment selects a page by name or 0-based index: `![](file.drawio#Page Name)` or `![](file.drawio#2)`, producing `` ```drawio page=Page Name ``. The `render.js` fence rule creates a `<div class="mxgraph">` with a tab bar for multi-page diagrams, and uses `GraphViewer.createViewerForElement` with a callback to wire up page switching. This is necessary because `html: false` would escape raw HTML divs injected pre-rendering.
 
 ## SharedResources
 

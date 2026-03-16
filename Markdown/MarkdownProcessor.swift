@@ -2,11 +2,13 @@ import Foundation
 
 enum MarkdownProcessor {
 
-    /// Pattern matches `![alt](path.drawio)` in markdown
-    private static let drawioPattern = #/!\[([^\]]*)\]\(([^)]+\.drawio)\)/#
+    /// Pattern matches `![alt](path.drawio)` or `![alt](path.drawio#fragment)` in markdown
+    private static let drawioPattern = #/!\[([^\]]*)\]\(([^)#]+\.drawio)(?:#([^)]*))?\)/#
 
     /// Replaces `![alt](path.drawio)` references with draw.io viewer divs.
     /// Reads the .drawio XML file from disk and embeds it inline.
+    /// An optional fragment selects a page by name or 0-based index:
+    ///   `![](arch.drawio#Key Derivation)` or `![](arch.drawio#2)`
     static func resolveDrawioReferences(_ markdown: String, baseURL: URL) -> String {
         let matches = Array(markdown.matches(of: drawioPattern))
 
@@ -21,7 +23,9 @@ enum MarkdownProcessor {
                 continue // Leave the reference as-is if file can't be read
             }
 
-            let fencedBlock = "```drawio\n\(xml)\n```"
+            let fragment = match.output.3.map(String.init) ?? ""
+            let info = fragment.isEmpty ? "drawio" : "drawio page=\(fragment)"
+            let fencedBlock = "```\(info)\n\(xml)\n```"
             result.replaceSubrange(match.range, with: fencedBlock)
         }
 

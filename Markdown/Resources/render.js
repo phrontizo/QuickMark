@@ -42,12 +42,42 @@
             return '<div class="mermaid">' + md.utils.escapeHtml(token.content) + "</div>\n";
         }
 
-        if (info === "drawio") {
-            // Build draw.io viewer div: JSON-encode the XML, then HTML-escape for the attribute
+        if (info === "drawio" || info.lastIndexOf("drawio ", 0) === 0) {
+            // Parse optional page selector: "drawio page=Name" or "drawio page=2"
+            var pageParam = null;
+            var pageMatch = info.match(/^drawio\s+page=(.+)$/);
+            if (pageMatch) pageParam = pageMatch[1];
+
             var xml = token.content.replace(/\n$/, "");
             var data = JSON.stringify({highlight: "#0000ff", nav: true, resize: true, xml: xml});
             var escaped = data.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-            return '<div class="mxgraph" data-mxgraph="' + escaped + '"></div>\n';
+            // Generate tab bar if multiple pages
+            var tabsHtml = "";
+            var diagramTags = xml.match(/<diagram[\s][^>]*name="([^"]*)"[^>]*>/g);
+            if (diagramTags && diagramTags.length > 1) {
+                // Resolve page param to 0-based index
+                var initialPage = 0;
+                if (pageParam !== null) {
+                    var asInt = parseInt(pageParam, 10);
+                    if (!isNaN(asInt) && asInt >= 0 && asInt < diagramTags.length) {
+                        initialPage = asInt;
+                    } else {
+                        for (var p = 0; p < diagramTags.length; p++) {
+                            var pn = diagramTags[p].match(/name="([^"]*)"/);
+                            if (pn && pn[1] === pageParam) { initialPage = p; break; }
+                        }
+                    }
+                }
+                tabsHtml = '<div class="drawio-tabs" data-initial-page="' + initialPage + '">';
+                for (var k = 0; k < diagramTags.length; k++) {
+                    var nm = diagramTags[k].match(/name="([^"]*)"/);
+                    var name = nm ? nm[1] : "Page " + (k + 1);
+                    tabsHtml += '<button class="drawio-tab' + (k === initialPage ? ' active' : '') + '" data-page="' + k + '">'
+                        + md.utils.escapeHtml(name) + '</button>';
+                }
+                tabsHtml += '</div>';
+            }
+            return tabsHtml + '<div class="mxgraph" data-mxgraph="' + escaped + '"></div>\n';
         }
 
         return defaultFence(tokens, idx, options, env, self);
@@ -85,7 +115,28 @@
     // Initialize draw.io viewer (if any .mxgraph elements exist)
     if (typeof GraphViewer !== "undefined" && document.querySelector(".mxgraph")) {
         try {
-            GraphViewer.processElements();
+            var mxEls = document.querySelectorAll(".mxgraph");
+            for (var di = 0; di < mxEls.length; di++) {
+                (function(el) {
+                    var tabBar = el.previousElementSibling;
+                    var hasTabs = tabBar && tabBar.classList.contains("drawio-tabs");
+                    el.innerText = "";
+                    GraphViewer.createViewerForElement(el, function(viewer) {
+                        if (!hasTabs) return;
+                        var initial = parseInt(tabBar.getAttribute("data-initial-page")) || 0;
+                        if (initial > 0) viewer.selectPage(initial);
+                        tabBar.addEventListener("click", function(e) {
+                            var tab = e.target.closest(".drawio-tab");
+                            if (!tab) return;
+                            var page = parseInt(tab.getAttribute("data-page"));
+                            viewer.selectPage(page);
+                            var tabs = tabBar.querySelectorAll(".drawio-tab");
+                            for (var j = 0; j < tabs.length; j++)
+                                tabs[j].classList.toggle("active", j === page);
+                        });
+                    });
+                })(mxEls[di]);
+            }
         } catch (e) {
             console.error("Draw.io viewer initialization failed:", e);
         }

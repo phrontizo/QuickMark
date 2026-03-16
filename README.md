@@ -15,7 +15,7 @@ macOS has no built-in Markdown preview. QuickLook shows `.md` files as plain tex
 - **LaTeX math** — inline (`$...$`) and display (`$$...$$`) via KaTeX + texmath
 - **Mermaid diagrams** — flowcharts, sequence diagrams, etc.
 - **Task lists & footnotes** — via markdown-it plugins
-- **Embedded draw.io diagrams** — `![diagram](file.drawio)` references rendered inline
+- **Embedded draw.io diagrams** — `![diagram](file.drawio)` references rendered inline, with optional fragment to select a page by name (`![](file.drawio#Key Derivation)`) or 0-based index (`![](file.drawio#2)`)
 - **Local images** — SVG, PNG, JPEG, GIF, WebP resolved from relative paths
 - **Linked Markdown files** — clicking a `.md` link renders the target inline
 - **Dark mode** — adapts to system appearance
@@ -25,7 +25,7 @@ macOS has no built-in Markdown preview. QuickLook shows `.md` files as plain tex
 - **All diagram types** — UML, BPMN, network, flowcharts, ERD, architecture diagrams, etc.
 - **Auto-fit to window** — diagram scales to fit the QuickLook window
 - **Pinch-to-zoom** — native trackpad zoom with scrollbars when zoomed
-- **Multi-page diagrams** — page navigation for multi-page files
+- **Multi-page diagrams** — named tab bar for switching pages
 - **Dark mode** — adapts to system appearance
 
 ### Structured Data

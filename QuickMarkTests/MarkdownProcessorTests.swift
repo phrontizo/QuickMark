@@ -141,6 +141,57 @@ class MarkdownProcessorTests: XCTestCase {
 
     // MARK: - Multiple Drawio Refs
 
+    // MARK: - Page Fragment
+
+    func testResolveDrawioReferencesWithPageNameFragment() throws {
+        let tempDir = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: tempDir) }
+
+        let xml = "<mxfile><diagram name=\"Overview\">a</diagram><diagram name=\"Details\">b</diagram></mxfile>"
+        try xml.write(to: tempDir.appendingPathComponent("arch.drawio"), atomically: true, encoding: .utf8)
+
+        let markdown = "![](arch.drawio#Details)"
+        let result = MarkdownProcessor.resolveDrawioReferences(markdown, baseURL: tempDir)
+
+        XCTAssertTrue(result.contains("```drawio page=Details\n"), "Fragment should produce page= in fence info")
+        XCTAssertTrue(result.contains(xml), "XML content should be embedded")
+    }
+
+    func testResolveDrawioReferencesWithPageIndexFragment() throws {
+        let tempDir = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: tempDir) }
+
+        let xml = "<mxfile><diagram name=\"A\">a</diagram><diagram name=\"B\">b</diagram></mxfile>"
+        try xml.write(to: tempDir.appendingPathComponent("d.drawio"), atomically: true, encoding: .utf8)
+
+        let markdown = "![](d.drawio#1)"
+        let result = MarkdownProcessor.resolveDrawioReferences(markdown, baseURL: tempDir)
+
+        XCTAssertTrue(result.contains("```drawio page=1\n"), "Numeric fragment should produce page= in fence info")
+    }
+
+    func testResolveDrawioReferencesWithoutFragment() throws {
+        let tempDir = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: tempDir) }
+
+        let xml = "<mxfile><diagram>a</diagram></mxfile>"
+        try xml.write(to: tempDir.appendingPathComponent("d.drawio"), atomically: true, encoding: .utf8)
+
+        let markdown = "![](d.drawio)"
+        let result = MarkdownProcessor.resolveDrawioReferences(markdown, baseURL: tempDir)
+
+        XCTAssertTrue(result.contains("```drawio\n"), "No fragment should produce plain drawio fence")
+        XCTAssertFalse(result.contains("page="), "No page param without fragment")
+    }
+
+    // MARK: - Multiple Drawio Refs (continued)
+
     func testResolveDrawioReferencesHandlesMultipleRefs() throws {
         let tempDir = FileManager.default.temporaryDirectory
             .appendingPathComponent(UUID().uuidString)

@@ -170,3 +170,32 @@ li + li { margin-top: 0.25em; }
     overflow-y: hidden;
     padding: 8px 0;
 }
+
+/* --- Draw.io page tabs --- */
+
+.drawio-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    background: var(--code-bg);
+    overflow-x: auto;
+    font-family: -apple-system, system-ui, sans-serif;
+    margin: 16px 0 0;
+    border-radius: 6px 6px 0 0;
+}
+
+.drawio-tab {
+    padding: 5px 14px;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    color: var(--secondary);
+    font-size: 12px;
+}
+
+.drawio-tab.active {
+    color: var(--text);
+    border-bottom-color: var(--link);
+    font-weight: 600;
+}
