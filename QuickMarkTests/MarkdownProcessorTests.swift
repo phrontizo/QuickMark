@@ -98,8 +98,6 @@ class MarkdownProcessorTests: XCTestCase {
                              "Should throw for missing file")
     }
 
-    // MARK: - Multiple Drawio Refs
-
     // MARK: - Malformed Draw.io XML
 
     func testResolveDrawioReferencesMalformedXMLPassesThrough() throws {
@@ -138,8 +136,6 @@ class MarkdownProcessorTests: XCTestCase {
         XCTAssertTrue(result.contains("```drawio\n"), "Empty file should still produce a fenced block")
         XCTAssertFalse(result.contains("![Empty]"), "Image ref should be replaced")
     }
-
-    // MARK: - Multiple Drawio Refs
 
     // MARK: - Page Fragment
 
@@ -190,7 +186,7 @@ class MarkdownProcessorTests: XCTestCase {
         XCTAssertFalse(result.contains("page="), "No page param without fragment")
     }
 
-    // MARK: - Multiple Drawio Refs (continued)
+    // MARK: - Multiple Drawio Refs
 
     func testResolveDrawioReferencesHandlesMultipleRefs() throws {
         let tempDir = FileManager.default.temporaryDirectory

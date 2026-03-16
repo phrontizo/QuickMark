@@ -89,10 +89,11 @@ enum MxGraphHelper {
             }
             el.innerText = "";
             GraphViewer.createViewerForElement(el, function(viewer) {
+                if (diagrams.length <= 1) return;
                 tabBar.addEventListener("click", function(e) {
                     var tab = e.target.closest(".drawio-tab");
                     if (!tab) return;
-                    var page = parseInt(tab.getAttribute("data-page"));
+                    var page = parseInt(tab.getAttribute("data-page"), 10);
                     viewer.selectPage(page);
                     var tabs = tabBar.querySelectorAll(".drawio-tab");
                     for (var j = 0; j < tabs.length; j++)

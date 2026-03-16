@@ -86,13 +86,11 @@ class PreviewViewController: NSViewController, @preconcurrency QLPreviewingContr
     private func pollForDiagram(attempts: Int) {
         let js = """
         (function() {
-            var svg = document.querySelector('svg');
-            if (svg) {
-                var r = svg.getBoundingClientRect();
-                if (r.width > 0 && r.height > 0) {
-                    return JSON.stringify({w: Math.ceil(r.width), h: Math.ceil(r.bottom)});
-                }
-            }
+            if (!document.querySelector('svg')) return null;
+            var d = document.documentElement;
+            var w = d.scrollWidth;
+            var h = d.scrollHeight;
+            if (w > 0 && h > 0) return JSON.stringify({w: w, h: h});
             return null;
         })()
         """

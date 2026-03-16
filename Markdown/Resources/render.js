@@ -53,25 +53,24 @@
             var escaped = data.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
             // Generate tab bar if multiple pages
             var tabsHtml = "";
-            var diagramTags = xml.match(/<diagram[\s][^>]*name="([^"]*)"[^>]*>/g);
-            if (diagramTags && diagramTags.length > 1) {
+            var doc = new DOMParser().parseFromString(xml, "text/xml");
+            var diagrams = doc.querySelectorAll("diagram");
+            if (diagrams.length > 1) {
                 // Resolve page param to 0-based index
                 var initialPage = 0;
                 if (pageParam !== null) {
                     var asInt = parseInt(pageParam, 10);
-                    if (!isNaN(asInt) && asInt >= 0 && asInt < diagramTags.length) {
+                    if (!isNaN(asInt) && asInt >= 0 && asInt < diagrams.length) {
                         initialPage = asInt;
                     } else {
-                        for (var p = 0; p < diagramTags.length; p++) {
-                            var pn = diagramTags[p].match(/name="([^"]*)"/);
-                            if (pn && pn[1] === pageParam) { initialPage = p; break; }
+                        for (var p = 0; p < diagrams.length; p++) {
+                            if (diagrams[p].getAttribute("name") === pageParam) { initialPage = p; break; }
                         }
                     }
                 }
                 tabsHtml = '<div class="drawio-tabs" data-initial-page="' + initialPage + '">';
-                for (var k = 0; k < diagramTags.length; k++) {
-                    var nm = diagramTags[k].match(/name="([^"]*)"/);
-                    var name = nm ? nm[1] : "Page " + (k + 1);
+                for (var k = 0; k < diagrams.length; k++) {
+                    var name = diagrams[k].getAttribute("name") || "Page " + (k + 1);
                     tabsHtml += '<button class="drawio-tab' + (k === initialPage ? ' active' : '') + '" data-page="' + k + '">'
                         + md.utils.escapeHtml(name) + '</button>';
                 }
@@ -123,7 +122,7 @@
                     el.innerText = "";
                     GraphViewer.createViewerForElement(el, function(viewer) {
                         if (!hasTabs) return;
-                        var initial = parseInt(tabBar.getAttribute("data-initial-page")) || 0;
+                        var initial = parseInt(tabBar.getAttribute("data-initial-page"), 10) || 0;
                         if (initial > 0) viewer.selectPage(initial);
                         tabBar.addEventListener("click", function(e) {
                             var tab = e.target.closest(".drawio-tab");

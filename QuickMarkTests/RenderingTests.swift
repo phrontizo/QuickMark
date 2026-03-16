@@ -198,13 +198,70 @@ class RenderingTests: XCTestCase, WKNavigationDelegate {
         XCTAssertTrue(rendered, "Draw.io diagram embedded in markdown should render as SVG")
     }
 
-    func testMultiPageDrawioShowsNamedTabs() throws {
-        let sampleURL = URL(fileURLWithPath: #filePath)
-            .deletingLastPathComponent()
-            .deletingLastPathComponent()
-            .appendingPathComponent("TestFiles/drawio-samples/dependency-graphs.drawio")
+    func testMultiPageDrawioTabsInMarkdown() throws {
+        let markdown = "# Test\n\n```drawio\n\(Self.multiPageXML)\n```"
+        let bundle = Bundle(for: type(of: self))
+        let html = HTMLBuilder.build(markdown: markdown, bundle: bundle)
 
-        let xml = try String(contentsOf: sampleURL, encoding: .utf8)
+        let tempFile = FileManager.default.temporaryDirectory
+            .appendingPathComponent("test-drawio-md-tabs-\(UUID().uuidString).html")
+        try html.write(to: tempFile, atomically: true, encoding: .utf8)
+        addTeardownBlock { try? FileManager.default.removeItem(at: tempFile) }
+
+        navigationExpectation = expectation(description: "Multi-page drawio in markdown loaded")
+        webView.loadFileURL(tempFile, allowingReadAccessTo: URL(fileURLWithPath: "/"))
+        wait(for: [navigationExpectation!], timeout: 10)
+
+        var hasTabs = false
+        for _ in 0..<40 {
+            let result = evaluateJS(
+                "document.querySelector('svg') !== null && " +
+                "document.querySelectorAll('.drawio-tab').length === 3"
+            ) as? Bool
+            if result == true { hasTabs = true; break }
+            let waitExp = expectation(description: "poll wait")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { waitExp.fulfill() }
+            wait(for: [waitExp], timeout: 1)
+        }
+        XCTAssertTrue(hasTabs, "Multi-page draw.io in markdown should show 3 named tab buttons")
+
+        let firstName = evaluateJS(
+            "document.querySelector('.drawio-tab').textContent"
+        ) as? String
+        XCTAssertEqual(firstName, "Overview", "First tab should show the diagram name")
+    }
+
+    /// Minimal multi-page draw.io XML for tests (no gitignored fixtures needed).
+    private static let multiPageXML = """
+        <mxfile>
+          <diagram name="Overview">
+            <mxGraphModel><root>
+              <mxCell id="0"/><mxCell id="1" parent="0"/>
+              <mxCell id="2" value="A" style="rounded=1;" vertex="1" parent="1">
+                <mxGeometry x="10" y="10" width="80" height="40" as="geometry"/>
+              </mxCell>
+            </root></mxGraphModel>
+          </diagram>
+          <diagram name="Details">
+            <mxGraphModel><root>
+              <mxCell id="0"/><mxCell id="1" parent="0"/>
+              <mxCell id="2" value="B" style="rounded=1;" vertex="1" parent="1">
+                <mxGeometry x="10" y="10" width="80" height="40" as="geometry"/>
+              </mxCell>
+            </root></mxGraphModel>
+          </diagram>
+          <diagram name="Notes">
+            <mxGraphModel><root>
+              <mxCell id="0"/><mxCell id="1" parent="0"/>
+              <mxCell id="2" value="C" style="rounded=1;" vertex="1" parent="1">
+                <mxGeometry x="10" y="10" width="80" height="40" as="geometry"/>
+              </mxCell>
+            </root></mxGraphModel>
+          </diagram>
+        </mxfile>
+        """
+
+    func testMultiPageDrawioShowsNamedTabs() throws {
         let bundle = Bundle(for: type(of: self))
 
         guard let viewerURL = bundle.url(forResource: "viewer-static.min", withExtension: "js") else {
@@ -212,7 +269,7 @@ class RenderingTests: XCTestCase, WKNavigationDelegate {
             return
         }
 
-        let html = MxGraphHelper.buildHTML(xml: xml, viewerURL: viewerURL)
+        let html = MxGraphHelper.buildHTML(xml: Self.multiPageXML, viewerURL: viewerURL)
 
         let tempFile = FileManager.default.temporaryDirectory
             .appendingPathComponent("test-drawio-multipage-\(UUID().uuidString).html")
@@ -241,7 +298,7 @@ class RenderingTests: XCTestCase, WKNavigationDelegate {
         let firstName = evaluateJS(
             "document.querySelector('.drawio-tab').textContent"
         ) as? String
-        XCTAssertEqual(firstName, "dependency-graph", "First tab should show the diagram name")
+        XCTAssertEqual(firstName, "Overview", "First tab should show the diagram name")
 
         // Verify active tab styling
         let activeCount = evaluateJS(
@@ -296,12 +353,6 @@ class RenderingTests: XCTestCase, WKNavigationDelegate {
     }
 
     func testDrawioPollForDiagramIncludesTabBarHeight() throws {
-        let sampleURL = URL(fileURLWithPath: #filePath)
-            .deletingLastPathComponent()
-            .deletingLastPathComponent()
-            .appendingPathComponent("TestFiles/drawio-samples/dependency-graphs.drawio")
-
-        let xml = try String(contentsOf: sampleURL, encoding: .utf8)
         let bundle = Bundle(for: type(of: self))
 
         guard let viewerURL = bundle.url(forResource: "viewer-static.min", withExtension: "js") else {
@@ -309,7 +360,7 @@ class RenderingTests: XCTestCase, WKNavigationDelegate {
             return
         }
 
-        let html = MxGraphHelper.buildHTML(xml: xml, viewerURL: viewerURL)
+        let html = MxGraphHelper.buildHTML(xml: Self.multiPageXML, viewerURL: viewerURL)
 
         let tempFile = FileManager.default.temporaryDirectory
             .appendingPathComponent("test-drawio-sizing-\(UUID().uuidString).html")
@@ -331,24 +382,28 @@ class RenderingTests: XCTestCase, WKNavigationDelegate {
         }
         XCTAssertTrue(rendered, "Diagram should render")
 
-        // With tabs on top, SVG r.bottom includes the tab bar offset
+        // Verify the tab bar offsets the SVG downward and scrollHeight captures both
         let sizeCheck = evaluateJS(
             "(function() {" +
             "  var svg = document.querySelector('svg');" +
-            "  if (!svg) return null;" +
-            "  var r = svg.getBoundingClientRect();" +
-            "  return JSON.stringify({top: r.top, height: r.height, bottom: r.bottom});" +
+            "  var tabs = document.querySelector('.drawio-tabs');" +
+            "  if (!svg || !tabs) return null;" +
+            "  var tabsH = tabs.getBoundingClientRect().height;" +
+            "  var svgTop = svg.getBoundingClientRect().top;" +
+            "  var scrollH = document.documentElement.scrollHeight;" +
+            "  return JSON.stringify({tabsH: tabsH, svgTop: svgTop, scrollH: scrollH});" +
             "})()"
         ) as? String
 
-        XCTAssertNotNil(sizeCheck, "Should measure SVG dimensions")
+        XCTAssertNotNil(sizeCheck, "Should measure dimensions")
         if let data = sizeCheck?.data(using: .utf8),
            let obj = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-           let top = obj["top"] as? Double,
-           let height = obj["height"] as? Double,
-           let bottom = obj["bottom"] as? Double {
-            XCTAssertGreaterThan(top, 0, "SVG should be offset by tab bar height")
-            XCTAssertEqual(bottom, top + height, accuracy: 1.0, "r.bottom should equal r.top + r.height")
+           let tabsH = obj["tabsH"] as? Double,
+           let svgTop = obj["svgTop"] as? Double,
+           let scrollH = obj["scrollH"] as? Double {
+            XCTAssertGreaterThan(tabsH, 0, "Tab bar should have non-zero height")
+            XCTAssertGreaterThanOrEqual(svgTop, tabsH, "SVG top should be at or below the tab bar")
+            XCTAssertGreaterThan(scrollH, tabsH, "Scroll height should include both tabs and diagram")
         }
     }
 
