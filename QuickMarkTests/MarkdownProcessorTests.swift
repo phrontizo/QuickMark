@@ -206,6 +206,39 @@ class MarkdownProcessorTests: XCTestCase {
         XCTAssertFalse(result.contains("![](my%20diagrams"), "Image ref should be replaced")
     }
 
+    // MARK: - Fence Length
+
+    func testFenceForContentWithoutBackticks() {
+        XCTAssertEqual(MarkdownProcessor.fenceFor(content: "<xml>test</xml>"), "```")
+    }
+
+    func testFenceForContentWithTripleBackticks() {
+        XCTAssertEqual(MarkdownProcessor.fenceFor(content: "before\n```\nafter"), "````")
+    }
+
+    func testFenceForContentWithLongBacktickRun() {
+        XCTAssertEqual(MarkdownProcessor.fenceFor(content: "`````code`````"), "``````")
+    }
+
+    func testResolveDrawioReferencesEscapesBackticksInContent() throws {
+        let tempDir = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: tempDir) }
+
+        // XML that contains triple backticks (could break a 3-backtick fence)
+        let xml = "<mxfile><diagram>label with ``` backticks</diagram></mxfile>"
+        try xml.write(to: tempDir.appendingPathComponent("tricky.drawio"), atomically: true, encoding: .utf8)
+
+        let markdown = "![](tricky.drawio)"
+        let result = MarkdownProcessor.resolveDrawioReferences(markdown, baseURL: tempDir)
+
+        // The fence must be longer than 3 backticks to avoid premature closure
+        XCTAssertTrue(result.hasPrefix("````"), "Fence should be at least 4 backticks when content has ```")
+        XCTAssertTrue(result.contains(xml), "XML content should be embedded intact")
+        XCTAssertFalse(result.contains("![](tricky.drawio)"), "Image ref should be replaced")
+    }
+
     // MARK: - Multiple Drawio Refs
 
     func testResolveDrawioReferencesHandlesMultipleRefs() throws {

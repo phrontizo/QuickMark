@@ -7,7 +7,7 @@ class PreviewViewController: NSViewController, @preconcurrency QLPreviewingContr
 
     private var webView: WKWebView!
     private var contentSize: CGSize = .zero
-    private var completionHandler: ((Error?) -> Void)?
+    nonisolated(unsafe) private var completionHandler: ((Error?) -> Void)?
     nonisolated(unsafe) private var tempFileURL: URL?
     private static let tempFilePrefix = "quickdrawio-"
 

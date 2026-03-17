@@ -26,11 +26,28 @@ enum MarkdownProcessor {
 
             let fragment = match.output.3.map(String.init) ?? ""
             let info = fragment.isEmpty ? "drawio" : "drawio page=\(fragment)"
-            let fencedBlock = "```\(info)\n\(xml)\n```"
+            let fence = Self.fenceFor(content: xml)
+            let fencedBlock = "\(fence)\(info)\n\(xml)\n\(fence)"
             result.replaceSubrange(match.range, with: fencedBlock)
         }
 
         return result
+    }
+
+    /// Returns a backtick fence long enough that it cannot appear in `content`.
+    /// Uses 3 backticks (the minimum) unless the content contains a run of 3+.
+    static func fenceFor(content: String) -> String {
+        var maxRun = 0
+        var current = 0
+        for ch in content {
+            if ch == "`" {
+                current += 1
+                if current > maxRun { maxRun = current }
+            } else {
+                current = 0
+            }
+        }
+        return String(repeating: "`", count: max(3, maxRun + 1))
     }
 
     /// Entry point: preprocesses markdown before HTML rendering.
