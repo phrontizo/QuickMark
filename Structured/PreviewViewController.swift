@@ -58,16 +58,8 @@ class PreviewViewController: NSViewController, @preconcurrency QLPreviewingContr
 
     // MARK: - HTML Builder
 
-    private nonisolated static func escapeHTMLAttribute(_ string: String) -> String {
-        string
-            .replacingOccurrences(of: "&", with: "&amp;")
-            .replacingOccurrences(of: "<", with: "&lt;")
-            .replacingOccurrences(of: ">", with: "&gt;")
-            .replacingOccurrences(of: "\"", with: "&quot;")
-    }
-
     nonisolated static func buildHTML(content: String, language: String, bundle: Bundle) -> String {
-        let escaped = escapeHTMLAttribute(content)
+        let escaped = content.htmlEscaped
 
         let hljsURL = bundle.url(forResource: "highlight.min", withExtension: "js")
         let themeURL = bundle.url(forResource: "hljs-themes", withExtension: "css")
@@ -76,17 +68,17 @@ class PreviewViewController: NSViewController, @preconcurrency QLPreviewingContr
         var html = "<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"utf-8\">\n"
 
         if let url = themeURL {
-            html += "<link rel=\"stylesheet\" href=\"\(escapeHTMLAttribute(url.absoluteString))\">\n"
+            html += "<link rel=\"stylesheet\" href=\"\(url.absoluteString.htmlEscaped)\">\n"
         }
         if let url = styleURL {
-            html += "<link rel=\"stylesheet\" href=\"\(escapeHTMLAttribute(url.absoluteString))\">\n"
+            html += "<link rel=\"stylesheet\" href=\"\(url.absoluteString.htmlEscaped)\">\n"
         }
 
         html += "</head>\n<body>\n"
-        html += "<pre><code class=\"language-\(escapeHTMLAttribute(language))\">\(escaped)</code></pre>\n"
+        html += "<pre><code class=\"language-\(language.htmlEscaped)\">\(escaped)</code></pre>\n"
 
         if let url = hljsURL {
-            html += "<script src=\"\(escapeHTMLAttribute(url.absoluteString))\"></script>\n"
+            html += "<script src=\"\(url.absoluteString.htmlEscaped)\"></script>\n"
         }
 
         html += "<script>\n"
