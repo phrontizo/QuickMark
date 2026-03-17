@@ -12,6 +12,8 @@ class PreviewViewController: NSViewController, @preconcurrency QLPreviewingContr
     private static let tempFilePrefix = "quickdrawio-"
 
     deinit {
+        // Complete any pending handler so QuickLook doesn't hang if dismissed mid-load
+        completionHandler?(nil)
         if let temp = tempFileURL { try? FileManager.default.removeItem(at: temp) }
     }
 
