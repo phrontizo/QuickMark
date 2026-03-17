@@ -71,6 +71,12 @@ targets:
       - path: SharedResources/viewer-static.min.js
         buildPhase: resources
         type: file
+      - path: SharedResources/highlight.min.js
+        buildPhase: resources
+        type: file
+      - path: SharedResources/hljs-themes.css
+        buildPhase: resources
+        type: file
     info:
       path: Markdown/Info.plist
       properties:
@@ -155,6 +161,12 @@ targets:
           - "Resources/**"
       - path: Structured/Resources
         buildPhase: resources
+      - path: SharedResources/highlight.min.js
+        buildPhase: resources
+        type: file
+      - path: SharedResources/hljs-themes.css
+        buildPhase: resources
+        type: file
     info:
       path: Structured/Info.plist
       properties:
@@ -201,6 +213,12 @@ targets:
       - path: Markdown/Resources
         buildPhase: resources
       - path: SharedResources/viewer-static.min.js
+        buildPhase: resources
+        type: file
+      - path: SharedResources/highlight.min.js
+        buildPhase: resources
+        type: file
+      - path: SharedResources/hljs-themes.css
         buildPhase: resources
         type: file
       - path: Structured/PreviewViewController.swift

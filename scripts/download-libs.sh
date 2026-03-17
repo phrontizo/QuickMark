@@ -93,10 +93,10 @@ curl -sfLo "$RESOURCES_DIR/texmath.min.css" \
 verify_hash "$RESOURCES_DIR/texmath.min.css" "$TEXMATH_CSS_HASH" "texmath.css"
 echo "  texmath@$TEXMATH_VER ✓"
 
-# --- highlight.js ---
-curl -sfLo "$RESOURCES_DIR/highlight.min.js" \
+# --- highlight.js (shared between Markdown and Structured extensions) ---
+curl -sfLo "SharedResources/highlight.min.js" \
   "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@$HLJS_VER/build/highlight.min.js"
-verify_hash "$RESOURCES_DIR/highlight.min.js" "$HLJS_HASH" "highlight.js"
+verify_hash "SharedResources/highlight.min.js" "$HLJS_HASH" "highlight.js"
 curl -sfLo "$TEMP_DIR/github.min.css" \
   "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@$HLJS_VER/build/styles/github.min.css"
 verify_hash "$TEMP_DIR/github.min.css" "$HLJS_LIGHT_HASH" "hljs-light-theme"
@@ -112,7 +112,7 @@ verify_hash "$TEMP_DIR/github-dark.min.css" "$HLJS_DARK_HASH" "hljs-dark-theme"
   echo "@media (prefers-color-scheme: dark) {"
   cat "$TEMP_DIR/github-dark.min.css"
   echo "}"
-} > "$RESOURCES_DIR/hljs-themes.css"
+} > "SharedResources/hljs-themes.css"
 echo "  highlight.js@$HLJS_VER ✓"
 
 # --- KaTeX ---
@@ -147,12 +147,6 @@ curl -sfLo "SharedResources/viewer-static.min.js" \
 verify_hash "SharedResources/viewer-static.min.js" "$DRAWIO_VIEWER_HASH" "viewer-static.js"
 echo "  draw.io viewer ✓"
 
-# Copy highlight.js to Structured extension
-mkdir -p "Structured/Resources"
-cp "$RESOURCES_DIR/highlight.min.js" "Structured/Resources/highlight.min.js"
-cp "$RESOURCES_DIR/hljs-themes.css" "Structured/Resources/hljs-themes.css"
-echo "  Copied highlight.min.js and hljs-themes.css to Structured/Resources/ ✓"
-
 echo ""
-echo "All libraries downloaded to $RESOURCES_DIR/"
+echo "All libraries downloaded to $RESOURCES_DIR/ and SharedResources/"
 ls -lh "$RESOURCES_DIR/"

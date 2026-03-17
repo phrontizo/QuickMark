@@ -28,7 +28,7 @@ Draw.io diagrams referenced as `![alt](file.drawio)` are converted to `` ```draw
 
 ## SharedResources
 
-`SharedResources/` contains resources used by multiple extension targets (currently `viewer-static.min.js` for Markdown and DrawIO). Each target references the single copy in `project.yml` — Xcode bundles it into each extension at build time. Do NOT duplicate shared resources into individual extension `Resources/` directories.
+`SharedResources/` contains resources used by multiple extension targets (`viewer-static.min.js` for Markdown and DrawIO; `highlight.min.js` and `hljs-themes.css` for Markdown and Structured). Each target references the single copy in `project.yml` — Xcode bundles it into each extension at build time. Do NOT duplicate shared resources into individual extension `Resources/` directories.
 
 ## Versioning & Releases
 
