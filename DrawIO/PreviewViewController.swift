@@ -68,10 +68,14 @@ class PreviewViewController: NSViewController, @preconcurrency QLPreviewingContr
         decidePolicyFor navigationAction: WKNavigationAction,
         decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
     ) {
-        if navigationAction.navigationType == .linkActivated {
-            decisionHandler(.cancel)
-        } else {
+        guard navigationAction.navigationType == .linkActivated,
+              let url = navigationAction.request.url else {
             decisionHandler(.allow)
+            return
+        }
+        decisionHandler(.cancel)
+        if case .openExternal(let externalURL) = LinkPolicy.action(for: url) {
+            NSWorkspace.shared.open(externalURL)
         }
     }
 
@@ -132,6 +136,7 @@ class PreviewViewController: NSViewController, @preconcurrency QLPreviewingContr
                     self?.pollForDiagram(attempts: attempts + 1)
                 }
             } else {
+                NSLog("QuickDrawio: diagram poll timed out after 3 seconds")
                 self.completionHandler?(nil)
                 self.completionHandler = nil
                 self.webView.alphaValue = 1
