@@ -149,11 +149,11 @@ struct ContentView: View {
     }
 
     private func checkExtensions() {
-        DispatchQueue.global(qos: .userInitiated).async {
-            let md = isExtensionRegistered("com.quickmark.QuickMark.QuickMarkPreview")
-            let dio = isExtensionRegistered("com.quickmark.QuickMark.QuickMarkDrawio")
-            let str = isExtensionRegistered("com.quickmark.QuickMark.QuickMarkStructured")
-            DispatchQueue.main.async {
+        Task.detached {
+            let md = Self.isExtensionRegistered("com.quickmark.QuickMark.QuickMarkPreview")
+            let dio = Self.isExtensionRegistered("com.quickmark.QuickMark.QuickMarkDrawio")
+            let str = Self.isExtensionRegistered("com.quickmark.QuickMark.QuickMarkStructured")
+            await MainActor.run {
                 markdownActive = md
                 drawioActive = dio
                 structuredActive = str
@@ -162,7 +162,7 @@ struct ContentView: View {
         }
     }
 
-    private func isExtensionRegistered(_ bundleId: String) -> Bool {
+    private nonisolated static func isExtensionRegistered(_ bundleId: String) -> Bool {
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/usr/bin/pluginkit")
         process.arguments = ["-m", "-i", bundleId]

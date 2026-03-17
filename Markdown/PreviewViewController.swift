@@ -6,7 +6,7 @@ import WebKit
 class PreviewViewController: NSViewController, @preconcurrency QLPreviewingController {
 
     private var webView: WKWebView!
-    private var tempFileURL: URL?
+    nonisolated(unsafe) private var tempFileURL: URL?
     private static let tempFilePrefix = "quickmark-"
 
     deinit {

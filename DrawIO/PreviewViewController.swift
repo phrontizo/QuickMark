@@ -8,7 +8,7 @@ class PreviewViewController: NSViewController, @preconcurrency QLPreviewingContr
     private var webView: WKWebView!
     private var contentSize: CGSize = .zero
     private var completionHandler: ((Error?) -> Void)?
-    private var tempFileURL: URL?
+    nonisolated(unsafe) private var tempFileURL: URL?
     private static let tempFilePrefix = "quickdrawio-"
 
     deinit {
@@ -91,6 +91,10 @@ class PreviewViewController: NSViewController, @preconcurrency QLPreviewingContr
 
     func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
         NSLog("QuickDrawio: WebContent process terminated — reloading")
+        // Complete any pending handler so QuickLook doesn't hang waiting
+        completionHandler?(nil)
+        completionHandler = nil
+        webView.alphaValue = 1
         if let temp = tempFileURL {
             webView.loadFileURL(temp, allowingReadAccessTo: URL(fileURLWithPath: "/"))
         }
