@@ -415,6 +415,10 @@ class RenderingTests: XCTestCase, WKNavigationDelegate {
             .deletingLastPathComponent()
             .appendingPathComponent("TestFiles/drawio-samples/bpmn-2-example.drawio")
 
+        guard FileManager.default.fileExists(atPath: fileURL.path) else {
+            throw XCTSkip("bpmn-2-example.drawio not available (gitignored fixture)")
+        }
+
         let xml = try String(contentsOf: fileURL, encoding: .utf8)
         let bundle = Bundle(for: type(of: self))
 
