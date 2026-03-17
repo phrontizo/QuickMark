@@ -50,7 +50,7 @@
 
             var xml = token.content.replace(/\n$/, "");
             var data = JSON.stringify({highlight: "#0000ff", nav: true, resize: true, xml: xml});
-            var escaped = data.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+            var escaped = data.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#x27;");
             // Generate tab bar if multiple pages
             var tabsHtml = "";
             var doc = new DOMParser().parseFromString(xml, "text/xml");
