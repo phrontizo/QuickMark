@@ -30,6 +30,12 @@ Draw.io diagrams referenced as `![alt](file.drawio)` are converted to `` ```draw
 
 `SharedResources/` contains resources used by multiple extension targets (currently `viewer-static.min.js` for Markdown and DrawIO). Each target references the single copy in `project.yml` — Xcode bundles it into each extension at build time. Do NOT duplicate shared resources into individual extension `Resources/` directories.
 
+## Versioning & Releases
+
+Version is managed via `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION` build settings in `project.yml`. Info.plist files reference `$(MARKETING_VERSION)` and `$(CURRENT_PROJECT_VERSION)` — do NOT hardcode version strings there. XcodeGen regenerates plists from `project.yml`, so version properties must be set in the `info.properties` section of each target.
+
+Releases are tag-driven: push a `v*` tag (e.g., `git tag v1.1.0 && git push origin v1.1.0`) and the release workflow builds, tests, creates a DMG, and publishes a GitHub release. CI injects the version from the tag at build time — no files are modified during the release.
+
 ## Testing
 
 - Tests run under App Sandbox with the same entitlements as the extensions (`ENABLE_APP_SANDBOX`, `ENABLE_HARDENED_RUNTIME`, `ENABLE_OUTGOING_NETWORK_CONNECTIONS`, read-only `/`)
