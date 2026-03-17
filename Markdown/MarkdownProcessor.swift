@@ -24,7 +24,8 @@ enum MarkdownProcessor {
                 continue // Leave the reference as-is if file can't be read
             }
 
-            let fragment = match.output.3.map(String.init) ?? ""
+            let rawFragment = match.output.3.map(String.init) ?? ""
+            let fragment = rawFragment.removingPercentEncoding ?? rawFragment
             let info = fragment.isEmpty ? "drawio" : "drawio page=\(fragment)"
             let fence = Self.fenceFor(content: xml)
             let fencedBlock = "\(fence)\(info)\n\(xml)\n\(fence)"

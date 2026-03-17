@@ -186,6 +186,24 @@ class MarkdownProcessorTests: XCTestCase {
         XCTAssertFalse(result.contains("page="), "No page param without fragment")
     }
 
+    // MARK: - Percent-Encoded Fragments
+
+    func testResolveDrawioReferencesWithPercentEncodedFragment() throws {
+        let tempDir = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: tempDir) }
+
+        let xml = "<mxfile><diagram name=\"My Page\">a</diagram><diagram name=\"Other\">b</diagram></mxfile>"
+        try xml.write(to: tempDir.appendingPathComponent("d.drawio"), atomically: true, encoding: .utf8)
+
+        let markdown = "![](d.drawio#My%20Page)"
+        let result = MarkdownProcessor.resolveDrawioReferences(markdown, baseURL: tempDir)
+
+        XCTAssertTrue(result.contains("```drawio page=My Page\n"),
+                      "Percent-encoded fragment should be decoded to match page names")
+    }
+
     // MARK: - Percent-Encoded Paths
 
     func testResolveDrawioReferencesWithPercentEncodedPath() throws {
