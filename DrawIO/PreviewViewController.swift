@@ -12,9 +12,6 @@ class PreviewViewController: NSViewController, @preconcurrency QLPreviewingContr
     private static let tempFilePrefix = "quickdrawio-"
 
     deinit {
-        let handler = completionHandler
-        completionHandler = nil
-        handler?(nil)
         if let temp = tempFileURL { try? FileManager.default.removeItem(at: temp) }
     }
 
@@ -74,6 +71,7 @@ class PreviewViewController: NSViewController, @preconcurrency QLPreviewingContr
     }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        guard completionHandler != nil else { return }
         pollForDiagram(attempts: 0)
     }
 
@@ -89,6 +87,13 @@ class PreviewViewController: NSViewController, @preconcurrency QLPreviewingContr
         completionHandler?(error)
         completionHandler = nil
         webView.alphaValue = 1
+    }
+
+    func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+        NSLog("QuickDrawio: WebContent process terminated — reloading")
+        if let temp = tempFileURL {
+            webView.loadFileURL(temp, allowingReadAccessTo: URL(fileURLWithPath: "/"))
+        }
     }
 
     /// Polls for the rendered diagram element until it has non-zero dimensions,

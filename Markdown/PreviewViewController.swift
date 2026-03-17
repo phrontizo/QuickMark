@@ -91,4 +91,11 @@ extension PreviewViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         NSLog("QuickMarkPreview: provisional navigation failed: %@", error.localizedDescription)
     }
+
+    func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+        NSLog("QuickMarkPreview: WebContent process terminated — reloading")
+        if let temp = tempFileURL {
+            webView.loadFileURL(temp, allowingReadAccessTo: URL(fileURLWithPath: "/"))
+        }
+    }
 }

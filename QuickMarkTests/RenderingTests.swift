@@ -407,6 +407,71 @@ class RenderingTests: XCTestCase, WKNavigationDelegate {
         }
     }
 
+    // MARK: - Multi-Page Tab Switching
+
+    func testBpmn2ExamplePageSwitch() throws {
+        let fileURL = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("TestFiles/drawio-samples/bpmn-2-example.drawio")
+
+        let xml = try String(contentsOf: fileURL, encoding: .utf8)
+        let bundle = Bundle(for: type(of: self))
+
+        guard let viewerURL = bundle.url(forResource: "viewer-static.min", withExtension: "js") else {
+            XCTFail("viewer-static.min.js not found in test bundle")
+            return
+        }
+
+        let html = MxGraphHelper.buildHTML(xml: xml, viewerURL: viewerURL)
+
+        let tempFile = FileManager.default.temporaryDirectory
+            .appendingPathComponent("test-bpmn2-\(UUID().uuidString).html")
+        try html.write(to: tempFile, atomically: true, encoding: .utf8)
+        addTeardownBlock { try? FileManager.default.removeItem(at: tempFile) }
+
+        navigationExpectation = expectation(description: "BPMN-2 page loaded")
+        webView.loadFileURL(tempFile, allowingReadAccessTo: URL(fileURLWithPath: "/"))
+        wait(for: [navigationExpectation!], timeout: 15)
+
+        // Wait for initial render (page 1)
+        var rendered = false
+        for _ in 0..<60 {
+            let hasSVG = evaluateJS("document.querySelector('svg') !== null") as? Bool
+            if hasSVG == true { rendered = true; break }
+            let waitExp = expectation(description: "poll wait")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { waitExp.fulfill() }
+            wait(for: [waitExp], timeout: 1)
+        }
+        XCTAssertTrue(rendered, "BPMN-2 page 1 should render an SVG")
+
+        // Verify 2 tabs are shown
+        let tabCount = evaluateJS("document.querySelectorAll('.drawio-tab').length") as? Int
+        XCTAssertEqual(tabCount, 2, "Should have 2 tab buttons")
+
+        // Click tab 2 (simulate selectPage)
+        let switchResult = evaluateJS(
+            "(function() {" +
+            "  var tabs = document.querySelectorAll('.drawio-tab');" +
+            "  if (tabs.length < 2) return 'no tabs';" +
+            "  tabs[1].click();" +
+            "  return 'clicked';" +
+            "})()"
+        ) as? String
+        XCTAssertEqual(switchResult, "clicked", "Tab click should execute")
+
+        // Wait for page 2 to render
+        var page2Rendered = false
+        for _ in 0..<60 {
+            let hasSVG = evaluateJS("document.querySelector('svg') !== null") as? Bool
+            if hasSVG == true { page2Rendered = true; break }
+            let waitExp = expectation(description: "page2 poll wait")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { waitExp.fulfill() }
+            wait(for: [waitExp], timeout: 1)
+        }
+        XCTAssertTrue(page2Rendered, "BPMN-2 page 2 should render after tab switch")
+    }
+
     // MARK: - Test File Rendering
 
     func testMultipleTestFilesRender() throws {
