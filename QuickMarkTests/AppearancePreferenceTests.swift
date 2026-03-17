@@ -8,11 +8,13 @@ class AppearancePreferenceTests: XCTestCase {
         // Reset to system before each test
         AppearancePreference.markdown = .system
         AppearancePreference.drawio = .system
+        AppearancePreference.structured = .system
     }
 
     override func tearDown() {
         AppearancePreference.markdown = .system
         AppearancePreference.drawio = .system
+        AppearancePreference.structured = .system
         super.tearDown()
     }
 
@@ -21,6 +23,7 @@ class AppearancePreferenceTests: XCTestCase {
     func testDefaultIsSystem() {
         XCTAssertEqual(AppearancePreference.markdown, .system)
         XCTAssertEqual(AppearancePreference.drawio, .system)
+        XCTAssertEqual(AppearancePreference.structured, .system)
     }
 
     func testMarkdownPreferencePersists() {

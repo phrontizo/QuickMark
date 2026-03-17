@@ -94,6 +94,14 @@ class LinkPolicyTests: XCTestCase {
         }
     }
 
+    func testLocalDrawioFileIsBlocked() {
+        let url = URL(fileURLWithPath: "/tmp/diagram.drawio")
+        guard case .block = LinkPolicy.action(for: url) else {
+            XCTFail("Local .drawio file should return .block")
+            return
+        }
+    }
+
     // MARK: - FTP → block
 
     func testFtpSchemeIsBlocked() {

@@ -22,7 +22,7 @@ Structured/
 ├── Resources/
 │   ├── highlight.min.js           # Copy from Markdown/Resources
 │   └── hljs-themes.css            # Copy from Markdown/Resources
-└── style.css                      # Line numbers, monospace, dark/light mode
+└── structured-style.css           # Line numbers, monospace, dark/light mode
 ```
 
 ### PreviewViewController
@@ -51,13 +51,19 @@ Inline in PreviewViewController (no HTMLBuilder needed — the template is simpl
   <pre><code class="language-{lang}">{escaped-content}</code></pre>
   <script src="{highlight.min.js}"></script>
   <script>
-    hljs.highlightAll();
-    // Split into numbered lines
     var code = document.querySelector('code');
-    var lines = code.innerHTML.split('\n');
+    var lang = (code.className.match(/language-(\w+)/) || [])[1] || '';
+    var highlighted = code.innerHTML;
+    try {
+      if (typeof hljs !== 'undefined' && lang) {
+        highlighted = hljs.highlight(code.textContent, {language: lang}).value;
+      }
+    } catch(e) {}
+    var lines = highlighted.split('\n');
+    if (lines.length > 0 && lines[lines.length - 1] === '') lines.pop();
     code.innerHTML = lines.map(function(line, i) {
       return '<span class="line"><span class="line-number">' + (i + 1) + '</span>' + line + '</span>';
-    }).join('\n');
+    }).join('');
   </script>
 </body>
 </html>

@@ -186,6 +186,26 @@ class MarkdownProcessorTests: XCTestCase {
         XCTAssertFalse(result.contains("page="), "No page param without fragment")
     }
 
+    // MARK: - Percent-Encoded Paths
+
+    func testResolveDrawioReferencesWithPercentEncodedPath() throws {
+        let tempDir = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString)
+        let subDir = tempDir.appendingPathComponent("my diagrams")
+        try FileManager.default.createDirectory(at: subDir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: tempDir) }
+
+        let xml = "<mxfile><diagram>encoded</diagram></mxfile>"
+        try xml.write(to: subDir.appendingPathComponent("arch.drawio"), atomically: true, encoding: .utf8)
+
+        let markdown = "![](my%20diagrams/arch.drawio)"
+        let result = MarkdownProcessor.resolveDrawioReferences(markdown, baseURL: tempDir)
+
+        XCTAssertTrue(result.contains("```drawio\n"), "Percent-encoded path should resolve correctly")
+        XCTAssertTrue(result.contains(xml), "XML content should be embedded")
+        XCTAssertFalse(result.contains("![](my%20diagrams"), "Image ref should be replaced")
+    }
+
     // MARK: - Multiple Drawio Refs
 
     func testResolveDrawioReferencesHandlesMultipleRefs() throws {

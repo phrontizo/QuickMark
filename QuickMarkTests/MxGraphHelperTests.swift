@@ -51,4 +51,39 @@ class MxGraphHelperTests: XCTestCase {
         XCTAssertTrue(result.contains("class=\"mxgraph\""), "Should still produce a valid div")
         XCTAssertTrue(result.contains("data-mxgraph="), "Should still have the attribute")
     }
+
+    func testDrawioDivEscapesControlCharacters() {
+        let xml = "<mxfile>\u{0000}\u{0008}\u{000B}\u{000C}</mxfile>"
+        let result = MxGraphHelper.drawioDiv(xml: xml)
+
+        // Control characters should be escaped by JSONSerialization
+        XCTAssertFalse(result.contains("\u{0000}"), "NUL bytes must be escaped")
+        XCTAssertTrue(result.contains("class=\"mxgraph\""), "Should still produce a valid div")
+    }
+
+    // MARK: - buildHTML
+
+    func testBuildHTMLProducesCompleteDocument() {
+        let viewerURL = URL(fileURLWithPath: "/path/to/viewer-static.min.js")
+        let html = MxGraphHelper.buildHTML(xml: "<mxfile><diagram>test</diagram></mxfile>", viewerURL: viewerURL)
+
+        XCTAssertTrue(html.contains("<!DOCTYPE html>"), "Should start with DOCTYPE")
+        XCTAssertTrue(html.contains("</html>"), "Should close HTML tag")
+        XCTAssertTrue(html.contains("class=\"mxgraph\""), "Should contain the mxgraph div")
+        XCTAssertTrue(html.contains("viewer-static.min.js"), "Should reference the viewer script")
+    }
+
+    func testBuildHTMLContainsTabBarDiv() {
+        let viewerURL = URL(fileURLWithPath: "/path/to/viewer.js")
+        let html = MxGraphHelper.buildHTML(xml: "<mxfile><diagram>a</diagram></mxfile>", viewerURL: viewerURL)
+
+        XCTAssertTrue(html.contains("id=\"drawio-tabs\""), "Should contain tab bar div")
+    }
+
+    func testBuildHTMLEscapesViewerURL() {
+        let viewerURL = URL(string: "file:///path/with%22quotes&amps")!
+        let html = MxGraphHelper.buildHTML(xml: "<mxfile/>", viewerURL: viewerURL)
+
+        XCTAssertTrue(html.contains("&amp;amps"), "Ampersands in viewer URL should be escaped")
+    }
 }

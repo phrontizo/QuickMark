@@ -14,7 +14,7 @@ class PreviewViewController: NSViewController, @preconcurrency QLPreviewingContr
     }
 
     override func loadView() {
-        cleanupStaleTempFiles()
+        FileUtilities.cleanupStaleTempFiles(prefix: Self.tempFilePrefix)
         let config = WKWebViewConfiguration()
         #if DEBUG
         config.preferences.setValue(true, forKey: "developerExtrasEnabled")
@@ -52,18 +52,6 @@ class PreviewViewController: NSViewController, @preconcurrency QLPreviewingContr
         webView.loadFileURL(tempFile, allowingReadAccessTo: URL(fileURLWithPath: "/"))
     }
 
-    private func cleanupStaleTempFiles() {
-        let tempDir = FileManager.default.temporaryDirectory
-        guard let files = try? FileManager.default.contentsOfDirectory(
-            at: tempDir, includingPropertiesForKeys: [.creationDateKey]
-        ) else { return }
-        let cutoff = Date().addingTimeInterval(-300) // 5 minutes ago
-        for file in files where file.lastPathComponent.hasPrefix(Self.tempFilePrefix) && file.pathExtension == "html" {
-            guard let created = try? file.resourceValues(forKeys: [.creationDateKey]).creationDate,
-                  created < cutoff else { continue }
-            try? FileManager.default.removeItem(at: file)
-        }
-    }
 }
 
 extension PreviewViewController: WKNavigationDelegate {

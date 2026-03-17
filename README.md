@@ -10,7 +10,7 @@ macOS has no built-in Markdown preview. QuickLook shows `.md` files as plain tex
 
 ### Markdown
 
-- **Formatted Markdown** — headings, lists, tables, blockquotes, links, inline HTML
+- **Formatted Markdown** — headings, lists, tables, blockquotes, links, images
 - **Syntax-highlighted code blocks** — via highlight.js
 - **LaTeX math** — inline (`$...$`) and display (`$$...$$`) via KaTeX + texmath
 - **Mermaid diagrams** — flowcharts, sequence diagrams, etc.
@@ -62,7 +62,7 @@ QuickMark is a macOS app bundle containing three QuickLook preview extensions:
 **Markdown Preview** — when Finder invokes QuickLook on a `.md` file:
 
 1. **PreviewViewController** reads the file from disk
-2. **MarkdownProcessor** resolves draw.io references (inlined as viewer divs)
+2. **MarkdownProcessor** resolves draw.io references (converted to fenced code blocks)
 3. **HTMLBuilder** assembles an HTML page referencing bundled JS/CSS by URL, with a `<base>` tag for relative image paths
 4. The HTML is loaded via `WKWebView.loadFileURL` for local file access
 5. **render.js** (client-side) parses the Markdown with markdown-it and its plugins

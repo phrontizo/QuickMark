@@ -3,7 +3,7 @@ import Quartz
 import WebKit
 
 @MainActor
-class PreviewViewController: NSViewController, @preconcurrency QLPreviewingController {
+class PreviewViewController: NSViewController, @preconcurrency QLPreviewingController, WKNavigationDelegate {
 
     private var webView: WKWebView!
     private var tempFileURL: URL?
@@ -14,24 +14,20 @@ class PreviewViewController: NSViewController, @preconcurrency QLPreviewingContr
     }
 
     override func loadView() {
-        cleanupStaleTempFiles()
+        FileUtilities.cleanupStaleTempFiles(prefix: Self.tempFilePrefix)
         let config = WKWebViewConfiguration()
         #if DEBUG
         config.preferences.setValue(true, forKey: "developerExtrasEnabled")
         #endif
         webView = WKWebView(frame: NSRect(x: 0, y: 0, width: 800, height: 600), configuration: config)
+        webView.navigationDelegate = self
         self.view = webView
     }
 
     func preparePreviewOfFile(at url: URL, completionHandler handler: @escaping (Error?) -> Void) {
         webView.appearance = AppearancePreference.structured.nsAppearance
         do {
-            let content: String
-            if let utf8 = try? String(contentsOf: url, encoding: .utf8) {
-                content = utf8
-            } else {
-                content = try String(contentsOf: url, encoding: .isoLatin1)
-            }
+            let content = try FileUtilities.readFile(at: url)
 
             let lang = Self.language(for: url.pathExtension)
             let bundle = Bundle(for: type(of: self))
@@ -62,12 +58,16 @@ class PreviewViewController: NSViewController, @preconcurrency QLPreviewingContr
 
     // MARK: - HTML Builder
 
-    nonisolated static func buildHTML(content: String, language: String, bundle: Bundle) -> String {
-        let escaped = content
+    private nonisolated static func escapeHTMLAttribute(_ string: String) -> String {
+        string
             .replacingOccurrences(of: "&", with: "&amp;")
             .replacingOccurrences(of: "<", with: "&lt;")
             .replacingOccurrences(of: ">", with: "&gt;")
             .replacingOccurrences(of: "\"", with: "&quot;")
+    }
+
+    nonisolated static func buildHTML(content: String, language: String, bundle: Bundle) -> String {
+        let escaped = escapeHTMLAttribute(content)
 
         let hljsURL = bundle.url(forResource: "highlight.min", withExtension: "js")
         let themeURL = bundle.url(forResource: "hljs-themes", withExtension: "css")
@@ -76,17 +76,17 @@ class PreviewViewController: NSViewController, @preconcurrency QLPreviewingContr
         var html = "<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"utf-8\">\n"
 
         if let url = themeURL {
-            html += "<link rel=\"stylesheet\" href=\"\(url.absoluteString)\">\n"
+            html += "<link rel=\"stylesheet\" href=\"\(escapeHTMLAttribute(url.absoluteString))\">\n"
         }
         if let url = styleURL {
-            html += "<link rel=\"stylesheet\" href=\"\(url.absoluteString)\">\n"
+            html += "<link rel=\"stylesheet\" href=\"\(escapeHTMLAttribute(url.absoluteString))\">\n"
         }
 
         html += "</head>\n<body>\n"
-        html += "<pre><code class=\"language-\(language)\">\(escaped)</code></pre>\n"
+        html += "<pre><code class=\"language-\(escapeHTMLAttribute(language))\">\(escaped)</code></pre>\n"
 
         if let url = hljsURL {
-            html += "<script src=\"\(url.absoluteString)\"></script>\n"
+            html += "<script src=\"\(escapeHTMLAttribute(url.absoluteString))\"></script>\n"
         }
 
         html += "<script>\n"
@@ -94,12 +94,12 @@ class PreviewViewController: NSViewController, @preconcurrency QLPreviewingContr
         html += "  var code = document.querySelector('code');\n"
         html += "  if (!code) return;\n"
         html += "  var lang = (code.className.match(/language-(\\w+)/) || [])[1] || '';\n"
-        html += "  var highlighted = code.textContent;\n"
+        html += "  var highlighted = code.innerHTML;\n"
         html += "  try {\n"
         html += "    if (typeof hljs !== 'undefined' && lang) {\n"
         html += "      highlighted = hljs.highlight(code.textContent, {language: lang}).value;\n"
         html += "    }\n"
-        html += "  } catch(e) { highlighted = code.innerHTML; }\n"
+        html += "  } catch(e) {}\n"
         html += "  var lines = highlighted.split('\\n');\n"
         html += "  if (lines.length > 0 && lines[lines.length - 1] === '') lines.pop();\n"
         html += "  code.innerHTML = lines.map(function(line, i) {\n"
@@ -114,18 +114,25 @@ class PreviewViewController: NSViewController, @preconcurrency QLPreviewingContr
         return html
     }
 
-    // MARK: - Temp File Cleanup
+    // MARK: - WKNavigationDelegate
 
-    private func cleanupStaleTempFiles() {
-        let tempDir = FileManager.default.temporaryDirectory
-        guard let files = try? FileManager.default.contentsOfDirectory(
-            at: tempDir, includingPropertiesForKeys: [.creationDateKey]
-        ) else { return }
-        let cutoff = Date().addingTimeInterval(-300) // 5 minutes ago
-        for file in files where file.lastPathComponent.hasPrefix(Self.tempFilePrefix) && file.pathExtension == "html" {
-            guard let created = try? file.resourceValues(forKeys: [.creationDateKey]).creationDate,
-                  created < cutoff else { continue }
-            try? FileManager.default.removeItem(at: file)
+    func webView(
+        _ webView: WKWebView,
+        decidePolicyFor navigationAction: WKNavigationAction,
+        decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
+    ) {
+        if navigationAction.navigationType == .linkActivated {
+            decisionHandler(.cancel)
+        } else {
+            decisionHandler(.allow)
         }
+    }
+
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        NSLog("QuickStructured: navigation failed: %@", error.localizedDescription)
+    }
+
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        NSLog("QuickStructured: provisional navigation failed: %@", error.localizedDescription)
     }
 }

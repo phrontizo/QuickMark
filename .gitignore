@@ -28,3 +28,10 @@ TestFiles/drawio-samples/
 
 # Node (for JS dependency management)
 node_modules/
+
+# Python
+__pycache__/
+
+# Local scripts
+ralph-review.py
+.ralph-memory.md

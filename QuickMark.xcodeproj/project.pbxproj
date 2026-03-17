@@ -33,6 +33,7 @@
 		5DBE460F9F40DDDCE4CFDF4F /* katex-inlined.min.css in Resources */ = {isa = PBXBuildFile; fileRef = E2C988C4882CF2552CA9FCAF /* katex-inlined.min.css */; };
 		623C8CDC325A2A47AF2489D4 /* mermaid.min.js in Resources */ = {isa = PBXBuildFile; fileRef = FB6691AFE4B67F1F3617DDA2 /* mermaid.min.js */; };
 		6984BEBAA997CEF0DEE37A6A /* QuickMarkApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653CE4750AE1FBB9B41ED4EC /* QuickMarkApp.swift */; };
+		6E7759468C6036E67AD75CB9 /* FileUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB7F57AF393FFDB7299F728A /* FileUtilities.swift */; };
 		7B08B7DC56B28451F0E51E3B /* LinkPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9972857110EC202F6F3C0833 /* LinkPolicy.swift */; };
 		802E9B7F6F296A388EAEAE7A /* markdown-it.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 733EBB2778133BA55F3D6977 /* markdown-it.min.js */; };
 		817D4640E18EB700302E4632 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982FCB0E3433F1ABDD5C4FF8 /* PreviewViewController.swift */; };
@@ -44,16 +45,19 @@
 		9BBC391DC461EAACABAA41A1 /* QuickMarkDrawio.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = E8A9860649E34C9062766E73 /* QuickMarkDrawio.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9CE679DB5B277D7D465B0B8F /* katex.min.js in Resources */ = {isa = PBXBuildFile; fileRef = B4E8C01661186C19E8264797 /* katex.min.js */; };
 		A05078668B77AD92D1E3C196 /* markdown-it-task-lists.min.js in Resources */ = {isa = PBXBuildFile; fileRef = BE3679C89305E3D0C29688BD /* markdown-it-task-lists.min.js */; };
+		A234D7E59CC6B580BFF930D3 /* FileUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB7F57AF393FFDB7299F728A /* FileUtilities.swift */; };
 		A27524EE45737F556B7C4F80 /* katex.min.js in Resources */ = {isa = PBXBuildFile; fileRef = B4E8C01661186C19E8264797 /* katex.min.js */; };
 		A3272ED664EE0797A07AC77E /* highlight.min.js in Resources */ = {isa = PBXBuildFile; fileRef = F23FC2C40FC50671901754B0 /* highlight.min.js */; };
 		A4EACAAA7D322B75C17E5469 /* LinkPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9972857110EC202F6F3C0833 /* LinkPolicy.swift */; };
 		A6A42992CCA92792CEE023F4 /* MxGraphHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496D8582B19D7F290F24E99B /* MxGraphHelper.swift */; };
 		A9BA232C7069A52ECCF148B5 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90FBA77D4660D22A836D283 /* PreviewViewController.swift */; };
+		AB8A6C0EB87CBBA6C124B866 /* FileUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB7F57AF393FFDB7299F728A /* FileUtilities.swift */; };
 		B063054690299EAE19264F4C /* render.js in Resources */ = {isa = PBXBuildFile; fileRef = CF3C5B03D6538A43D6642970 /* render.js */; };
 		B8B8E94D65BC1B70E5925ABB /* MarkdownProcessorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4AF0F19C5C0CEB2D631E7E /* MarkdownProcessorTests.swift */; };
 		B8CFAC2EF124404F384E4D7D /* hljs-themes.css in Resources */ = {isa = PBXBuildFile; fileRef = A8B67C7C6C85877EF496BD49 /* hljs-themes.css */; };
 		B92054FE83D5FBD36F95BA50 /* RenderingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7F0CFCB2514CFA756DBFA7F /* RenderingTests.swift */; };
 		BAE77E5524202F0779CCF899 /* highlight.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 202BB1A525B409CFF1EA48B0 /* highlight.min.js */; };
+		BD3617E0D6D9F2594143B878 /* FileUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB7F57AF393FFDB7299F728A /* FileUtilities.swift */; };
 		C587BD8E27366A11E0DAB638 /* render.js in Resources */ = {isa = PBXBuildFile; fileRef = CF3C5B03D6538A43D6642970 /* render.js */; };
 		C75E4A5423514B8C52E57512 /* texmath.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 52DA12520FCA33919A26628C /* texmath.min.js */; };
 		C858081203A774F50507DE0F /* StructuredTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 762A7903C96481FDAE04AA78 /* StructuredTests.swift */; };
@@ -71,6 +75,7 @@
 		EAE82C679F8C02632758ABA3 /* texmath.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 52DA12520FCA33919A26628C /* texmath.min.js */; };
 		ECB8BBF9EB5E4FEEEF39C390 /* style.css in Resources */ = {isa = PBXBuildFile; fileRef = 523E7AAA8ABF3D839401ECD9 /* style.css */; };
 		ED49B4403F91FF8D08976662 /* LinkPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1FBC77ACE3DC19B83716A65 /* LinkPolicyTests.swift */; };
+		F8714E5BC87036F00CCBCF0D /* FileUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB7F57AF393FFDB7299F728A /* FileUtilities.swift */; };
 		F9764956B3BB16055609F58C /* MxGraphHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496D8582B19D7F290F24E99B /* MxGraphHelper.swift */; };
 		FE862145F68EE7761CAD9ED9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 43BCB4594E25E7A451777FE2 /* Assets.xcassets */; };
 		FFBEF628372545749B97AFE2 /* markdown-it-footnote.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 384575201CF5C2420B1766CE /* markdown-it-footnote.min.js */; };
@@ -160,6 +165,7 @@
 		E2C988C4882CF2552CA9FCAF /* katex-inlined.min.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "katex-inlined.min.css"; sourceTree = "<group>"; };
 		E8A9860649E34C9062766E73 /* QuickMarkDrawio.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = QuickMarkDrawio.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB396954C692361D7C0E924A /* Markdown.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Markdown.entitlements; sourceTree = "<group>"; };
+		EB7F57AF393FFDB7299F728A /* FileUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileUtilities.swift; sourceTree = "<group>"; };
 		F1FBC77ACE3DC19B83716A65 /* LinkPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkPolicyTests.swift; sourceTree = "<group>"; };
 		F23FC2C40FC50671901754B0 /* highlight.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = highlight.min.js; sourceTree = "<group>"; };
 		FB6691AFE4B67F1F3617DDA2 /* mermaid.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = mermaid.min.js; sourceTree = "<group>"; };
@@ -212,6 +218,7 @@
 			isa = PBXGroup;
 			children = (
 				992648D1F73305BF7775701D /* AppearancePreference.swift */,
+				EB7F57AF393FFDB7299F728A /* FileUtilities.swift */,
 				9972857110EC202F6F3C0833 /* LinkPolicy.swift */,
 				496D8582B19D7F290F24E99B /* MxGraphHelper.swift */,
 			);
@@ -524,6 +531,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				26305F759015BB6FDF55F2A4 /* AppearancePreference.swift in Sources */,
+				AB8A6C0EB87CBBA6C124B866 /* FileUtilities.swift in Sources */,
 				3BBEBD3D34105E55E8A8E66E /* HTMLBuilder.swift in Sources */,
 				4BB5A60FE008D09BBD9B9DAF /* LinkPolicy.swift in Sources */,
 				82725FB873BF2FA202333545 /* MarkdownProcessor.swift in Sources */,
@@ -538,6 +546,7 @@
 			files = (
 				3D1B288FF000AAEF90FABB2A /* AppearancePreference.swift in Sources */,
 				1680DC704AEFB3DEB9526989 /* ContentView.swift in Sources */,
+				A234D7E59CC6B580BFF930D3 /* FileUtilities.swift in Sources */,
 				A4EACAAA7D322B75C17E5469 /* LinkPolicy.swift in Sources */,
 				F9764956B3BB16055609F58C /* MxGraphHelper.swift in Sources */,
 				6984BEBAA997CEF0DEE37A6A /* QuickMarkApp.swift in Sources */,
@@ -549,6 +558,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				40C3FEBDDF79D64323653CED /* AppearancePreference.swift in Sources */,
+				F8714E5BC87036F00CCBCF0D /* FileUtilities.swift in Sources */,
 				56D49F2F3E40366672D626E5 /* LinkPolicy.swift in Sources */,
 				A6A42992CCA92792CEE023F4 /* MxGraphHelper.swift in Sources */,
 				D4CB2219A3AE8DA28ABB5815 /* PreviewViewController.swift in Sources */,
@@ -561,6 +571,7 @@
 			files = (
 				D730DCAD2115B682CC9A770A /* AppearancePreference.swift in Sources */,
 				3DEE2AA9F3022FDCE306AC3B /* AppearancePreferenceTests.swift in Sources */,
+				6E7759468C6036E67AD75CB9 /* FileUtilities.swift in Sources */,
 				820D5FD883F51564F03DE884 /* HTMLBuilder.swift in Sources */,
 				5A45F178AAA310766D7727B0 /* HTMLBuilderTests.swift in Sources */,
 				7B08B7DC56B28451F0E51E3B /* LinkPolicy.swift in Sources */,
@@ -580,6 +591,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				93DACCBCDFF928EDD81A8588 /* AppearancePreference.swift in Sources */,
+				BD3617E0D6D9F2594143B878 /* FileUtilities.swift in Sources */,
 				EA721F0D168C1C39BE1D1440 /* LinkPolicy.swift in Sources */,
 				E395593C0DB9B425FD922DDF /* MxGraphHelper.swift in Sources */,
 				817D4640E18EB700302E4632 /* PreviewViewController.swift in Sources */,

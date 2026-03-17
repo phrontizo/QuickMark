@@ -1,5 +1,7 @@
 # QuickMark Implementation Plan
 
+> **Historical:** This was the initial implementation plan. The final implementation uses `Markdown/`, `DrawIO/`, and `Structured/` directories (not `QuickMarkPreview/`), three extension targets instead of one, and file URL references instead of inlined JS. See the codebase and CLAUDE.md for current architecture.
+
 > **For agentic workers:** REQUIRED: Use superpowers:subagent-driven-development (if subagents available) or superpowers:executing-plans to implement this plan. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build a macOS QuickLook extension that previews markdown files with GFM support, syntax highlighting, mermaid diagrams, LaTeX math, draw.io diagrams, and light/dark mode.

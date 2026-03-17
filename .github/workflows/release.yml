@@ -8,11 +8,16 @@ on:
         required: true
         type: string
 
+permissions: {}
+
 jobs:
   release:
     runs-on: macos-15
     permissions:
       contents: write
+
+    env:
+      VERSION: ${{ github.event.inputs.version }}
 
     steps:
       - uses: actions/checkout@v5
@@ -29,15 +34,15 @@ jobs:
         run: xcodebuild test -scheme QuickMark -destination "platform=macOS" -quiet
 
       - name: Bump version
-        run: ./scripts/bump-version.sh "${{ github.event.inputs.version }}"
+        run: ./scripts/bump-version.sh "$VERSION"
 
       - name: Commit and tag
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add QuickMark/Info.plist Markdown/Info.plist DrawIO/Info.plist Structured/Info.plist
-          git commit -m "chore: release v${{ github.event.inputs.version }}"
-          git tag "v${{ github.event.inputs.version }}"
+          git commit -m "chore: release v${VERSION}"
+          git tag "v${VERSION}"
           git push origin main --tags
 
       - name: Build Release
@@ -53,7 +58,7 @@ jobs:
       - name: Create DMG
         run: |
           APP_PATH=$(find build/DerivedData -name "QuickMark.app" -type d | head -1)
-          DMG_NAME="QuickMark-v${{ github.event.inputs.version }}.dmg"
+          DMG_NAME="QuickMark-v${VERSION}.dmg"
           STAGING="build/dmg-staging"
 
           mkdir -p "$STAGING"
@@ -68,7 +73,7 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: "v${{ github.event.inputs.version }}"
-          name: "QuickMark v${{ github.event.inputs.version }}"
-          files: "QuickMark-v${{ github.event.inputs.version }}.dmg"
+          tag_name: "v${{ env.VERSION }}"
+          name: "QuickMark v${{ env.VERSION }}"
+          files: "QuickMark-v${{ env.VERSION }}.dmg"
           generate_release_notes: true

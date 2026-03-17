@@ -1,5 +1,7 @@
 # QuickMark — Design Spec
 
+> **Historical:** This was the initial design spec. The implementation diverged in several ways: three extensions instead of one (Markdown, DrawIO, Structured), `html: false` for security, file URL references instead of inlined JS, and a `Shared/`/`SharedResources/` directory structure. See the codebase and CLAUDE.md for current architecture.
+
 ## Overview
 
 A clean, from-scratch macOS QuickLook extension for markdown files. Uses a JavaScript rendering stack running in WKWebView, with zero native dependencies.
