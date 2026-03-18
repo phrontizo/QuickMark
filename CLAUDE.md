@@ -41,3 +41,4 @@ Releases are tag-driven: push a `v*` tag (e.g., `git tag v1.1.0 && git push orig
 - Tests run under App Sandbox with the same entitlements as the extensions (`ENABLE_APP_SANDBOX`, `ENABLE_HARDENED_RUNTIME`, `ENABLE_OUTGOING_NETWORK_CONNECTIONS`, read-only `/`)
 - `RenderingTests` load HTML in a real WKWebView and verify content renders — catches CSP, sandbox, and script-loading regressions
 - Run `./scripts/download-libs.sh --rehash` after bumping library versions to update SHA-256 hashes
+- When adding a new third-party dependency, add its licence to `THIRD-PARTY-NOTICES` following the existing format
