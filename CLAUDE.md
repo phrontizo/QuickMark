@@ -24,7 +24,7 @@ Do NOT re-add CSP or remove the network entitlement — both break WKWebView ren
 
 ## Table of Contents Sidebar
 
-`render.js` generates a sticky ToC sidebar from h1–h6 headings (requires markdown-it-anchor for `id` attributes). The sidebar uses `body.has-toc` flex layout, IntersectionObserver scroll tracking, and a draggable resize handle with localStorage persistence (best-effort in sandbox). Auto-hidden when fewer than 2 headings or viewport < 1000px. The ToC CSS uses `align-self: flex-start` to make `position: sticky` work inside the flex parent.
+`render.js` generates a sticky ToC sidebar from h1–h6 headings (requires markdown-it-anchor for `id` attributes). The sidebar uses `body.has-toc` flex layout, IntersectionObserver scroll tracking, and a draggable resize handle with localStorage persistence (best-effort in sandbox). Auto-hidden when fewer than 2 headings or viewport < 500px. The ToC CSS uses `align-self: flex-start` to make `position: sticky` work inside the flex parent.
 
 ## GitHub Alerts
 
@@ -32,7 +32,7 @@ Do NOT re-add CSP or remove the network entitlement — both break WKWebView ren
 
 ## RTL Support
 
-`render.js` auto-detects RTL content by sampling the first 200 directional characters and sets `dir="rtl"` on `<html>`. All layout CSS uses logical properties (`padding-inline-start`, `border-inline-start`, `margin-inline-start`, etc.) so the layout flips automatically. Code blocks force `direction: ltr` regardless of document direction. When adding new CSS, always use logical properties instead of physical ones (`left`/`right`).
+`render.js` auto-detects RTL content by sampling the first 200 characters (counting RTL and Latin letters separately) and sets `dir="rtl"` on `<html>` when RTL characters outnumber LTR. All layout CSS uses logical properties (`padding-inline-start`, `border-inline-start`, `margin-inline-start`, etc.) so the layout flips automatically. Code blocks force `direction: ltr` regardless of document direction. When adding new CSS, always use logical properties instead of physical ones (`left`/`right`).
 
 ## Draw.io in Markdown
 
