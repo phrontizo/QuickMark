@@ -5,7 +5,7 @@
 
 ## Overview
 
-Add seven features to QuickMark that QL-Win/QuickLook already provides, closing the feature gap for markdown rendering and expanding structured data coverage. Each feature is an independent commit.
+Add six features to QuickMark that QL-Win/QuickLook already provides, closing the feature gap for markdown rendering and expanding structured data coverage. Each feature is an independent commit. CSV/TSV table preview is deferred to a potential 1.3 release.
 
 ## Features
 
@@ -153,60 +153,6 @@ Add seven features to QuickMark that QL-Win/QuickLook already provides, closing 
 
 ---
 
-### 7. CSV/TSV Table Preview
-
-**Goal:** New extension target rendering CSV and TSV files as HTML tables.
-
-**New target:** `QuickMarkCSV` in `project.yml`.
-
-**Changes:**
-
-**New files — `CSV/` directory:**
-- `PreviewViewController.swift` — reads file, passes to JS renderer via WKWebView, sets `AppearancePreference.csv.nsAppearance`
-- `CSV.entitlements` — same sandbox entitlements as other extensions
-- `Info.plist` — declares supported UTTypes
-- `Resources/render.js` — lightweight CSV parser in JS:
-  - Detect delimiter: check if the first N lines have a consistent tab count vs comma count (more robust than raw frequency, handles commas in quoted fields)
-  - Handle quoted fields with escaped quotes
-  - First row treated as header (`<thead>`)
-  - Cap at 10,000 rows with "showing first N of M rows" message
-  - Table cells populated via `textContent` only (no `innerHTML` from user content)
-- `Resources/style.css` — reuses existing table styling (alternating rows, borders, cell padding) plus line-number gutter column matching Structured extension style
-
-**`project.yml` additions:**
-- New `QuickMarkCSV` extension target with:
-  - `type: app-extension`, `platform: macOS`
-  - Sources: `Shared/` + `CSV/` (excluding Resources) + `CSV/Resources` as buildPhase resources
-  - UTTypes: `public.comma-separated-values-text`, `public.tab-separated-values-text`
-  - Entitlements: `ENABLE_APP_SANDBOX: YES`, `ENABLE_HARDENED_RUNTIME: YES`, `ENABLE_OUTGOING_NETWORK_CONNECTIONS: YES`, `ENABLE_USER_SELECTED_FILES: readonly`, read-only `/` temporary exception
-  - `PRODUCT_BUNDLE_IDENTIFIER: com.quickmark.QuickMark.QuickMarkCSV`
-- Host app `QuickMark` target: add `QuickMarkCSV` to dependencies (embed with code signing)
-
-**`Shared/AppearancePreference.swift`:**
-- Add `csvAppearance` storage key
-- Add `AppearancePreference.csv` computed property (getter/setter)
-
-**`QuickMark/ContentView.swift`:**
-- Add `@State var csvActive = false`
-- Add `isExtensionRegistered("com.quickmark.QuickMark.QuickMarkCSV")` call in `checkExtensions()`
-- Add fourth column with extension status row + appearance picker
-- Update "all active" condition to include `csvActive`
-- Update user-facing file type text to mention `.csv` and `.tsv`
-
-**Test target (`project.yml`):**
-- Add CSV `PreviewViewController.swift` to test target sources
-- Add CSV test resource files (sample `.csv` and `.tsv`)
-
-**Dark mode:** Via CSS custom properties, same pattern as other extensions.
-
-**No third-party dependencies.**
-
-**Testing:** Rendering test loading a CSV file, verifying `<table>` with correct row/column count.
-
-**Dependencies:** None.
-
----
-
 ## Implementation Order
 
 Features are independent commits but should be implemented in this order to avoid rework:
@@ -217,9 +163,8 @@ Features are independent commits but should be implemented in this order to avoi
 4. **GitHub Alerts** — independent
 5. **RTL text direction** — converts remaining physical properties to logical
 6. **XML syntax highlighting** — independent, trivial
-7. **CSV/TSV table preview** — independent, largest scope
 
-After implementation, update `CLAUDE.md` to document the new features and patterns (ToC, CSS logical properties, CSV extension).
+After implementation, update `CLAUDE.md` to document the new features and patterns (ToC, CSS logical properties).
 
 ## Security
 
@@ -227,7 +172,6 @@ After implementation, update `CLAUDE.md` to document the new features and patter
 - `markdown-it-anchor` slugify uses a `heading-` prefix to avoid `id` collisions with existing elements (`content`, `toc`, `markdown-source`)
 - GitHub Alerts implemented as a custom plugin (no external dependency) operating within the markdown-it token stream
 - New library (markdown-it-anchor) pinned with SHA-256 hash via `download-libs.sh`
-- CSV parsing is pure JS with no `eval` or `innerHTML` from user content — table cells are text-content only
 - No new network access or entitlement changes required
 
 ## New Dependencies
