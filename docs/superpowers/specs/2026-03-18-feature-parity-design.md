@@ -14,9 +14,9 @@ Add seven features to QuickMark that QL-Win/QuickLook already provides, closing 
 **Goal:** Generate stable `id` attributes on all headings (h1-h6) so they can be linked to from the ToC and fragment URLs.
 
 **Changes:**
-- Add `markdown-it-anchor` plugin (pinned version, SHA-256 hash via `download-libs.sh`)
-- `HTMLBuilder.swift`: add `<script>` tag after other markdown-it plugins
-- `render.js`: initialise `md.use(markdownItAnchor, { slugify })` with a Unicode-aware slugify function (important for RTL content)
+- Add `markdown-it-anchor` plugin — download `dist/markdownItAnchor.umd.js` from CDN (unminified, ~6.5 KB, small enough to use as-is). Pin version with SHA-256 hash via `download-libs.sh`.
+- `HTMLBuilder.swift`: add `<script>` tag in `scriptResources` after other markdown-it plugins but before `render.js` (render.js is an IIFE that runs immediately, so all plugins must be loaded first)
+- `render.js`: initialise `md.use(markdownItAnchor, { slugify })` with a Unicode-aware slugify function (important for RTL content). The slugify function must avoid producing `id` values that collide with existing element IDs (`content`, `toc`, `markdown-source`) — use a `heading-` prefix.
 - `THIRD-PARTY-NOTICES`: add licence entry
 
 **Testing:** Rendering test verifying headings receive `id` attributes.
@@ -35,16 +35,16 @@ Add seven features to QuickMark that QL-Win/QuickLook already provides, closing 
 - `render.js`:
   - After markdown-it renders, scan all h1-h6 elements (which have `id` from feature 1)
   - Build nested list, inject into `<nav id="toc">`
-  - `IntersectionObserver` on headings highlights the active ToC entry (`.active` class) and auto-scrolls the ToC to keep it visible
-  - Mousedown near the ToC right edge starts resize drag; width saved to `localStorage` and restored on load
+  - `IntersectionObserver` on headings with `rootMargin: "0px 0px -70% 0px"` highlights the heading nearest the top of the viewport. Active item gets `.active` class. The ToC auto-scrolls to keep the active item visible.
+  - Mousedown near the ToC right edge (inline-end) starts resize drag; width saved to `localStorage` and restored on load. **Note:** `localStorage` persistence in WKWebView sandbox is best-effort (file:// origins may be treated as opaque). The CSS default (`--toc-width: 220px`) must work as a sensible fallback when the saved value is unavailable.
   - Hide ToC if fewer than 2 headings
 - `style.css`:
   - `body { display: flex }` when ToC is visible
   - `#toc { position: sticky; top: 0; height: 100vh; overflow-y: auto; width: var(--toc-width) }`
   - Article remains `max-width: 880px` in the flex content area
-  - Collapse/hide ToC below a minimum viewport width to avoid squishing content
-  - Use CSS logical properties (`margin-inline-start`, `border-inline-start`) to support RTL flipping (feature 5)
-- `HTMLBuilder.swift`: add empty `<nav id="toc"></nav>` before `<article>` in the HTML template
+  - Hide ToC when viewport is below ~1000px to avoid squishing content (QuickLook windows can be narrow)
+  - Use CSS logical properties (`margin-inline-start`, `border-inline-start`) from the start to support RTL flipping (feature 5)
+- `HTMLBuilder.swift`: add `<nav id="toc"></nav>` before `<article>` in the `assembleHTML()` method (not just `build()`) so tests that call `assembleHTML` directly also have the ToC container
 
 **Considerations:**
 - CSS logical properties used from the start so RTL (feature 5) works without rework
@@ -62,10 +62,14 @@ Add seven features to QuickMark that QL-Win/QuickLook already provides, closing 
 
 **Goal:** Render `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]` blockquote syntax as styled alert boxes.
 
+**Approach:** The `markdown-it-github-alerts` npm package is ESM-only with no UMD/IIFE browser bundle. Since QuickMark loads all scripts as classic `<script>` tags with no bundler, we implement the alert parsing as a **custom markdown-it plugin directly in `render.js`**. The transformation is straightforward: detect `[!TYPE]` at the start of a blockquote's first paragraph token, rewrite the token tree to wrap in an alert container with the appropriate class. This avoids the dependency entirely and keeps class naming under our control.
+
 **Changes:**
-- Add `markdown-it-github-alerts` plugin (pinned version, SHA-256 hash)
-- `HTMLBuilder.swift`: add `<script>` tag after other markdown-it plugins
-- `render.js`: initialise `md.use(markdownItGithubAlerts)`
+- `render.js`: custom markdown-it plugin function that:
+  - Hooks into `core` rules after parsing
+  - Finds `blockquote_open` tokens where the first inline content starts with `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, or `[!CAUTION]`
+  - Wraps the blockquote in a `<div class="markdown-alert markdown-alert-note">` (etc.)
+  - Strips the `[!TYPE]` marker from the rendered text
 - `style.css`: alert-type-specific styling:
   - NOTE: blue left border
   - TIP: green left border
@@ -73,7 +77,8 @@ Add seven features to QuickMark that QL-Win/QuickLook already provides, closing 
   - WARNING: yellow left border
   - CAUTION: red left border
   - Dark mode variants via `prefers-color-scheme`
-- `THIRD-PARTY-NOTICES`: add licence entry
+
+**No new dependencies. No changes to `THIRD-PARTY-NOTICES`.**
 
 **Testing:** Rendering test with a `[!WARNING]` blockquote, verifying the correct alert class is applied.
 
@@ -85,13 +90,15 @@ Add seven features to QuickMark that QL-Win/QuickLook already provides, closing 
 
 **Goal:** Brief highlight fade when navigating to a heading via hash link (ToC click or fragment URL).
 
+**Approach:** Use a `.targeted` class as the primary mechanism (not `:target`), because the ToC uses `scrollIntoView({ behavior: 'smooth' })` which does not change `location.hash` and therefore does not trigger `:target`.
+
 **Changes:**
-- `style.css`: `:target` pseudo-class with `@keyframes` animation — background fades from `--link` at 20% opacity to transparent over ~1 second. Falls back gracefully (no animation if unsupported).
-- If `:target` proves insufficient with `scrollIntoView`-based ToC navigation, add a `.targeted` class applied/removed in the ToC click handler in `render.js`.
+- `render.js`: ToC click handler adds `.targeted` class to the destination heading, removes it after the animation completes (~1 second) via `animationend` event listener
+- `style.css`: `.targeted` class with `@keyframes` animation — background fades from `--link` at 20% opacity to transparent over ~1 second
 
 **No new dependencies.**
 
-**Testing:** Low risk — manual verification. Could optionally assert the CSS class is applied.
+**Testing:** Low risk — manual verification. Could optionally assert the CSS class is applied in a rendering test.
 
 **Dependencies:** Feature 1 (heading anchors). Best implemented alongside feature 2 (ToC).
 
@@ -102,8 +109,14 @@ Add seven features to QuickMark that QL-Win/QuickLook already provides, closing 
 **Goal:** Correct rendering of Arabic, Hebrew, Persian, and other RTL markdown, with the ToC flipping to the right side.
 
 **Changes:**
-- `render.js`: after rendering, inspect the first meaningful text content for RTL Unicode ranges (`\u0600-\u06FF` Arabic, `\u0590-\u05FF` Hebrew, etc.). If predominantly RTL, set `dir="rtl"` on `<html>`.
-- `style.css`: convert physical properties to CSS logical equivalents:
+- `render.js`: after rendering, inspect the first meaningful text content for RTL Unicode ranges:
+  - Arabic: `\u0600-\u06FF`
+  - Arabic Supplement/Extended: `\u0750-\u077F`, `\u08A0-\u08FF`
+  - Hebrew: `\u0590-\u05FF`
+  - Thaana: `\u0780-\u07BF`
+  - Syriac: `\u0700-\u074F`
+  - If predominantly RTL, set `dir="rtl"` on `<html>`
+- `style.css`: convert any remaining physical properties to CSS logical equivalents (most should already be logical from feature 2):
   - `margin-left` -> `margin-inline-start`
   - `border-left` -> `border-inline-start`
   - `padding-left` -> `padding-inline-start`
@@ -128,8 +141,11 @@ Add seven features to QuickMark that QL-Win/QuickLook already provides, closing 
 **Changes:**
 - `project.yml`: add `public.xml` UTType to QuickMarkStructured's `QLSupportedContentTypes`
 - `Structured/PreviewViewController.swift`: map XML UTType to highlight.js `language-xml`
+- Verify at runtime that `hljs.getLanguage('xml')` is truthy (XML is in the default highlight.js common bundle)
 
-highlight.js already includes XML support. **No new dependencies, no CSS changes, no new files.**
+**UTType precedence note:** The custom UTType `com.jgraph.drawio` conforms to `public.xml`. macOS will prefer the more specific UTType for `.drawio` files, so they will continue to be handled by the DrawIO extension, not Structured. No conflict.
+
+**No new dependencies, no CSS changes, no new files.**
 
 **Testing:** Rendering test loading an XML file, verifying syntax highlighting classes.
 
@@ -141,29 +157,47 @@ highlight.js already includes XML support. **No new dependencies, no CSS changes
 
 **Goal:** New extension target rendering CSV and TSV files as HTML tables.
 
-**New target:** `QuickMarkCSV` in `project.yml`, following the existing extension pattern (App Sandbox, hardened runtime, network entitlement).
+**New target:** `QuickMarkCSV` in `project.yml`.
 
 **Changes:**
-- `CSV/` directory with:
-  - `PreviewViewController.swift` — reads file, passes to JS renderer via WKWebView
-  - `CSV.entitlements` — same sandbox entitlements as other extensions
-  - `Info.plist` — declares supported UTTypes
-  - `Resources/render.js` — lightweight CSV parser in JS:
-    - Detect delimiter (comma vs tab) by frequency analysis
-    - Handle quoted fields with escaped quotes
-    - First row treated as header (`<thead>`)
-    - Cap at 10,000 rows with "showing first N of M rows" message
-  - `Resources/style.css` — reuses existing table styling (alternating rows, borders, cell padding) plus line-number gutter column matching Structured extension style
-- `project.yml`:
-  - New `QuickMarkCSV` extension target
+
+**New files — `CSV/` directory:**
+- `PreviewViewController.swift` — reads file, passes to JS renderer via WKWebView, sets `AppearancePreference.csv.nsAppearance`
+- `CSV.entitlements` — same sandbox entitlements as other extensions
+- `Info.plist` — declares supported UTTypes
+- `Resources/render.js` — lightweight CSV parser in JS:
+  - Detect delimiter: check if the first N lines have a consistent tab count vs comma count (more robust than raw frequency, handles commas in quoted fields)
+  - Handle quoted fields with escaped quotes
+  - First row treated as header (`<thead>`)
+  - Cap at 10,000 rows with "showing first N of M rows" message
+  - Table cells populated via `textContent` only (no `innerHTML` from user content)
+- `Resources/style.css` — reuses existing table styling (alternating rows, borders, cell padding) plus line-number gutter column matching Structured extension style
+
+**`project.yml` additions:**
+- New `QuickMarkCSV` extension target with:
+  - `type: app-extension`, `platform: macOS`
+  - Sources: `Shared/` + `CSV/` (excluding Resources) + `CSV/Resources` as buildPhase resources
   - UTTypes: `public.comma-separated-values-text`, `public.tab-separated-values-text`
-  - Host app embeds the new extension
-- `Shared/AppearancePreference.swift`:
-  - Add `csvAppearance` storage key
-  - Add `AppearancePreference.csv` computed property (getter/setter)
-- `QuickMark/ContentView.swift`:
-  - Add fourth column for CSV extension status and appearance picker
-- Dark mode via CSS custom properties, same pattern as other extensions
+  - Entitlements: `ENABLE_APP_SANDBOX: YES`, `ENABLE_HARDENED_RUNTIME: YES`, `ENABLE_OUTGOING_NETWORK_CONNECTIONS: YES`, `ENABLE_USER_SELECTED_FILES: readonly`, read-only `/` temporary exception
+  - `PRODUCT_BUNDLE_IDENTIFIER: com.quickmark.QuickMark.QuickMarkCSV`
+- Host app `QuickMark` target: add `QuickMarkCSV` to dependencies (embed with code signing)
+
+**`Shared/AppearancePreference.swift`:**
+- Add `csvAppearance` storage key
+- Add `AppearancePreference.csv` computed property (getter/setter)
+
+**`QuickMark/ContentView.swift`:**
+- Add `@State var csvActive = false`
+- Add `isExtensionRegistered("com.quickmark.QuickMark.QuickMarkCSV")` call in `checkExtensions()`
+- Add fourth column with extension status row + appearance picker
+- Update "all active" condition to include `csvActive`
+- Update user-facing file type text to mention `.csv` and `.tsv`
+
+**Test target (`project.yml`):**
+- Add CSV `PreviewViewController.swift` to test target sources
+- Add CSV test resource files (sample `.csv` and `.tsv`)
+
+**Dark mode:** Via CSS custom properties, same pattern as other extensions.
 
 **No third-party dependencies.**
 
@@ -185,10 +219,14 @@ Features are independent commits but should be implemented in this order to avoi
 6. **XML syntax highlighting** — independent, trivial
 7. **CSV/TSV table preview** — independent, largest scope
 
+After implementation, update `CLAUDE.md` to document the new features and patterns (ToC, CSS logical properties, CSV extension).
+
 ## Security
 
 - All new markdown-it plugins run with `html: false` — no change to the security model
-- New libraries pinned with SHA-256 hashes via `download-libs.sh`
+- `markdown-it-anchor` slugify uses a `heading-` prefix to avoid `id` collisions with existing elements (`content`, `toc`, `markdown-source`)
+- GitHub Alerts implemented as a custom plugin (no external dependency) operating within the markdown-it token stream
+- New library (markdown-it-anchor) pinned with SHA-256 hash via `download-libs.sh`
 - CSV parsing is pure JS with no `eval` or `innerHTML` from user content — table cells are text-content only
 - No new network access or entitlement changes required
 
@@ -197,4 +235,3 @@ Features are independent commits but should be implemented in this order to avoi
 | Library | Licence | Used by |
 |---|---|---|
 | markdown-it-anchor | MIT | Heading anchors |
-| markdown-it-github-alerts | MIT | GitHub Alerts |
