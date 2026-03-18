@@ -67,6 +67,8 @@ jobs:
 
           mkdir -p "$STAGING"
           cp -R "$APP_PATH" "$STAGING/"
+          cp LICENSE.txt "$STAGING/"
+          cp THIRD-PARTY-NOTICES "$STAGING/"
           ln -s /Applications "$STAGING/Applications"
 
           hdiutil create -volname "QuickMark" \
