@@ -111,7 +111,7 @@ body.has-toc article {
 }
 
 /* Hide ToC in narrow viewports */
-@media (max-width: 1000px) {
+@media (max-width: 500px) {
     body.has-toc {
         display: block;
         padding: 32px;
