@@ -41,7 +41,7 @@ class PreviewViewController: NSViewController, @preconcurrency QLPreviewingContr
             let bundle = Bundle(for: type(of: self))
 
             guard let viewerURL = bundle.url(forResource: "viewer-static.min", withExtension: "js") else {
-                let error = NSError(domain: "com.quickmark.QuickMarkDrawio", code: 1,
+                let error = NSError(domain: "com.phrontizo.QuickMark.QuickMarkDrawio", code: 1,
                     userInfo: [NSLocalizedDescriptionKey: "viewer-static.min.js not found in bundle"])
                 handler(error)
                 return
