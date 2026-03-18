@@ -36,7 +36,7 @@
             slugify: function(s) {
                 return "heading-" + s.trim().toLowerCase()
                     .replace(/\s+/g, "-")
-                    .replace(/[^\w\u0590-\u05FF\u0600-\u06FF\u0700-\u074F\u0750-\u077F\u0780-\u07BF\u08A0-\u08FF-]/g, "");
+                    .replace(/[^\p{L}\p{N}_-]/gu, "");
             },
             permalink: false
         });
