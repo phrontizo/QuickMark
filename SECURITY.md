@@ -2,7 +2,7 @@
 
 ## Threat Model
 
-QuickMark renders untrusted files (Markdown, draw.io XML, JSON, YAML, TOML) in sandboxed QuickLook extensions via WKWebView. The primary risk is a crafted file executing arbitrary code or exfiltrating data.
+QuickMark renders untrusted files (Markdown, draw.io diagrams, JSON, YAML, TOML, XML) in sandboxed QuickLook extensions via WKWebView. The primary risk is a crafted file executing arbitrary code or exfiltrating data.
 
 ### Mitigations
 
