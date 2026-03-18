@@ -121,6 +121,17 @@ body.has-toc article {
     }
 }
 
+/* --- Heading target animation --- */
+
+@keyframes heading-highlight {
+    from { background-color: color-mix(in srgb, var(--link) 20%, transparent); }
+    to { background-color: transparent; }
+}
+
+.targeted {
+    animation: heading-highlight 1s ease-out;
+}
+
 * {
     box-sizing: border-box;
 }

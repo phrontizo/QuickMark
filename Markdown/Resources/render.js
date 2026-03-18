@@ -174,7 +174,16 @@
             e.preventDefault();
             var targetId = link.getAttribute("href").slice(1);
             var target = document.getElementById(targetId);
-            if (target) target.scrollIntoView({ behavior: "smooth" });
+            if (target) {
+                target.scrollIntoView({ behavior: "smooth" });
+                // Heading highlight animation
+                target.classList.remove("targeted");
+                void target.offsetWidth; // force reflow to restart animation
+                target.classList.add("targeted");
+                target.addEventListener("animationend", function() {
+                    target.classList.remove("targeted");
+                }, { once: true });
+            }
         });
 
         // Resize drag
