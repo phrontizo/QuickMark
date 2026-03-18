@@ -222,13 +222,22 @@
             var target = document.getElementById(targetId);
             if (target) {
                 target.scrollIntoView({ behavior: "smooth" });
-                // Heading highlight animation
-                target.classList.remove("targeted");
-                void target.offsetWidth; // force reflow to restart animation
-                target.classList.add("targeted");
-                target.addEventListener("animationend", function() {
-                    target.classList.remove("targeted");
-                }, { once: true });
+                // Delay highlight until scroll finishes (no scrollend in WebKit,
+                // so poll until scroll position stabilises)
+                var lastY = -1;
+                var poll = setInterval(function() {
+                    var curY = window.scrollY;
+                    if (curY === lastY) {
+                        clearInterval(poll);
+                        target.classList.remove("targeted");
+                        void target.offsetWidth;
+                        target.classList.add("targeted");
+                        target.addEventListener("animationend", function() {
+                            target.classList.remove("targeted");
+                        }, { once: true });
+                    }
+                    lastY = curY;
+                }, 50);
             }
         });
 
