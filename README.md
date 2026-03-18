@@ -49,7 +49,7 @@ Then open QuickMark and follow the prompts to enable the extensions in System Se
 ## Requirements
 
 - macOS 14.0+
-- Xcode 15.0+ (to build)
+- Xcode 15.3+ (to build)
 - [XcodeGen](https://github.com/yonaskolb/XcodeGen) (to generate the Xcode project)
 
 ## Building
