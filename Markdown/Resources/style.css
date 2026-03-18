@@ -207,7 +207,7 @@ pre code {
 /* Code is always LTR regardless of document direction */
 pre, code {
     direction: ltr;
-    text-align: left;
+    text-align: start;
 }
 
 /* --- Blockquotes --- */
