@@ -105,6 +105,66 @@ class StructuredTests: XCTestCase {
                        "Line spans must not be separated by newlines inside <pre> — causes double spacing")
     }
 
+    // MARK: - XML Rendering
+
+    func testXmlHighlightingProducesOutput() throws {
+        let bundle = Bundle(for: type(of: self))
+        let content = "<?xml version=\"1.0\"?>\n<root>\n  <item name=\"test\">value</item>\n</root>"
+        let html = PreviewViewController.buildHTML(content: content, language: "xml", bundle: bundle)
+
+        let tempFile = FileManager.default.temporaryDirectory
+            .appendingPathComponent("test-xml-\(UUID().uuidString).html")
+        try html.write(to: tempFile, atomically: true, encoding: .utf8)
+        addTeardownBlock { try? FileManager.default.removeItem(at: tempFile) }
+
+        let webView = WKWebView(frame: NSRect(x: 0, y: 0, width: 800, height: 600))
+        let navExp = expectation(description: "Page loaded")
+        let delegate = NavigationHelper { navExp.fulfill() }
+        webView.navigationDelegate = delegate
+        webView.loadFileURL(tempFile, allowingReadAccessTo: URL(fileURLWithPath: "/"))
+        wait(for: [navExp], timeout: 10)
+
+        let jsExp = expectation(description: "JS check")
+        var hasHighlighting = false
+        webView.evaluateJavaScript(
+            "document.querySelector('.hljs-tag') !== null || document.querySelector('.hljs-attr') !== null"
+        ) { result, _ in
+            hasHighlighting = result as? Bool ?? false
+            jsExp.fulfill()
+        }
+        wait(for: [jsExp], timeout: 5)
+
+        XCTAssertTrue(hasHighlighting, "XML content should get syntax highlighting from highlight.js")
+    }
+
+    func testXmlLineNumbersPresent() throws {
+        let bundle = Bundle(for: type(of: self))
+        let content = "<root>\n  <child/>\n</root>"
+        let html = PreviewViewController.buildHTML(content: content, language: "xml", bundle: bundle)
+
+        let tempFile = FileManager.default.temporaryDirectory
+            .appendingPathComponent("test-xml-lines-\(UUID().uuidString).html")
+        try html.write(to: tempFile, atomically: true, encoding: .utf8)
+        addTeardownBlock { try? FileManager.default.removeItem(at: tempFile) }
+
+        let webView = WKWebView(frame: NSRect(x: 0, y: 0, width: 800, height: 600))
+        let navExp = expectation(description: "Page loaded")
+        let delegate = NavigationHelper { navExp.fulfill() }
+        webView.navigationDelegate = delegate
+        webView.loadFileURL(tempFile, allowingReadAccessTo: URL(fileURLWithPath: "/"))
+        wait(for: [navExp], timeout: 10)
+
+        let jsExp = expectation(description: "JS check")
+        var lineCount = 0
+        webView.evaluateJavaScript("document.querySelectorAll('.line-number').length") { result, _ in
+            lineCount = result as? Int ?? 0
+            jsExp.fulfill()
+        }
+        wait(for: [jsExp], timeout: 5)
+
+        XCTAssertEqual(lineCount, 3, "XML with 3 lines should have 3 line numbers")
+    }
+
     // MARK: - WKWebView Rendering
 
     func testHighlightJSProducesOutput() throws {

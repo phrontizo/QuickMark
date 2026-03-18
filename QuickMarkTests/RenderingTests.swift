@@ -540,6 +540,108 @@ class RenderingTests: XCTestCase, WKNavigationDelegate {
                       "English content should not set dir=rtl")
     }
 
+    // MARK: - GitHub Alerts (All Types)
+
+    func testAllAlertTypesRender() throws {
+        try loadMarkdown(
+            "> [!NOTE]\n> A note\n\n" +
+            "> [!TIP]\n> A tip\n\n" +
+            "> [!IMPORTANT]\n> Important info\n\n" +
+            "> [!WARNING]\n> A warning\n\n" +
+            "> [!CAUTION]\n> Use caution"
+        )
+
+        for type in ["note", "tip", "important", "warning", "caution"] {
+            let found = evaluateJS(
+                "document.querySelector('.markdown-alert-\(type)') !== null"
+            ) as? Bool
+            XCTAssertEqual(found, true, "\(type) alert should render with .markdown-alert-\(type) class")
+        }
+    }
+
+    func testRegularBlockquoteNotConvertedToAlert() throws {
+        try loadMarkdown("> Just a normal blockquote\n> with no alert marker")
+
+        let alertCount = evaluateJS("document.querySelectorAll('.markdown-alert').length") as? Int
+        XCTAssertEqual(alertCount, 0, "Regular blockquote should not become an alert")
+    }
+
+    func testAlertTextColourNotMuted() throws {
+        try loadMarkdown("> [!NOTE]\n> This text should not be muted")
+
+        let colour = evaluateJS(
+            "getComputedStyle(document.querySelector('.markdown-alert-note')).color"
+        ) as? String
+        let bodyColour = evaluateJS(
+            "getComputedStyle(document.body).color"
+        ) as? String
+        XCTAssertEqual(colour, bodyColour, "Alert text should use normal text colour, not blockquote muted colour")
+    }
+
+    // MARK: - ToC with Test File
+
+    func testTocFromTestFile() throws {
+        let testFile = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("TestFiles/headings-toc.md")
+
+        let markdown = try String(contentsOf: testFile, encoding: .utf8)
+        try loadMarkdown(markdown)
+
+        let tocLinks = evaluateJS("document.querySelectorAll('#toc a').length") as? Int
+        XCTAssertNotNil(tocLinks)
+        XCTAssertGreaterThanOrEqual(tocLinks ?? 0, 8, "headings-toc.md has 8+ headings, ToC should have links for each")
+
+        // Verify nested indentation exists
+        let hasLevel3 = evaluateJS("document.querySelector('#toc li[data-level=\"3\"]') !== null") as? Bool
+        XCTAssertEqual(hasLevel3, true, "ToC should have level-3 entries for ### headings")
+    }
+
+    func testDuplicateHeadingsGetUniqueAnchors() throws {
+        try loadMarkdown("# Same\n\n## Same\n\nText")
+
+        let id1 = evaluateJS("document.querySelectorAll('#content h1')[0]?.id") as? String
+        let id2 = evaluateJS("document.querySelectorAll('#content h2')[0]?.id") as? String
+        XCTAssertNotNil(id1)
+        XCTAssertNotNil(id2)
+        XCTAssertNotEqual(id1, id2, "Duplicate headings should get disambiguated anchor IDs")
+    }
+
+    // MARK: - RTL with Test File
+
+    func testRTLTestFileRendersCorrectly() throws {
+        let testFile = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("TestFiles/rtl-test.md")
+
+        let markdown = try String(contentsOf: testFile, encoding: .utf8)
+        try loadMarkdown(markdown)
+
+        let dir = evaluateJS("document.documentElement.dir") as? String
+        XCTAssertEqual(dir, "rtl", "Arabic test file should trigger RTL")
+
+        // Code block should remain LTR
+        let codeDir = evaluateJS(
+            "getComputedStyle(document.querySelector('#content pre')).direction"
+        ) as? String
+        XCTAssertEqual(codeDir, "ltr", "Code blocks should remain LTR in RTL documents")
+    }
+
+    func testRTLBlockquoteBorderOnCorrectSide() throws {
+        try loadMarkdown("# \u{0645}\u{0631}\u{062D}\u{0628}\u{0627}\n\n> \u{0627}\u{0642}\u{062A}\u{0628}\u{0627}\u{0633}")
+
+        let dir = evaluateJS("document.documentElement.dir") as? String
+        XCTAssertEqual(dir, "rtl", "Should be RTL")
+
+        // border-inline-start resolves to border-right in RTL
+        let borderRight = evaluateJS(
+            "parseFloat(getComputedStyle(document.querySelector('#content blockquote')).borderRightWidth)"
+        ) as? Double
+        XCTAssertGreaterThan(borderRight ?? 0, 0, "In RTL, blockquote border-inline-start should resolve to border-right")
+    }
+
     // MARK: - Test File Rendering
 
     func testMultipleTestFilesRender() throws {

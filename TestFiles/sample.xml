@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <server>
+        <host>localhost</host>
+        <port>8080</port>
+        <ssl enabled="true">
+            <certificate>/etc/ssl/cert.pem</certificate>
+            <key>/etc/ssl/key.pem</key>
+        </ssl>
+    </server>
+    <database>
+        <driver>postgresql</driver>
+        <connection>
+            <host>db.example.com</host>
+            <port>5432</port>
+            <name>myapp</name>
+            <credentials>
+                <username>admin</username>
+                <password>changeme</password>
+            </credentials>
+        </connection>
+        <pool>
+            <min-connections>5</min-connections>
+            <max-connections>50</max-connections>
+            <timeout>30000</timeout>
+        </pool>
+    </database>
+    <logging level="info">
+        <appender type="file">
+            <path>/var/log/app.log</path>
+            <max-size>100MB</max-size>
+            <rotation>daily</rotation>
+        </appender>
+        <appender type="console">
+            <format>%d{ISO8601} [%t] %-5p %c - %m%n</format>
+        </appender>
+    </logging>
+</configuration>
