@@ -113,6 +113,6 @@ QuickMarkTests/             # Unit + integration tests
 project.yml                 # XcodeGen project definition
 ```
 
-## License
+## Licence
 
-MIT — see [LICENSE.txt](LICENSE.txt).
+MIT — see [LICENCE.txt](LICENCE.txt).

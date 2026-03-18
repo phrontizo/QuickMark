@@ -105,7 +105,7 @@ struct ContentView: View {
             }
             .fixedSize(horizontal: false, vertical: true)
 
-            Text("MIT License \u{00B7} \u{00A9} 2026 Phrontizo Limited")
+            Text("MIT Licence \u{00B7} \u{00A9} 2026 Phrontizo Limited")
                 .font(.caption)
                 .foregroundStyle(.tertiary)
         }
