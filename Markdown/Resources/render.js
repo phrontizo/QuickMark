@@ -30,6 +30,18 @@
         md.use(texmath, { engine: katex, delimiters: "dollars", katexOptions: { throwOnError: false } });
     }
 
+    // Heading anchors
+    if (typeof markdownItAnchor !== "undefined") {
+        md.use(markdownItAnchor, {
+            slugify: function(s) {
+                return "heading-" + s.trim().toLowerCase()
+                    .replace(/\s+/g, "-")
+                    .replace(/[^\w\u0590-\u05FF\u0600-\u06FF\u0700-\u074F\u0750-\u077F\u0780-\u07BF\u08A0-\u08FF-]/g, "");
+            },
+            permalink: false
+        });
+    }
+
     // Custom fence rules: render mermaid and drawio blocks as divs instead of <pre><code>
     var defaultFence = md.renderer.rules.fence.bind(md.renderer.rules);
     md.renderer.rules.fence = function(tokens, idx, options, env, self) {

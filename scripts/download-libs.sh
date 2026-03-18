@@ -8,13 +8,16 @@ set -euo pipefail
 # ───────────────────────────────────────────────────────────────────────
 
 MARKDOWN_IT_VER="14.1.0"
-MARKDOWN_IT_HASH="c833317a56b17b17cc1910f3b7004447573487cd1fed4c1bcef90afbcbf5c234"
+MARKDOWN_IT_HASH="38c70a1e7ca91ab40e2d9e6e60129851a717ed1c7d4acbbdd41bf9503791cf68"
 
 TASK_LISTS_VER="2.1.1"
 TASK_LISTS_HASH="4f3b23f41bb3787957da2602fbccc4df0d017928c1fce62583159e096b832a81"
 
 FOOTNOTE_VER="4.0.0"
 FOOTNOTE_HASH="d6fee58a3b56c5742fa18f3e01f1d317cc99975683ebd39c9195cb2aff0c2e42"
+
+ANCHOR_VER="9.2.0"
+ANCHOR_HASH="9ae7874d506368f9628f0ab85ba982cbe6816fff68592fbaf4a9581e86496d4b"
 
 TEXMATH_VER="1.0.0"
 TEXMATH_JS_HASH="b01b706e6d23e8270a55228fdba35b557127b6f2af5b4c23ca22b15bdbd1c09d"
@@ -26,14 +29,14 @@ HLJS_LIGHT_HASH="3a9a5def8b9c311e5ae43abde85c63133185eed4f0d9f67fea4b00a8308cf06
 HLJS_DARK_HASH="9f208d022102b1d0c7aebfecd8e42ca7997d5de636649d2b31ea63093d809019"
 
 KATEX_VER="0.16.21"
-KATEX_HASH="1b68624f8f96870496011de546fad33805b112e1e1c0f7fa675ede6baa47136c"
+KATEX_HASH="863811e2baa0849c77bc92d26d44f4d0a4843c2a8ab52c462017dea57316e4d8"
 KATEX_CSS_HASH="f787891b550d554c214aa8902f39ac46df2dbd48fdec500a2040a5dce1e8ab58"
 
 MERMAID_VER="11.4.1"
-MERMAID_HASH="3e2002bf333907fae7c1d6860bbc78f5da417bc70b64f3d2268581ba0ba8b96a"
+MERMAID_HASH="a43bc1afd446f9c4cc66ac5dd45d02e8d65e26fc5344ec0ef787f88d6ddb6f9e"
 
 # draw.io viewer has no semver — hash-only verification
-DRAWIO_VIEWER_HASH="24bb4c9c9dae09644e8c9b29bbaaf7af37eca5e0533b3e992f57bf0fd1c63467"
+DRAWIO_VIEWER_HASH="a288ecea83e956cf8f40aa6a3fe8e604c790ba46e767498dbba4049d209c366b"
 
 # ──────────────────────────────────────────────────────────────────────
 
@@ -83,6 +86,11 @@ curl -sfLo "$RESOURCES_DIR/markdown-it-footnote.min.js" \
   "https://cdn.jsdelivr.net/npm/markdown-it-footnote@$FOOTNOTE_VER/dist/markdown-it-footnote.min.js"
 verify_hash "$RESOURCES_DIR/markdown-it-footnote.min.js" "$FOOTNOTE_HASH" "footnote"
 echo "  markdown-it-footnote@$FOOTNOTE_VER ✓"
+
+curl -sfLo "$RESOURCES_DIR/markdownItAnchor.umd.js" \
+  "https://cdn.jsdelivr.net/npm/markdown-it-anchor@$ANCHOR_VER/dist/markdownItAnchor.umd.js"
+verify_hash "$RESOURCES_DIR/markdownItAnchor.umd.js" "$ANCHOR_HASH" "markdown-it-anchor"
+echo "  markdown-it-anchor@$ANCHOR_VER ✓"
 
 # --- markdown-it-texmath ---
 curl -sfLo "$RESOURCES_DIR/texmath.min.js" \

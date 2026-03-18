@@ -39,6 +39,7 @@ enum HTMLBuilder {
         ("markdown-it.min", "js"),
         ("markdown-it-task-lists.min", "js"),
         ("markdown-it-footnote.min", "js"),
+        ("markdownItAnchor.umd", "js"),
         ("katex.min", "js"),
         ("texmath.min", "js"),
         ("highlight.min", "js"),

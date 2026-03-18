@@ -104,6 +104,18 @@ class RenderingTests: XCTestCase, WKNavigationDelegate {
         XCTAssertEqual(scripts, 0, "html:false should prevent <script> tags from being rendered")
     }
 
+    func testHeadingsHaveAnchorIds() throws {
+        try loadMarkdown("# First\n\n## Second\n\n### Third")
+
+        let id1 = evaluateJS("document.querySelector('#content h1')?.id") as? String
+        let id2 = evaluateJS("document.querySelector('#content h2')?.id") as? String
+        let id3 = evaluateJS("document.querySelector('#content h3')?.id") as? String
+
+        XCTAssertEqual(id1, "heading-first", "H1 should have slugified anchor id")
+        XCTAssertEqual(id2, "heading-second", "H2 should have slugified anchor id")
+        XCTAssertEqual(id3, "heading-third", "H3 should have slugified anchor id")
+    }
+
     // MARK: - Draw.io Tests
 
     func testDrawioSampleRenders() throws {

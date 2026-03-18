@@ -40,6 +40,7 @@
 		685502555AF21617E3173EE4 /* hljs-themes.css in Resources */ = {isa = PBXBuildFile; fileRef = D13DA6FEFE9CC2EDAD7BF887 /* hljs-themes.css */; };
 		6984BEBAA997CEF0DEE37A6A /* QuickMarkApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653CE4750AE1FBB9B41ED4EC /* QuickMarkApp.swift */; };
 		6E7759468C6036E67AD75CB9 /* FileUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB7F57AF393FFDB7299F728A /* FileUtilities.swift */; };
+		71264845D4F0327A01513AC2 /* markdownItAnchor.umd.js in Resources */ = {isa = PBXBuildFile; fileRef = 250F918B88FEDB64EAF579A7 /* markdownItAnchor.umd.js */; };
 		74839570D010007FC5047C32 /* hljs-themes.css in Resources */ = {isa = PBXBuildFile; fileRef = D13DA6FEFE9CC2EDAD7BF887 /* hljs-themes.css */; };
 		7B08B7DC56B28451F0E51E3B /* LinkPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9972857110EC202F6F3C0833 /* LinkPolicy.swift */; };
 		802E9B7F6F296A388EAEAE7A /* markdown-it.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 733EBB2778133BA55F3D6977 /* markdown-it.min.js */; };
@@ -81,6 +82,7 @@
 		ECB8BBF9EB5E4FEEEF39C390 /* style.css in Resources */ = {isa = PBXBuildFile; fileRef = 523E7AAA8ABF3D839401ECD9 /* style.css */; };
 		ED49B4403F91FF8D08976662 /* LinkPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1FBC77ACE3DC19B83716A65 /* LinkPolicyTests.swift */; };
 		F2136CBA07E95DCEC7155603 /* HTMLEscaping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69040C1FDE048E88654786E9 /* HTMLEscaping.swift */; };
+		F7DECCC77364E7A900B13C37 /* markdownItAnchor.umd.js in Resources */ = {isa = PBXBuildFile; fileRef = 250F918B88FEDB64EAF579A7 /* markdownItAnchor.umd.js */; };
 		F8714E5BC87036F00CCBCF0D /* FileUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB7F57AF393FFDB7299F728A /* FileUtilities.swift */; };
 		F9764956B3BB16055609F58C /* MxGraphHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496D8582B19D7F290F24E99B /* MxGraphHelper.swift */; };
 		FE862145F68EE7761CAD9ED9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 43BCB4594E25E7A451777FE2 /* Assets.xcassets */; };
@@ -132,6 +134,7 @@
 		039DE6F516B91ED5DDFEEAA7 /* QuickMark.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuickMark.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0FDE340D12F2796336DC8896 /* PreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
 		217F62B0F311CDB8FD194E2A /* highlight.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = highlight.min.js; sourceTree = "<group>"; };
+		250F918B88FEDB64EAF579A7 /* markdownItAnchor.umd.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = markdownItAnchor.umd.js; sourceTree = "<group>"; };
 		37DA3BBC24FD11A22175E2F1 /* QuickMarkPreview.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = QuickMarkPreview.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		384575201CF5C2420B1766CE /* markdown-it-footnote.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "markdown-it-footnote.min.js"; sourceTree = "<group>"; };
 		43BCB4594E25E7A451777FE2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -267,6 +270,7 @@
 				384575201CF5C2420B1766CE /* markdown-it-footnote.min.js */,
 				BE3679C89305E3D0C29688BD /* markdown-it-task-lists.min.js */,
 				733EBB2778133BA55F3D6977 /* markdown-it.min.js */,
+				250F918B88FEDB64EAF579A7 /* markdownItAnchor.umd.js */,
 				FB6691AFE4B67F1F3617DDA2 /* mermaid.min.js */,
 				CF3C5B03D6538A43D6642970 /* render.js */,
 				523E7AAA8ABF3D839401ECD9 /* style.css */,
@@ -473,6 +477,7 @@
 				FFBEF628372545749B97AFE2 /* markdown-it-footnote.min.js in Resources */,
 				A05078668B77AD92D1E3C196 /* markdown-it-task-lists.min.js in Resources */,
 				0FCB85F17AF7ABDBAE3AB443 /* markdown-it.min.js in Resources */,
+				F7DECCC77364E7A900B13C37 /* markdownItAnchor.umd.js in Resources */,
 				47ABD3B3E683A8E84AD5A830 /* mermaid.min.js in Resources */,
 				C587BD8E27366A11E0DAB638 /* render.js in Resources */,
 				ECB8BBF9EB5E4FEEEF39C390 /* style.css in Resources */,
@@ -501,6 +506,7 @@
 				2380A3A4645A28C45B8490C9 /* markdown-it-footnote.min.js in Resources */,
 				02EFB1F00D0DA0A73BBB2E61 /* markdown-it-task-lists.min.js in Resources */,
 				802E9B7F6F296A388EAEAE7A /* markdown-it.min.js in Resources */,
+				71264845D4F0327A01513AC2 /* markdownItAnchor.umd.js in Resources */,
 				623C8CDC325A2A47AF2489D4 /* mermaid.min.js in Resources */,
 				B063054690299EAE19264F4C /* render.js in Resources */,
 				9A80E3117C2E485BE47AF8BE /* structured-style.css in Resources */,
