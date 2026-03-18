@@ -116,6 +116,25 @@ class RenderingTests: XCTestCase, WKNavigationDelegate {
         XCTAssertEqual(id3, "heading-third", "H3 should have slugified anchor id")
     }
 
+    // MARK: - Table of Contents Tests
+
+    func testTocGeneratedForMultipleHeadings() throws {
+        try loadMarkdown("# One\n\n## Two\n\n## Three")
+
+        let tocLinks = evaluateJS("document.querySelectorAll('#toc a').length") as? Int
+        XCTAssertEqual(tocLinks, 3, "ToC should have 3 links for 3 headings")
+
+        let firstHref = evaluateJS("document.querySelector('#toc a')?.getAttribute('href')") as? String
+        XCTAssertEqual(firstHref, "#heading-one", "First ToC link should point to heading anchor")
+    }
+
+    func testTocHiddenForSingleHeading() throws {
+        try loadMarkdown("# Only One Heading\n\nSome text")
+
+        let display = evaluateJS("getComputedStyle(document.getElementById('toc')).display") as? String
+        XCTAssertEqual(display, "none", "ToC should be hidden when fewer than 2 headings")
+    }
+
     // MARK: - Draw.io Tests
 
     func testDrawioSampleRenders() throws {

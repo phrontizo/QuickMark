@@ -23,6 +23,7 @@ enum HTMLBuilder {
         }
 
         html += "</head>\n<body>\n"
+        html += "<nav id=\"toc\"></nav>\n"
         html += "<article id=\"content\"></article>\n"
         html += "<script id=\"markdown-source\" type=\"text/plain\">\(markdownBase64)</script>\n"
 

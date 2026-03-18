@@ -107,6 +107,96 @@
         return;
     }
 
+    // --- Table of Contents ---
+    (function() {
+        var tocEl = document.getElementById("toc");
+        if (!tocEl) return;
+
+        var headings = contentEl.querySelectorAll("h1, h2, h3, h4, h5, h6");
+        if (headings.length < 2) return;
+
+        // Build ToC list
+        var ul = document.createElement("ul");
+        for (var i = 0; i < headings.length; i++) {
+            var h = headings[i];
+            if (!h.id) continue;
+            var level = parseInt(h.tagName.charAt(1), 10);
+            var li = document.createElement("li");
+            li.setAttribute("data-level", level);
+            var a = document.createElement("a");
+            a.href = "#" + h.id;
+            a.textContent = h.textContent;
+            li.appendChild(a);
+            ul.appendChild(li);
+        }
+
+        // Resize handle
+        var handle = document.createElement("div");
+        handle.className = "toc-resize-handle";
+        tocEl.appendChild(handle);
+
+        tocEl.appendChild(ul);
+        tocEl.style.display = "";
+        document.body.classList.add("has-toc");
+
+        // Restore saved width (best-effort — localStorage may not persist in sandbox)
+        try {
+            var saved = localStorage.getItem("quickmark-toc-width");
+            if (saved) tocEl.style.width = saved;
+        } catch (e) {}
+
+        // Scroll tracking
+        var tocLinks = tocEl.querySelectorAll("a");
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    for (var j = 0; j < tocLinks.length; j++) {
+                        var isActive = tocLinks[j].getAttribute("href") === "#" + entry.target.id;
+                        tocLinks[j].classList.toggle("active", isActive);
+                        if (isActive) {
+                            tocLinks[j].scrollIntoView({ block: "nearest", behavior: "smooth" });
+                        }
+                    }
+                }
+            });
+        }, { rootMargin: "0px 0px -70% 0px" });
+
+        for (var k = 0; k < headings.length; k++) {
+            observer.observe(headings[k]);
+        }
+
+        // ToC link click — smooth scroll
+        tocEl.addEventListener("click", function(e) {
+            var link = e.target.closest("a");
+            if (!link) return;
+            e.preventDefault();
+            var targetId = link.getAttribute("href").slice(1);
+            var target = document.getElementById(targetId);
+            if (target) target.scrollIntoView({ behavior: "smooth" });
+        });
+
+        // Resize drag
+        var isResizing = false;
+        handle.addEventListener("mousedown", function(e) {
+            isResizing = true;
+            e.preventDefault();
+        });
+        document.addEventListener("mousemove", function(e) {
+            if (!isResizing) return;
+            var isRTL = document.documentElement.dir === "rtl";
+            var newWidth = isRTL
+                ? (document.documentElement.clientWidth - e.clientX)
+                : e.clientX;
+            newWidth = Math.max(140, Math.min(newWidth, window.innerWidth * 0.4));
+            tocEl.style.width = newWidth + "px";
+        });
+        document.addEventListener("mouseup", function() {
+            if (!isResizing) return;
+            isResizing = false;
+            try { localStorage.setItem("quickmark-toc-width", tocEl.style.width); } catch (e) {}
+        });
+    })();
+
     // Initialize mermaid (if loaded)
     if (typeof mermaid !== "undefined") {
         try {

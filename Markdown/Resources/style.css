@@ -24,6 +24,102 @@
     }
 }
 
+/* --- Table of Contents --- */
+
+:root {
+    --toc-width: 220px;
+}
+
+body.has-toc {
+    display: flex;
+    padding: 0;
+}
+
+body.has-toc #toc {
+    display: block;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    width: var(--toc-width);
+    min-width: 140px;
+    max-width: 40vw;
+    overflow-y: auto;
+    padding: 16px 0;
+    border-inline-end: 1px solid var(--border);
+    font-size: 0.8125em;
+    line-height: 1.4;
+    flex-shrink: 0;
+    cursor: default;
+}
+
+body.has-toc article {
+    flex: 1;
+    min-width: 0;
+    padding: 32px;
+    margin: 0 auto;
+}
+
+#toc {
+    display: none;
+}
+
+#toc ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#toc li {
+    margin: 0;
+}
+
+#toc a {
+    display: block;
+    padding: 3px 16px;
+    color: var(--secondary);
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#toc a:hover {
+    color: var(--text);
+}
+
+#toc a.active {
+    color: var(--link);
+    font-weight: 600;
+}
+
+/* Indent nested levels */
+#toc li[data-level="2"] a { padding-inline-start: 32px; }
+#toc li[data-level="3"] a { padding-inline-start: 48px; }
+#toc li[data-level="4"] a { padding-inline-start: 64px; }
+#toc li[data-level="5"] a { padding-inline-start: 80px; }
+#toc li[data-level="6"] a { padding-inline-start: 96px; }
+
+/* Resize handle */
+#toc .toc-resize-handle {
+    position: absolute;
+    top: 0;
+    inset-inline-end: 0;
+    width: 4px;
+    height: 100%;
+    cursor: col-resize;
+}
+
+/* Hide ToC in narrow viewports */
+@media (max-width: 1000px) {
+    body.has-toc {
+        display: block;
+        padding: 32px;
+    }
+    body.has-toc #toc {
+        display: none !important;
+    }
+}
+
 * {
     box-sizing: border-box;
 }
