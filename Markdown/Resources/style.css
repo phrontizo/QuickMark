@@ -204,13 +204,19 @@ pre code {
     border-radius: 0;
 }
 
+/* Code is always LTR regardless of document direction */
+pre, code {
+    direction: ltr;
+    text-align: left;
+}
+
 /* --- Blockquotes --- */
 
 blockquote {
     margin: 0 0 16px 0;
     padding: 0 1em;
     color: var(--secondary);
-    border-left: 0.25em solid var(--blockquote-border);
+    border-inline-start: 0.25em solid var(--blockquote-border);
 }
 
 /* --- GitHub Alerts --- */
@@ -259,18 +265,18 @@ tr:nth-child(even) { background: var(--table-alt-bg); }
 
 /* --- Lists --- */
 
-ul, ol { padding-left: 2em; margin-bottom: 16px; }
+ul, ol { padding-inline-start: 2em; margin-bottom: 16px; }
 li + li { margin-top: 0.25em; }
 
 /* --- Task lists --- */
 
 .task-list-item {
     list-style-type: none;
-    margin-left: -1.5em;
+    margin-inline-start: -1.5em;
 }
 
 .task-list-item input[type="checkbox"] {
-    margin-right: 0.5em;
+    margin-inline-end: 0.5em;
     pointer-events: none;
 }
 
@@ -297,7 +303,7 @@ li + li { margin-top: 0.25em; }
     padding-top: 1em;
 }
 
-.footnotes ol { padding-left: 1.5em; }
+.footnotes ol { padding-inline-start: 1.5em; }
 
 /* --- Math (KaTeX) --- */
 

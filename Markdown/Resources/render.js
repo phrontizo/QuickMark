@@ -254,6 +254,29 @@
         });
     })();
 
+    // --- RTL detection ---
+    (function() {
+        var rtlPattern = /[\u0590-\u05FF\u0600-\u06FF\u0700-\u074F\u0750-\u077F\u0780-\u07BF\u08A0-\u08FF]/;
+        // Sample the first meaningful text content
+        var walker = document.createTreeWalker(contentEl, NodeFilter.SHOW_TEXT, null, false);
+        var rtlCount = 0, ltrCount = 0, sampled = 0;
+        while (sampled < 200) {
+            var node = walker.nextNode();
+            if (!node) break;
+            var text = node.textContent.trim();
+            if (!text) continue;
+            for (var ci = 0; ci < text.length && sampled < 200; ci++) {
+                var ch = text.charAt(ci);
+                if (rtlPattern.test(ch)) rtlCount++;
+                else if (/[a-zA-Z]/.test(ch)) ltrCount++;
+                sampled++;
+            }
+        }
+        if (rtlCount > ltrCount) {
+            document.documentElement.dir = "rtl";
+        }
+    })();
+
     // Initialize mermaid (if loaded)
     if (typeof mermaid !== "undefined") {
         try {

@@ -523,6 +523,23 @@ class RenderingTests: XCTestCase, WKNavigationDelegate {
         XCTAssertTrue(page2Rendered, "BPMN-2 page 2 should render after tab switch")
     }
 
+    // MARK: - RTL Detection Tests
+
+    func testRTLContentSetsDirection() throws {
+        try loadMarkdown("# \u{0645}\u{0631}\u{062D}\u{0628}\u{0627}\n\n\u{0647}\u{0630}\u{0627} \u{0646}\u{0635} \u{0639}\u{0631}\u{0628}\u{064A}")
+
+        let dir = evaluateJS("document.documentElement.dir") as? String
+        XCTAssertEqual(dir, "rtl", "Arabic content should set dir=rtl on <html>")
+    }
+
+    func testLTRContentDoesNotSetDirection() throws {
+        try loadMarkdown("# Hello\n\nThis is English text")
+
+        let dir = evaluateJS("document.documentElement.dir") as? String
+        XCTAssertTrue(dir == nil || dir == "" || dir == "ltr",
+                      "English content should not set dir=rtl")
+    }
+
     // MARK: - Test File Rendering
 
     func testMultipleTestFilesRender() throws {
