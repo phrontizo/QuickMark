@@ -52,6 +52,7 @@ class PreviewViewController: NSViewController, @preconcurrency QLPreviewingContr
         case "yml", "yaml": return "yaml"
         case "json": return "json"
         case "toml": return "toml"
+        case "xml": return "xml"
         default: return "plaintext"
         }
     }

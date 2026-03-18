@@ -31,6 +31,14 @@ class StructuredTests: XCTestCase {
         XCTAssertEqual(PreviewViewController.language(for: "TOML"), "toml")
     }
 
+    func testXmlExtension() {
+        XCTAssertEqual(PreviewViewController.language(for: "xml"), "xml")
+    }
+
+    func testXmlCaseInsensitive() {
+        XCTAssertEqual(PreviewViewController.language(for: "XML"), "xml")
+    }
+
     // MARK: - HTML Escaping
 
     func testBuildHTMLEscapesContent() {

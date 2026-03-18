@@ -179,6 +179,7 @@ targets:
               - public.json
               - public.yaml
               - org.toml.toml
+              - public.xml
           NSExtensionPointIdentifier: com.apple.quicklook.preview
           NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).PreviewViewController
         UTImportedTypeDeclarations:
