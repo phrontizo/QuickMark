@@ -37,17 +37,18 @@ code {
 
 .line {
     display: block;
-    padding: 0 16px 0 0;
+    padding: 0;
+    padding-inline-end: 16px;
 }
 
 .line-number {
     display: inline-block;
     width: 4em;
-    padding-right: 12px;
-    margin-right: 12px;
-    text-align: right;
+    padding-inline-end: 12px;
+    margin-inline-end: 12px;
+    text-align: end;
     color: var(--line-num);
-    border-right: 1px solid var(--line-border);
+    border-inline-end: 1px solid var(--line-border);
     user-select: none;
     -webkit-user-select: none;
 }
