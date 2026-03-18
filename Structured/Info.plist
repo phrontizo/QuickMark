@@ -29,6 +29,7 @@
 				<string>public.json</string>
 				<string>public.yaml</string>
 				<string>org.toml.toml</string>
+				<string>public.xml</string>
 			</array>
 		</dict>
 		<key>NSExtensionPointIdentifier</key>
