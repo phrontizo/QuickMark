@@ -2,7 +2,7 @@
 
 ## Git
 
-Commit locally when asked, but **never push** — pushing is always manual.
+Commit automatically after every fix. Pushing and releasing are separate steps — only do them when explicitly instructed.
 
 ## WKWebView in Sandboxed Extensions
 
