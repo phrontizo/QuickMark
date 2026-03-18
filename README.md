@@ -106,9 +106,9 @@ Markdown/                   # Markdown QuickLook extension
   └── Resources/            # JS/CSS dependencies + render.js
 DrawIO/                     # Draw.io QuickLook extension
   └── PreviewViewController.swift
-Structured/                 # Structured data QuickLook extension (JSON/YAML/TOML)
+Structured/                 # Structured data QuickLook extension (JSON/YAML/TOML/XML)
   ├── PreviewViewController.swift
-  └── Resources/            # highlight.js + themes
+  └── Resources/            # structured-style.css
 QuickMarkTests/             # Unit + integration tests
 project.yml                 # XcodeGen project definition
 ```
