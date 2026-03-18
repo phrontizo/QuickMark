@@ -30,7 +30,7 @@ macOS has no built-in Markdown preview. QuickLook shows `.md` files as plain tex
 
 ### Structured Data
 
-- **JSON, YAML, TOML** — syntax-highlighted previews
+- **JSON, YAML, TOML, XML** — syntax-highlighted previews
 - **Line numbers** — for easy reference
 - **Dark mode** — adapts to system appearance
 
@@ -85,7 +85,7 @@ QuickMark is a macOS app bundle containing three QuickLook preview extensions:
 2. The diagram is rendered, measured, and scaled to fit the QuickLook window
 3. `preferredContentSize` is set from the diagram dimensions so the window opens at the right size
 
-**Structured Data Preview** — when Finder invokes QuickLook on a `.json`, `.yaml`/`.yml`, or `.toml` file:
+**Structured Data Preview** — when Finder invokes QuickLook on a `.json`, `.yaml`/`.yml`, `.toml`, or `.xml` file:
 
 1. **PreviewViewController** reads the file and applies syntax highlighting via highlight.js
 2. Line numbers are added for easy reference
@@ -98,7 +98,7 @@ All rendering happens locally with no network requests.
 ```
 QuickMark/                  # Host app (SwiftUI)
 Shared/                     # Code shared between extensions
-SharedResources/            # Resources shared between extensions (viewer-static.min.js)
+SharedResources/            # Resources shared between extensions
 Markdown/                   # Markdown QuickLook extension
   ├── PreviewViewController.swift
   ├── MarkdownProcessor.swift

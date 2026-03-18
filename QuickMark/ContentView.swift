@@ -33,7 +33,7 @@ struct ContentView: View {
                 .padding(.top, 4)
 
                 if markdownActive && drawioActive && structuredActive {
-                    Text("Select a .md, .drawio, .yml, .json, or .toml file in Finder and press Space to preview.")
+                    Text("Select a .md, .drawio, .yml, .json, .toml, or .xml file in Finder and press Space to preview.")
                         .font(.callout)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
@@ -93,7 +93,7 @@ struct ContentView: View {
                     Text("Structured Data")
                         .font(.callout)
                         .fontWeight(.medium)
-                    featureRow("YAML / JSON / TOML")
+                    featureRow("YAML / JSON / TOML / XML")
                     featureRow("Syntax highlighting")
                     featureRow("Line numbers")
                     Spacer()
