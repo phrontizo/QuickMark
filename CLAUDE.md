@@ -22,6 +22,18 @@ Security relies on:
 
 Do NOT re-add CSP or remove the network entitlement — both break WKWebView rendering.
 
+## Table of Contents Sidebar
+
+`render.js` generates a sticky ToC sidebar from h1–h6 headings (requires markdown-it-anchor for `id` attributes). The sidebar uses `body.has-toc` flex layout, IntersectionObserver scroll tracking, and a draggable resize handle with localStorage persistence (best-effort in sandbox). Auto-hidden when fewer than 2 headings or viewport < 1000px. The ToC CSS uses `align-self: flex-start` to make `position: sticky` work inside the flex parent.
+
+## GitHub Alerts
+
+`[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, and `[!CAUTION]` blockquote syntax is handled by a custom markdown-it core ruler plugin in `render.js` (not an external library — the npm package is ESM-only). The plugin adds classes to the `<blockquote>` element and strips the `[!TYPE]` marker from rendered text.
+
+## RTL Support
+
+`render.js` auto-detects RTL content by sampling the first 200 directional characters and sets `dir="rtl"` on `<html>`. All layout CSS uses logical properties (`padding-inline-start`, `border-inline-start`, `margin-inline-start`, etc.) so the layout flips automatically. Code blocks force `direction: ltr` regardless of document direction. When adding new CSS, always use logical properties instead of physical ones (`left`/`right`).
+
 ## Draw.io in Markdown
 
 Draw.io diagrams referenced as `![alt](file.drawio)` are converted to `` ```drawio `` fenced code blocks by `MarkdownProcessor`. An optional fragment selects a page by name or 0-based index: `![](file.drawio#Page Name)` or `![](file.drawio#2)`, producing `` ```drawio page=Page Name ``. The `render.js` fence rule creates a `<div class="mxgraph">` with a tab bar for multi-page diagrams, and uses `GraphViewer.createViewerForElement` with a callback to wire up page switching. This is necessary because `html: false` would escape raw HTML divs injected pre-rendering.
