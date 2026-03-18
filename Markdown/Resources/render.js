@@ -130,6 +130,8 @@
             ul.appendChild(li);
         }
 
+        if (ul.children.length === 0) return;
+
         // Resize handle
         var handle = document.createElement("div");
         handle.className = "toc-resize-handle";

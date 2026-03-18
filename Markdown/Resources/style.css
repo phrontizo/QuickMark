@@ -39,6 +39,7 @@ body.has-toc #toc {
     display: block;
     position: sticky;
     top: 0;
+    align-self: flex-start;
     height: 100vh;
     width: var(--toc-width);
     min-width: 140px;
