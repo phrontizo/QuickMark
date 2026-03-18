@@ -213,6 +213,34 @@ blockquote {
     border-left: 0.25em solid var(--blockquote-border);
 }
 
+/* --- GitHub Alerts --- */
+
+.markdown-alert {
+    padding: 8px 1em;
+    margin-bottom: 16px;
+    border-inline-start-width: 0.25em;
+    border-inline-start-style: solid;
+    color: var(--text);
+}
+
+.markdown-alert p:last-child {
+    margin-bottom: 0;
+}
+
+.markdown-alert-note      { border-inline-start-color: #0969da; background: rgba(9, 105, 218, 0.05); }
+.markdown-alert-tip       { border-inline-start-color: #1a7f37; background: rgba(26, 127, 55, 0.05); }
+.markdown-alert-important { border-inline-start-color: #8250df; background: rgba(130, 80, 223, 0.05); }
+.markdown-alert-warning   { border-inline-start-color: #9a6700; background: rgba(154, 103, 0, 0.05); }
+.markdown-alert-caution   { border-inline-start-color: #cf222e; background: rgba(207, 34, 46, 0.05); }
+
+@media (prefers-color-scheme: dark) {
+    .markdown-alert-note      { border-inline-start-color: #58a6ff; background: rgba(88, 166, 255, 0.08); }
+    .markdown-alert-tip       { border-inline-start-color: #3fb950; background: rgba(63, 185, 80, 0.08); }
+    .markdown-alert-important { border-inline-start-color: #a371f7; background: rgba(163, 113, 247, 0.08); }
+    .markdown-alert-warning   { border-inline-start-color: #d29922; background: rgba(210, 153, 34, 0.08); }
+    .markdown-alert-caution   { border-inline-start-color: #f85149; background: rgba(248, 81, 73, 0.08); }
+}
+
 /* --- Tables --- */
 
 table {

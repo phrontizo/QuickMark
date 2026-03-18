@@ -135,6 +135,22 @@ class RenderingTests: XCTestCase, WKNavigationDelegate {
         XCTAssertEqual(display, "none", "ToC should be hidden when fewer than 2 headings")
     }
 
+    // MARK: - GitHub Alerts Tests
+
+    func testGitHubAlertRendersWithClass() throws {
+        try loadMarkdown("> [!WARNING]\n> This is a warning message")
+
+        let alertClass = evaluateJS(
+            "document.querySelector('.markdown-alert-warning') !== null"
+        ) as? Bool
+        XCTAssertEqual(alertClass, true, "Warning alert should have .markdown-alert-warning class")
+
+        let markerRemoved = evaluateJS(
+            "document.querySelector('.markdown-alert-warning')?.textContent?.indexOf('[!WARNING]') === -1"
+        ) as? Bool
+        XCTAssertEqual(markerRemoved, true, "[!WARNING] marker should be stripped from rendered text")
+    }
+
     // MARK: - Draw.io Tests
 
     func testDrawioSampleRenders() throws {

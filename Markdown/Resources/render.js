@@ -42,6 +42,52 @@
         });
     }
 
+    // GitHub-style alerts: [!NOTE], [!TIP], [!IMPORTANT], [!WARNING], [!CAUTION]
+    md.core.ruler.after("block", "github-alerts", function(state) {
+        var tokens = state.tokens;
+        for (var i = 0; i < tokens.length; i++) {
+            if (tokens[i].type !== "blockquote_open") continue;
+
+            // Find the first inline token inside this blockquote
+            var inlineIdx = -1;
+            for (var j = i + 1; j < tokens.length; j++) {
+                if (tokens[j].type === "blockquote_close" && tokens[j].level === tokens[i].level) break;
+                if (tokens[j].type === "inline") { inlineIdx = j; break; }
+            }
+            if (inlineIdx === -1) continue;
+
+            var inlineToken = tokens[inlineIdx];
+            var match = inlineToken.content.match(/^\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\n?/);
+            if (!match) continue;
+
+            var alertType = match[1].toLowerCase();
+
+            // Strip the marker from the inline content
+            inlineToken.content = inlineToken.content.slice(match[0].length);
+            if (inlineToken.children && inlineToken.children.length > 0) {
+                // Remove marker from child text tokens
+                var remaining = match[0].length;
+                for (var c = 0; c < inlineToken.children.length && remaining > 0; c++) {
+                    var child = inlineToken.children[c];
+                    if (child.type === "text") {
+                        if (child.content.length <= remaining) {
+                            remaining -= child.content.length;
+                            child.content = "";
+                        } else {
+                            child.content = child.content.slice(remaining);
+                            remaining = 0;
+                        }
+                    } else if (child.type === "softbreak") {
+                        remaining -= 1;
+                    }
+                }
+            }
+
+            // Add alert classes to the blockquote_open token
+            tokens[i].attrJoin("class", "markdown-alert markdown-alert-" + alertType);
+        }
+    });
+
     // Custom fence rules: render mermaid and drawio blocks as divs instead of <pre><code>
     var defaultFence = md.renderer.rules.fence.bind(md.renderer.rules);
     md.renderer.rules.fence = function(tokens, idx, options, env, self) {
