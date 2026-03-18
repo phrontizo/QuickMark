@@ -3,7 +3,7 @@ import AppKit
 /// Appearance preference for QuickLook extensions.
 ///
 /// The host app writes via UserDefaults.standard (which persists to
-/// ~/Library/Preferences/com.quickmark.QuickMark.plist). The sandboxed
+/// ~/Library/Preferences/com.phrontizo.QuickMark.plist). The sandboxed
 /// extensions read that plist file directly using their read-only
 /// filesystem entitlement — no app group required.
 enum AppearancePreference: String, CaseIterable {
@@ -38,9 +38,9 @@ enum AppearancePreference: String, CaseIterable {
     static let prefsPlistPath: String = {
         if let pw = getpwuid(getuid()), let dir = pw.pointee.pw_dir {
             let realHome = String(cString: dir)
-            return (realHome as NSString).appendingPathComponent("Library/Preferences/com.quickmark.QuickMark.plist")
+            return (realHome as NSString).appendingPathComponent("Library/Preferences/com.phrontizo.QuickMark.plist")
         }
-        return (NSHomeDirectory() as NSString).appendingPathComponent("Library/Preferences/com.quickmark.QuickMark.plist")
+        return (NSHomeDirectory() as NSString).appendingPathComponent("Library/Preferences/com.phrontizo.QuickMark.plist")
     }()
 
     /// Read a preference value. In the host app this reads UserDefaults.standard;

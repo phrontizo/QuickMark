@@ -1,6 +1,6 @@
 name: QuickMark
 options:
-  bundleIdPrefix: com.quickmark
+  bundleIdPrefix: com.phrontizo
   deploymentTarget:
     macOS: "14.0"
   xcodeVersion: "2630"
@@ -105,7 +105,7 @@ targets:
         com.apple.security.temporary-exception.files.absolute-path.read-only:
           - /
     settings:
-      PRODUCT_BUNDLE_IDENTIFIER: com.quickmark.QuickMark.QuickMarkPreview
+      PRODUCT_BUNDLE_IDENTIFIER: com.phrontizo.QuickMark.QuickMarkPreview
       ENABLE_APP_SANDBOX: YES
       ENABLE_HARDENED_RUNTIME: YES
       ENABLE_OUTGOING_NETWORK_CONNECTIONS: YES
@@ -147,7 +147,7 @@ targets:
         com.apple.security.temporary-exception.files.absolute-path.read-only:
           - /
     settings:
-      PRODUCT_BUNDLE_IDENTIFIER: com.quickmark.QuickMark.QuickMarkDrawio
+      PRODUCT_BUNDLE_IDENTIFIER: com.phrontizo.QuickMark.QuickMarkDrawio
       ENABLE_APP_SANDBOX: YES
       ENABLE_HARDENED_RUNTIME: YES
       ENABLE_OUTGOING_NETWORK_CONNECTIONS: YES
@@ -197,7 +197,7 @@ targets:
         com.apple.security.temporary-exception.files.absolute-path.read-only:
           - /
     settings:
-      PRODUCT_BUNDLE_IDENTIFIER: com.quickmark.QuickMark.QuickMarkStructured
+      PRODUCT_BUNDLE_IDENTIFIER: com.phrontizo.QuickMark.QuickMarkStructured
       ENABLE_APP_SANDBOX: YES
       ENABLE_HARDENED_RUNTIME: YES
       ENABLE_OUTGOING_NETWORK_CONNECTIONS: YES
