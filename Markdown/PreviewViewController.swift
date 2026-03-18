@@ -26,6 +26,7 @@ class PreviewViewController: NSViewController, @preconcurrency QLPreviewingContr
 
     func preparePreviewOfFile(at url: URL, completionHandler handler: @escaping (Error?) -> Void) {
         webView.appearance = AppearancePreference.markdown.nsAppearance
+        preferredContentSize = NSSize(width: 1100, height: 800)
         do {
             try renderMarkdown(at: url)
             handler(nil)
