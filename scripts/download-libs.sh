@@ -158,3 +158,5 @@ echo "  draw.io viewer ✓"
 echo ""
 echo "All libraries downloaded to $RESOURCES_DIR/ and SharedResources/"
 ls -lh "$RESOURCES_DIR/"
+echo ""
+ls -lh SharedResources/
