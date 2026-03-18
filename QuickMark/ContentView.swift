@@ -174,7 +174,9 @@ struct ContentView: View {
             let data = pipe.fileHandleForReading.readDataToEndOfFile()
             process.waitUntilExit()
             let output = String(data: data, encoding: .utf8) ?? ""
-            return !output.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            let trimmed = output.trimmingCharacters(in: .whitespacesAndNewlines)
+            // pluginkit prefixes disabled extensions with "-"
+            return !trimmed.isEmpty && !trimmed.hasPrefix("-")
         } catch {
             #if DEBUG
             NSLog("QuickMark: pluginkit check failed for %@: %@", bundleId, error.localizedDescription)
