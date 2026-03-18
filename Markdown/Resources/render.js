@@ -223,11 +223,12 @@
             if (target) {
                 target.scrollIntoView({ behavior: "smooth" });
                 // Delay highlight until scroll finishes (no scrollend in WebKit,
-                // so poll until scroll position stabilises)
+                // so poll until scroll position stabilises, max 3 seconds)
                 var lastY = -1;
+                var pollCount = 0;
                 var poll = setInterval(function() {
                     var curY = window.scrollY;
-                    if (curY === lastY) {
+                    if (curY === lastY || ++pollCount >= 60) {
                         clearInterval(poll);
                         target.classList.remove("targeted");
                         void target.offsetWidth;
