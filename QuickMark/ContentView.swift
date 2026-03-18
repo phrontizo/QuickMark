@@ -150,9 +150,9 @@ struct ContentView: View {
 
     private func checkExtensions() {
         Task.detached {
-            let md = Self.isExtensionRegistered("com.phrontizo.QuickMark.QuickMarkPreview")
-            let dio = Self.isExtensionRegistered("com.phrontizo.QuickMark.QuickMarkDrawio")
-            let str = Self.isExtensionRegistered("com.phrontizo.QuickMark.QuickMarkStructured")
+            let md = Self.isExtensionRegistered("com.quickmark.QuickMark.QuickMarkPreview")
+            let dio = Self.isExtensionRegistered("com.quickmark.QuickMark.QuickMarkDrawio")
+            let str = Self.isExtensionRegistered("com.quickmark.QuickMark.QuickMarkStructured")
             await MainActor.run {
                 markdownActive = md
                 drawioActive = dio

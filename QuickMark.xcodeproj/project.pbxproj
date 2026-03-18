@@ -723,7 +723,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.phrontizo.QuickMark.QuickMarkDrawio;
+				PRODUCT_BUNDLE_IDENTIFIER = com.quickmark.QuickMark.QuickMarkDrawio;
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -743,7 +743,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.phrontizo.QuickMark.QuickMarkStructured;
+				PRODUCT_BUNDLE_IDENTIFIER = com.quickmark.QuickMark.QuickMarkStructured;
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -763,7 +763,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.phrontizo.QuickMarkTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.quickmark.QuickMarkTests;
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -783,7 +783,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.phrontizo.QuickMark.QuickMarkDrawio;
+				PRODUCT_BUNDLE_IDENTIFIER = com.quickmark.QuickMark.QuickMarkDrawio;
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -875,7 +875,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.phrontizo.QuickMark.QuickMarkStructured;
+				PRODUCT_BUNDLE_IDENTIFIER = com.quickmark.QuickMark.QuickMarkStructured;
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -895,7 +895,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.phrontizo.QuickMarkTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.quickmark.QuickMarkTests;
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -910,7 +910,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.phrontizo.QuickMark;
+				PRODUCT_BUNDLE_IDENTIFIER = com.quickmark.QuickMark;
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -925,7 +925,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.phrontizo.QuickMark;
+				PRODUCT_BUNDLE_IDENTIFIER = com.quickmark.QuickMark;
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -945,7 +945,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.phrontizo.QuickMark.QuickMarkPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = com.quickmark.QuickMark.QuickMarkPreview;
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -965,7 +965,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.phrontizo.QuickMark.QuickMarkPreview;
+				PRODUCT_BUNDLE_IDENTIFIER = com.quickmark.QuickMark.QuickMarkPreview;
 				SDKROOT = macosx;
 			};
 			name = Release;
