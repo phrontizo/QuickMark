@@ -108,7 +108,7 @@ DrawIO/                     # Draw.io QuickLook extension
   └── PreviewViewController.swift
 Structured/                 # Structured data QuickLook extension (JSON/YAML/TOML/XML)
   ├── PreviewViewController.swift
-  └── Resources/            # structured-style.css
+  └── Resources/            # structured-render.js, structured-style.css
 QuickMarkTests/             # Unit + integration tests
 project.yml                 # XcodeGen project definition
 ```
