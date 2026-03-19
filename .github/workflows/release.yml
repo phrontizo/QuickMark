@@ -62,6 +62,7 @@ jobs:
             -destination "platform=macOS" \
             MARKETING_VERSION="$MARKETING_VERSION" \
             CURRENT_PROJECT_VERSION="$BUILD_NUMBER" \
+            CODE_SIGN_IDENTITY="-" \
             -quiet
 
       - name: Build Release

@@ -32,6 +32,9 @@ node_modules/
 # Python
 __pycache__/
 
+# Nextcloud sync
+.sync-exclude.lst
+
 # Local scripts
 ralph-review.py
 .ralph-memory.md

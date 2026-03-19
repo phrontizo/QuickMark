@@ -40,7 +40,17 @@ jobs:
           SUMS
 
       - name: Build
-        run: xcodebuild build -scheme QuickMark -destination "platform=macOS" -quiet
+        run: >
+          xcodebuild build
+          -scheme QuickMark
+          -destination "platform=macOS"
+          CODE_SIGN_IDENTITY="-"
+          -quiet
 
       - name: Test
-        run: xcodebuild test -scheme QuickMark -destination "platform=macOS" -quiet
+        run: >
+          xcodebuild test
+          -scheme QuickMark
+          -destination "platform=macOS"
+          CODE_SIGN_IDENTITY="-"
+          -quiet
