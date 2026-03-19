@@ -36,6 +36,7 @@ MERMAID_VER="11.4.1"
 MERMAID_HASH="a43bc1afd446f9c4cc66ac5dd45d02e8d65e26fc5344ec0ef787f88d6ddb6f9e"
 
 # draw.io viewer has no semver — hash-only verification
+# Pinned 2025-03-13 from https://viewer.diagrams.net/js/viewer-static.min.js
 DRAWIO_VIEWER_HASH="a288ecea83e956cf8f40aa6a3fe8e604c790ba46e767498dbba4049d209c366b"
 
 # ──────────────────────────────────────────────────────────────────────

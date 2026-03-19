@@ -23,6 +23,7 @@ class PreviewViewController: NSViewController, @preconcurrency QLPreviewingContr
     override func loadView() {
         FileUtilities.cleanupStaleTempFiles(prefix: Self.tempFilePrefix)
         let config = WKWebViewConfiguration()
+        config.preferences.javaScriptCanOpenWindowsAutomatically = false
         #if DEBUG
         config.preferences.setValue(true, forKey: "developerExtrasEnabled")
         #endif
