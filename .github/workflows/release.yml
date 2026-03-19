@@ -38,6 +38,23 @@ jobs:
       - name: Generate Xcode project
         run: xcodegen generate
 
+      - name: Verify library integrity
+        run: |
+          shasum -a 256 -c - <<'SUMS'
+          38c70a1e7ca91ab40e2d9e6e60129851a717ed1c7d4acbbdd41bf9503791cf68  Markdown/Resources/markdown-it.min.js
+          4f3b23f41bb3787957da2602fbccc4df0d017928c1fce62583159e096b832a81  Markdown/Resources/markdown-it-task-lists.min.js
+          d6fee58a3b56c5742fa18f3e01f1d317cc99975683ebd39c9195cb2aff0c2e42  Markdown/Resources/markdown-it-footnote.min.js
+          9ae7874d506368f9628f0ab85ba982cbe6816fff68592fbaf4a9581e86496d4b  Markdown/Resources/markdownItAnchor.umd.js
+          b01b706e6d23e8270a55228fdba35b557127b6f2af5b4c23ca22b15bdbd1c09d  Markdown/Resources/texmath.min.js
+          8d886ea32b7d159ca2fe4acf396d227a539edb0b474a3d166d6afb6da3834d40  Markdown/Resources/texmath.min.css
+          c4a399dd6f488bc97a3546e3476747b3e714c99c57b9473154c6fb8d259b9381  SharedResources/highlight.min.js
+          ac3febc3ba29f570bc72056a03a0a7d60d2f8e4f5bc3fde59bdb68e28f76134e  SharedResources/hljs-themes.css
+          863811e2baa0849c77bc92d26d44f4d0a4843c2a8ab52c462017dea57316e4d8  Markdown/Resources/katex.min.js
+          e2c4d6bafa5e96099411c20ec17857fe038f202b8ec4bb24b7f74f6bf4c282df  Markdown/Resources/katex-inlined.min.css
+          a43bc1afd446f9c4cc66ac5dd45d02e8d65e26fc5344ec0ef787f88d6ddb6f9e  Markdown/Resources/mermaid.min.js
+          a288ecea83e956cf8f40aa6a3fe8e604c790ba46e767498dbba4049d209c366b  SharedResources/viewer-static.min.js
+          SUMS
+
       - name: Test
         run: |
           xcodebuild test \

@@ -178,9 +178,7 @@ struct ContentView: View {
             // pluginkit prefixes disabled extensions with "-"
             return !trimmed.isEmpty && !trimmed.hasPrefix("-")
         } catch {
-            #if DEBUG
             NSLog("QuickMark: pluginkit check failed for %@: %@", bundleId, error.localizedDescription)
-            #endif
             return false
         }
     }

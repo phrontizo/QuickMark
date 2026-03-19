@@ -213,7 +213,8 @@ pre, code {
 /* --- Blockquotes --- */
 
 blockquote {
-    margin: 0 0 16px 0;
+    margin-block: 0 16px;
+    margin-inline: 0;
     padding: 0 1em;
     color: var(--secondary);
     border-inline-start: 0.25em solid var(--blockquote-border);

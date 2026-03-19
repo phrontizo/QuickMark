@@ -266,7 +266,7 @@
 
     // --- RTL detection ---
     (function() {
-        var rtlPattern = /[\u0590-\u05FF\u0600-\u06FF\u0700-\u074F\u0750-\u077F\u0780-\u07BF\u08A0-\u08FF]/;
+        var rtlPattern = /[\u0590-\u05FF\u0600-\u06FF\u0700-\u074F\u0750-\u077F\u0780-\u07FF\u0800-\u085F\u08A0-\u08FF]/;
         // Sample the first meaningful text content
         var walker = document.createTreeWalker(contentEl, NodeFilter.SHOW_TEXT, null, false);
         var rtlCount = 0, ltrCount = 0, sampled = 0;

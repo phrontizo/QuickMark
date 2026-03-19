@@ -27,6 +27,7 @@
 		3C8928AC267C84DEB6F54B92 /* viewer-static.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 67F47867CF9E28B6C4C527A9 /* viewer-static.min.js */; };
 		3D1B288FF000AAEF90FABB2A /* AppearancePreference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 992648D1F73305BF7775701D /* AppearancePreference.swift */; };
 		3DEE2AA9F3022FDCE306AC3B /* AppearancePreferenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6F848359AE5DCC9100DA6A /* AppearancePreferenceTests.swift */; };
+		3F04E8563A64E6D23FC517EC /* structured-render.js in Resources */ = {isa = PBXBuildFile; fileRef = 32CC275861A00703E0FE1302 /* structured-render.js */; };
 		40C3FEBDDF79D64323653CED /* AppearancePreference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 992648D1F73305BF7775701D /* AppearancePreference.swift */; };
 		459CB723F083920501F0FB9D /* FileUtilitiesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3438597670B80A8329B6B35 /* FileUtilitiesTests.swift */; };
 		474C95D6ABAAE27EBB7B1AA8 /* HTMLEscaping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69040C1FDE048E88654786E9 /* HTMLEscaping.swift */; };
@@ -73,6 +74,7 @@
 		D4CB2219A3AE8DA28ABB5815 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90FBA77D4660D22A836D283 /* PreviewViewController.swift */; };
 		D64B39EADF670D7D00C2D103 /* MarkdownProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E88DDF1B9500E5AAF7A593 /* MarkdownProcessor.swift */; };
 		D730DCAD2115B682CC9A770A /* AppearancePreference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 992648D1F73305BF7775701D /* AppearancePreference.swift */; };
+		DA1F49E387907DCED2454F1E /* structured-render.js in Resources */ = {isa = PBXBuildFile; fileRef = 32CC275861A00703E0FE1302 /* structured-render.js */; };
 		DDC15C4EB7F5565AAC5193F4 /* style.css in Resources */ = {isa = PBXBuildFile; fileRef = 523E7AAA8ABF3D839401ECD9 /* style.css */; };
 		E395593C0DB9B425FD922DDF /* MxGraphHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496D8582B19D7F290F24E99B /* MxGraphHelper.swift */; };
 		E60D3F1EDBDAA8EC3F2F479A /* texmath.min.css in Resources */ = {isa = PBXBuildFile; fileRef = AE674047DB03868496337751 /* texmath.min.css */; };
@@ -135,6 +137,7 @@
 		0FDE340D12F2796336DC8896 /* PreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
 		217F62B0F311CDB8FD194E2A /* highlight.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = highlight.min.js; sourceTree = "<group>"; };
 		250F918B88FEDB64EAF579A7 /* markdownItAnchor.umd.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = markdownItAnchor.umd.js; sourceTree = "<group>"; };
+		32CC275861A00703E0FE1302 /* structured-render.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "structured-render.js"; sourceTree = "<group>"; };
 		37DA3BBC24FD11A22175E2F1 /* QuickMarkPreview.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = QuickMarkPreview.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		384575201CF5C2420B1766CE /* markdown-it-footnote.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "markdown-it-footnote.min.js"; sourceTree = "<group>"; };
 		43BCB4594E25E7A451777FE2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -217,6 +220,7 @@
 		69D6729A0998BA542BC88F5B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				32CC275861A00703E0FE1302 /* structured-render.js */,
 				D98CDC0F9E62A0556C589143 /* structured-style.css */,
 			);
 			name = Resources;
@@ -514,6 +518,7 @@
 				71264845D4F0327A01513AC2 /* markdownItAnchor.umd.js in Resources */,
 				623C8CDC325A2A47AF2489D4 /* mermaid.min.js in Resources */,
 				B063054690299EAE19264F4C /* render.js in Resources */,
+				3F04E8563A64E6D23FC517EC /* structured-render.js in Resources */,
 				9A80E3117C2E485BE47AF8BE /* structured-style.css in Resources */,
 				DDC15C4EB7F5565AAC5193F4 /* style.css in Resources */,
 				35B7E144263FE75AE3993F98 /* texmath.min.css in Resources */,
@@ -536,6 +541,7 @@
 			files = (
 				97681CA833DFC0BC225E8F70 /* highlight.min.js in Resources */,
 				66224FC107890E0132C841E5 /* hljs-themes.css in Resources */,
+				DA1F49E387907DCED2454F1E /* structured-render.js in Resources */,
 				2A6558555C6D03435C1D3815 /* structured-style.css in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -83,26 +83,10 @@ class PreviewViewController: NSViewController, @preconcurrency QLPreviewingContr
             html += "<script src=\"\(url.absoluteString.htmlEscaped)\"></script>\n"
         }
 
-        html += "<script>\n"
-        html += "(function() {\n"
-        html += "  var code = document.querySelector('code');\n"
-        html += "  if (!code) return;\n"
-        html += "  var lang = (code.className.match(/language-(\\w+)/) || [])[1] || '';\n"
-        html += "  var highlighted = code.innerHTML;\n"
-        html += "  try {\n"
-        html += "    if (typeof hljs !== 'undefined' && lang) {\n"
-        html += "      highlighted = hljs.highlight(code.textContent, {language: lang}).value;\n"
-        html += "    }\n"
-        html += "  } catch(e) {}\n"
-        html += "  var lines = highlighted.split('\\n');\n"
-        html += "  if (lines.length > 0 && lines[lines.length - 1] === '') lines.pop();\n"
-        html += "  code.innerHTML = lines.map(function(line, i) {\n"
-        html += "    return '<span class=\"line\"><span class=\"line-number\">' + (i + 1) + '</span>' + line + '</span>';\n"
-        html += "  }).join('');\n"
-        html += "  code.classList.add('hljs');\n"
-        html += "  code.setAttribute('data-highlighted', 'yes');\n"
-        html += "})();\n"
-        html += "</script>\n"
+        let renderURL = bundle.url(forResource: "structured-render", withExtension: "js")
+        if let url = renderURL {
+            html += "<script src=\"\(url.absoluteString.htmlEscaped)\"></script>\n"
+        }
 
         html += "</body>\n</html>"
         return html

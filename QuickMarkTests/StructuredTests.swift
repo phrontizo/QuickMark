@@ -64,10 +64,10 @@ class StructuredTests: XCTestCase {
         XCTAssertTrue(html.contains("highlight.min.js"), "Should reference highlight.js")
     }
 
-    func testBuildHTMLIncludesLineNumberScript() {
+    func testBuildHTMLIncludesRenderScript() {
         let html = PreviewViewController.buildHTML(
             content: "test", language: "json", bundle: Bundle(for: type(of: self)))
-        XCTAssertTrue(html.contains("line-number"), "Should include line number generation script")
+        XCTAssertTrue(html.contains("structured-render.js"), "Should reference structured-render.js")
     }
 
     // MARK: - Line Spacing

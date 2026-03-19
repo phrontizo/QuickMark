@@ -13,9 +13,11 @@ class PreviewViewController: NSViewController, @preconcurrency QLPreviewingContr
 
     deinit {
         // Complete any pending handler so QuickLook doesn't hang if dismissed mid-load.
-        // Dispatch to main queue since deinit may run on an arbitrary thread.
-        if let handler = completionHandler {
-            DispatchQueue.main.async { handler(nil) }
+        // Capture and nil out before dispatching to avoid any ambiguity about ownership.
+        let pendingHandler = completionHandler
+        completionHandler = nil
+        if let pendingHandler {
+            DispatchQueue.main.async { pendingHandler(nil) }
         }
         if let temp = tempFileURL { try? FileManager.default.removeItem(at: temp) }
     }

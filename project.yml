@@ -223,9 +223,15 @@ targets:
       - path: SharedResources/hljs-themes.css
         buildPhase: resources
         type: file
+      # Only the Structured PreviewViewController is included here (not Markdown's)
+      # because both define a class named PreviewViewController. The tests reference
+      # Structured's static methods (language(for:), buildHTML(...)) directly.
       - path: Structured/PreviewViewController.swift
         type: file
       - path: Structured/Resources/structured-style.css
+        buildPhase: resources
+        type: file
+      - path: Structured/Resources/structured-render.js
         buildPhase: resources
         type: file
     entitlements:
