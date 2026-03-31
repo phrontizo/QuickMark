@@ -59,6 +59,8 @@ targets:
       - target: QuickMarkStructured
         embed: true
         codeSign: true
+    settings:
+      ENABLE_HARDENED_RUNTIME: YES
   QuickMarkPreview:
     type: app-extension
     platform: macOS
