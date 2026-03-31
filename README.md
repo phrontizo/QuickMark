@@ -36,15 +36,7 @@ macOS has no built-in Markdown preview. QuickLook shows `.md` files as plain tex
 
 ## Install
 
-Download the latest DMG from [Releases](https://github.com/phrontizo/QuickMark/releases), open it, and drag QuickMark to Applications.
-
-The app is not signed with an Apple Developer certificate, so macOS will quarantine it. Remove the quarantine attribute before launching:
-
-```bash
-xattr -d com.apple.quarantine /Applications/QuickMark.app
-```
-
-Then open QuickMark and follow the prompts to enable the extensions in System Settings.
+Download the latest DMG from [Releases](https://github.com/phrontizo/QuickMark/releases), open it, and drag QuickMark to Applications. Then open QuickMark and follow the prompts to enable the extensions in System Settings.
 
 ## Requirements
 
