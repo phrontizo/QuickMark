@@ -123,19 +123,41 @@ jobs:
           APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         run: |
+          # Submit without --wait so we control the polling loop
           SUBMIT_OUT=$(xcrun notarytool submit "QuickMark-${VERSION}.dmg" \
             --apple-id "$APPLE_ID" \
             --password "$APPLE_ID_PASSWORD" \
             --team-id "$APPLE_TEAM_ID" \
-            --wait \
-            --timeout 15m \
             --output-format json)
 
           echo "$SUBMIT_OUT"
-          STATUS=$(echo "$SUBMIT_OUT" | python3 -c "import sys,json; print(json.load(sys.stdin)['status'])")
+          SUBMISSION_ID=$(echo "$SUBMIT_OUT" | python3 -c "import sys,json; print(json.load(sys.stdin)['id'])")
+          echo "Submission ID: $SUBMISSION_ID"
+
+          # Poll until notarisation completes (condition-based, not fixed timeout)
+          DEADLINE=$(( SECONDS + 1800 ))  # 30-minute overall limit
+          while [ $SECONDS -lt $DEADLINE ]; do
+            sleep 30
+            INFO_OUT=$(xcrun notarytool info "$SUBMISSION_ID" \
+              --apple-id "$APPLE_ID" \
+              --password "$APPLE_ID_PASSWORD" \
+              --team-id "$APPLE_TEAM_ID" \
+              --output-format json) || true
+
+            STATUS=$(echo "$INFO_OUT" | python3 -c "import sys,json; print(json.load(sys.stdin)['status'])")
+            echo "Notarisation status: $STATUS"
+
+            if [ "$STATUS" != "In Progress" ]; then
+              break
+            fi
+          done
+
+          if [ "$STATUS" = "In Progress" ]; then
+            echo "::error::Notarisation still in progress after 30 minutes"
+            exit 1
+          fi
 
           if [ "$STATUS" != "Accepted" ]; then
-            SUBMISSION_ID=$(echo "$SUBMIT_OUT" | python3 -c "import sys,json; print(json.load(sys.stdin)['id'])")
             echo "::error::Notarisation failed with status: $STATUS"
             xcrun notarytool log "$SUBMISSION_ID" \
               --apple-id "$APPLE_ID" \
