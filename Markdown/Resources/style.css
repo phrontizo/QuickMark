@@ -295,6 +295,10 @@ li + li { margin-top: 0.25em; }
     max-width: 100%;
 }
 
+.mxgraph .geDiagramContainer {
+    overflow: hidden !important;
+}
+
 /* --- Footnotes --- */
 
 .footnotes {
