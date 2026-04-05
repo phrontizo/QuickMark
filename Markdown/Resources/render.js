@@ -108,6 +108,7 @@
 
             var xml = token.content.replace(/\n$/, "");
             var tabsHtml = "";
+            var selectedPage = null;
             var doc = new DOMParser().parseFromString(xml, "text/xml");
             var diagrams = doc.querySelectorAll("diagram");
             if (pageParam !== null && diagrams.length > 1) {
@@ -121,11 +122,7 @@
                         if (diagrams[p].getAttribute("name") === pageParam) { initialPage = p; break; }
                     }
                 }
-                // Strip all pages except the selected one
-                for (var r = diagrams.length - 1; r >= 0; r--) {
-                    if (r !== initialPage) diagrams[r].parentNode.removeChild(diagrams[r]);
-                }
-                xml = new XMLSerializer().serializeToString(doc);
+                selectedPage = initialPage;
             } else if (diagrams.length > 1) {
                 // No page selected — show tab bar for all pages
                 tabsHtml = '<div class="drawio-tabs" data-initial-page="0">';
@@ -136,7 +133,9 @@
                 }
                 tabsHtml += '</div>';
             }
-            var data = JSON.stringify({highlight: "#0000ff", nav: true, resize: true, xml: xml});
+            var config = {highlight: "#0000ff", nav: true, resize: true, xml: xml};
+            if (selectedPage !== null) config.page = selectedPage;
+            var data = JSON.stringify(config);
             var escaped = data.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#x27;");
             return tabsHtml + '<div class="mxgraph" data-mxgraph="' + escaped + '"></div>\n';
         }
