@@ -107,33 +107,37 @@
             if (pageMatch) pageParam = pageMatch[1];
 
             var xml = token.content.replace(/\n$/, "");
-            var data = JSON.stringify({highlight: "#0000ff", nav: true, resize: true, xml: xml});
-            var escaped = data.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#x27;");
-            // Generate tab bar if multiple pages
             var tabsHtml = "";
             var doc = new DOMParser().parseFromString(xml, "text/xml");
             var diagrams = doc.querySelectorAll("diagram");
-            if (diagrams.length > 1) {
+            if (pageParam !== null && diagrams.length > 1) {
                 // Resolve page param to 0-based index
                 var initialPage = 0;
-                if (pageParam !== null) {
-                    var asInt = parseInt(pageParam, 10);
-                    if (!isNaN(asInt) && asInt >= 0 && asInt < diagrams.length) {
-                        initialPage = asInt;
-                    } else {
-                        for (var p = 0; p < diagrams.length; p++) {
-                            if (diagrams[p].getAttribute("name") === pageParam) { initialPage = p; break; }
-                        }
+                var asInt = parseInt(pageParam, 10);
+                if (!isNaN(asInt) && asInt >= 0 && asInt < diagrams.length) {
+                    initialPage = asInt;
+                } else {
+                    for (var p = 0; p < diagrams.length; p++) {
+                        if (diagrams[p].getAttribute("name") === pageParam) { initialPage = p; break; }
                     }
                 }
-                tabsHtml = '<div class="drawio-tabs" data-initial-page="' + initialPage + '">';
+                // Strip all pages except the selected one
+                for (var r = diagrams.length - 1; r >= 0; r--) {
+                    if (r !== initialPage) diagrams[r].parentNode.removeChild(diagrams[r]);
+                }
+                xml = new XMLSerializer().serializeToString(doc);
+            } else if (diagrams.length > 1) {
+                // No page selected — show tab bar for all pages
+                tabsHtml = '<div class="drawio-tabs" data-initial-page="0">';
                 for (var k = 0; k < diagrams.length; k++) {
                     var name = diagrams[k].getAttribute("name") || "Page " + (k + 1);
-                    tabsHtml += '<button class="drawio-tab' + (k === initialPage ? ' active' : '') + '" data-page="' + k + '">'
+                    tabsHtml += '<button class="drawio-tab' + (k === 0 ? ' active' : '') + '" data-page="' + k + '">'
                         + md.utils.escapeHtml(name) + '</button>';
                 }
                 tabsHtml += '</div>';
             }
+            var data = JSON.stringify({highlight: "#0000ff", nav: true, resize: true, xml: xml});
+            var escaped = data.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#x27;");
             return tabsHtml + '<div class="mxgraph" data-mxgraph="' + escaped + '"></div>\n';
         }
 
