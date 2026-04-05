@@ -316,10 +316,6 @@
                     var hasTabs = tabBar && tabBar.classList.contains("drawio-tabs");
                     el.innerText = "";
                     GraphViewer.createViewerForElement(el, function(viewer) {
-                        setTimeout(function() {
-                            var divs = el.getElementsByTagName("div");
-                            for (var ci = 0; ci < divs.length; ci++) divs[ci].style.overflow = "hidden";
-                        }, 0);
                         if (!hasTabs) return;
                         var initial = parseInt(tabBar.getAttribute("data-initial-page"), 10) || 0;
                         if (initial > 0) viewer.selectPage(initial);
